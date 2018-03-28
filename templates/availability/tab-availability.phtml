@@ -1,0 +1,9 @@
+<p class="info">
+    Click on any time or day in the calendar bellow to start adding your available
+    times for this service. You may set recurring availabilities to save time,
+    exclude dates where the availability does not apply, and much more.
+    <a href="#">Learn more.</a>
+</p>
+<availability-calendar :availabilities="events" class="rc-calendar rc-calendar--availability"
+                       @availability-click="openAvailabilityEditor"
+/>

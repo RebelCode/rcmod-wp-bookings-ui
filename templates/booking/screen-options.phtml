@@ -1,0 +1,21 @@
+<div id="bookings-screen-options">
+    <app inline-template>
+        <div>
+            <fieldset class="metabox-prefs">
+                <legend>Booking statuses to display in calendar</legend>
+                <selection-list :collection="statusesCollection" v-model="selectedStatuses" :multiple="true">
+                    <label slot-scope="r">
+                        <input type="checkbox"
+                               :value="r.getKey(r.item)"
+                               @change="r.select(r.item)"
+                               :checked="r.isItemSelected(r.item)"
+                        > {{ r.item.value }}
+                    </label>
+                </selection-list>
+            </fieldset>
+            <p style="margin-top: 1em; padding: 0;">
+                <div class="button button-primary" @click="setScreenStatuses(selectedStatuses)">Apply</div>
+            </p>
+        </div>
+    </app>
+</div>

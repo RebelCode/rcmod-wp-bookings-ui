@@ -1,0 +1,62 @@
+<session-length inline-template>
+    <div>
+        <div class="session-length">
+            <div class="flex-row">
+                <fieldset class="session-length__options">
+                    <legend>Session Length</legend>
+                    <input type="number" step="1" min="1" max="59" placeholder="15" v-model="sessionDefault.sessionLength"
+                           ref="sessionLength"
+                           data-validation-error="Please enter a session length bigger than 0."
+                    >
+                    <select name="" id="">
+                        <option value="" selected>mins</option>
+                    </select>
+                </fieldset>
+                <fieldset class="session-length__options">
+                    <legend>Price</legend>
+                    <div class="input-with-placeholder">
+                        <span>$</span>
+                        <input type="number" step="1" min="1" max="59" placeholder="20.00" v-model="sessionDefault.price"
+                               ref="price"
+                               data-validation-error="Please enter a session price. If this session duration is free, enter 0."
+                        >
+                    </div>
+                </fieldset>
+            </div>
+            <div class="session-length__footer">
+                <div class="session-length__buttons">
+                    <input type="button"
+                           class="button button-primary"
+                           value="Add"
+                           @click="addNewSession"
+                    />
+                </div>
+                <transition name="fade-transition">
+                    <div class="session-length__validation" v-if="validationError">
+                        {{ validationError }}
+                    </div>
+                </transition>
+            </div>
+        </div>
+        <hr/>
+        <div class="session-bookable">
+            <div class="session-bookable__title">Bookable session lengths and prices for <u>Teeth Whitening</u>.</div>
+
+            <table v-if="sessions.getItems().length">
+                <thead>
+                <tr>
+                    <th>Session length</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody is="repeater" :collection="sessions" wrap="tbody">
+                <tr slot-scope="r">
+                    <td>{{ r.item.sessionLength }} minutes</td>
+                    <td>$ {{ r.item.price }}.00</td>
+                    <td><span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</session-length>

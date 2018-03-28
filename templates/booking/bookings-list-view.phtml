@@ -1,0 +1,55 @@
+<bookings-list-view @edit="editBooking"
+                    inline-template>
+    <div>
+        <list-table
+            :columns="columns"
+            :loading="false"
+            :rows="items"
+            :actions="actions"
+            :show-cb="true"
+            :total-pages="5"
+            :total-items="15"
+            :per-page="3"
+            :current-page="1"
+            action-column="date"
+            @pagination="goToPage"
+            @action:click="onActionClick"
+        >
+            <template slot="filters">
+                <select>
+                    <option value="All Dates">All months</option>
+                </select>
+                <select v-model="service">
+                    <option value="all">All Services</option>
+                    <option :value="service.id" v-for="service in services">{{ service.title }}</option>
+                </select>
+                <button class="button">Filter</button>
+            </template>
+
+            <template slot="date" slot-scope="data">
+                <a href="#" @click.prevent="$emit('edit', data.row)">
+                    <strong>{{ humanizeDate(data.row.start) }}</strong>
+                </a>
+                <span style="opacity: .6; margin-left: 4px">ID: {{ data.row.id }}</span>
+            </template>
+
+            <template slot="client" slot-scope="data">
+                <a href="#">
+                    {{ data.row.client.name }}
+                </a>
+            </template>
+
+            <template slot="service" slot-scope="data">
+                <a href="#">
+                    {{ data.row.service.title }}
+                </a>
+            </template>
+
+            <template slot="status" slot-scope="data">
+                <a href="#" @click.prevent="$emit('edit', data.row)" style="text-transform: capitalize">
+                    {{ data.row.status }}
+                </a>
+            </template>
+        </list-table>
+    </div>
+</bookings-list-view>

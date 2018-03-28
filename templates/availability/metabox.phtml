@@ -1,0 +1,26 @@
+<div id="metabox-calendar-app">
+    <app inline-template>
+        <div>
+            <?=$this->render('availability/service-availability-editor');?>
+            <div>
+                <label class="selectit">
+                    <input value="1" type="checkbox" name="enable_booking" id="enable_booking" checked>
+                    Enable booking for this download
+                </label>
+            </div>
+            <tabs :options="tabsConfig" v-model="activeTab">
+                <tab title="Availability">
+                    <?=$this->render('availability/tab-availability');?>
+                </tab>
+                <tab title="Session Length">
+                    <?=$this->render('availability/tab-session-length');?>
+                </tab>
+                <tab title="Display Options">
+                    <?=$this->render('availability/tab-display-options');?>
+                </tab>
+            </tabs>
+        </div>
+    </app>
+</div>
+
+<?=$this->render('components');?>

@@ -1,0 +1,276 @@
+<booking-editor inline-template>
+    <div>
+        <modal @close="closeModal"
+               modal-body-class="modal__body--wide"
+               :active="modalState.isOn()"
+        >
+            <div slot="header">
+                {{ model.id ? 'Edit Booking' : 'Add a New Booking' }}
+                <span v-if="model.id" style="opacity: .5">
+                    ({{ statusTitle }})
+                </span>
+
+                <div class="modal__close modal--right" @click="closeModal" v-if="!closeConfirming">&times;</div>
+                <div class="modal__header-buttons modal--right" v-else>
+                    <input type="button" class="button button-dark-solid" value="Close" @click="forceCloseModal">
+                    <input type="button" class="button" value="Continue Editing" @click="continueEditing">
+                </div>
+            </div>
+
+            <div slot="body" :class="[isDoubleConfirming ? 'disabled' : '']">
+                <div class="row">
+                    <div class="col-6 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Service</div>
+                            <div class="form-row__input">
+                                <vueselect :options="services" v-model="model.service" label="title"></vueselect>
+                                <a href="#" v-if="model.service">Click here to view service details in new tab</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Client</div>
+                            <div class="form-row__input">
+                                <template v-if="isCreatingClient">
+                                    <input type="text" placeholder="Enter full name" class="form-control--wide"/>
+                                    <input type="email" placeholder="Enter client email" class="form-control--wide"/>
+                                    <div class="text-right">
+                                        <div class="button button-outline" @click="isCreatingClient = false">Existing client</div>
+                                        <div class="button button-primary">Create client</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <vueselect :options="[]" v-model="model.client" label="name"></vueselect>
+                                    <div class="text-right">
+                                        <div class="button button-outline" @click="isCreatingClient = true">Create new client</div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Start</div>
+                            <div class="form-row__input">
+                                <datetime-picker class="form-control--wide" v-model="model.start"></datetime-picker>
+                                <div class="form-row__description">
+                                    <div>Universal time: {{ format(model.start) }}</div>
+                                    <div>Client time: {{ format(model.start, model.clientTimezone) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">End</div>
+                            <div class="form-row__input">
+                                <datetime-picker class="form-control--wide" v-model="model.end"></datetime-picker>
+                                <div class="form-row__description">
+                                    <div>Universal time: {{ format(model.end) }}</div>
+                                    <div>Client time: {{ format(model.end, model.clientTimezone) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Client Timezone</div>
+                            <div class="form-row__input">
+                                <select class="form-control--wide" v-model="model.clientTimezone">
+                                    <option value="-12">UTC-12</option>
+                                    <option value="-11.5">UTC-11:30</option>
+                                    <option value="-11">UTC-11</option>
+                                    <option value="-10.5">UTC-10:30</option>
+                                    <option value="-10">UTC-10</option>
+                                    <option value="-9.5">UTC-9:30</option>
+                                    <option value="-9">UTC-9</option>
+                                    <option value="-8.5">UTC-8:30</option>
+                                    <option value="-8">UTC-8</option>
+                                    <option value="-7.5">UTC-7:30</option>
+                                    <option value="-7">UTC-7</option>
+                                    <option value="-6.5">UTC-6:30</option>
+                                    <option value="-6">UTC-6</option>
+                                    <option value="-5.5">UTC-5:30</option>
+                                    <option value="-5">UTC-5</option>
+                                    <option value="-4.5">UTC-4:30</option>
+                                    <option value="-4">UTC-4</option>
+                                    <option value="-3.5">UTC-3:30</option>
+                                    <option value="-3">UTC-3</option>
+                                    <option value="-2.5">UTC-2:30</option>
+                                    <option value="-2">UTC-2</option>
+                                    <option value="-1.5">UTC-1:30</option>
+                                    <option value="-1">UTC-1</option>
+                                    <option value="-0.5">UTC-0:30</option>
+                                    <option value="0">UTC+0</option>
+                                    <option value="0.5">UTC+0:30</option>
+                                    <option value="1">UTC+1</option>
+                                    <option value="1.5">UTC+1:30</option>
+                                    <option value="2">UTC+2</option>
+                                    <option value="2.5">UTC+2:30</option>
+                                    <option value="3">UTC+3</option>
+                                    <option value="3.5">UTC+3:30</option>
+                                    <option value="4">UTC+4</option>
+                                    <option value="4.5">UTC+4:30</option>
+                                    <option value="5">UTC+5</option>
+                                    <option value="5.5">UTC+5:30</option>
+                                    <option value="5.75">UTC+5:45</option>
+                                    <option value="6">UTC+6</option>
+                                    <option value="6.5">UTC+6:30</option>
+                                    <option value="7">UTC+7</option>
+                                    <option value="7.5">UTC+7:30</option>
+                                    <option value="8">UTC+8</option>
+                                    <option value="8.5">UTC+8:30</option>
+                                    <option value="8.75">UTC+8:45</option>
+                                    <option value="9">UTC+9</option>
+                                    <option value="9.5">UTC+9:30</option>
+                                    <option value="10">UTC+10</option>
+                                    <option value="10.5">UTC+10:30</option>
+                                    <option value="11">UTC+11</option>
+                                    <option value="11.5">UTC+11:30</option>
+                                    <option value="12">UTC+12</option>
+                                    <option value="12.75">UTC+12:45</option>
+                                    <option value="13">UTC+13</option>
+                                    <option value="13.75">UTC+13:45</option>
+                                    <option value="14">UTC+14</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Payment Number</div>
+                            <div class="form-row__input">
+                                <input type="text" class="form-control--wide" v-model="model.paymentNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 columns">
+                        <div class="form-row">
+                            <div class="form-row__label form-row__label--no-top">Duration</div>
+                            <div class="form-row__input">
+                                <template v-if="duration">
+                                    {{ duration }}
+                                </template>
+                                <div class="form-row__description form-row__description--inline" v-else>
+                                    Please set start and end time to automatically calculate the duration
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">
+                                Add Notes
+                                <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
+                            </div>
+                            <div class="form-row__input">
+                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 columns">
+                        <div class="form-row form-row--vertical">
+                            <div class="form-row__label">Actions</div>
+                            <template v-if="availableActions.length">
+                                <div class="form-row__input">
+                                    <div v-if="bookingCanBe('in-cart')">
+                                        <label>
+                                            <input type="radio" name="action" value="in-cart" v-model="model.newStatus">
+                                            Set booking to In Cart
+                                        </label>
+                                    </div>
+                                    <div v-if="bookingCanBe('approved')">
+                                        <label>
+                                            <input type="radio" name="action" value="approved" v-model="model.newStatus">
+                                            Approve booking
+                                        </label>
+                                    </div>
+                                    <div v-if="bookingCanBe('draft')">
+                                        <label>
+                                            <input type="radio" name="action" value="draft" v-model="model.newStatus">
+                                            Set booking to Draft
+                                        </label>
+                                    </div>
+                                    <div v-if="bookingCanBe('pending')">
+                                        <label>
+                                            <input type="radio" name="action" value="pending" v-model="model.newStatus">
+                                            Set booking to Pending
+                                        </label>
+                                    </div>
+                                    <div v-if="bookingCanBe('scheduled')">
+                                        <label>
+                                            <input type="radio" name="action" value="scheduled" v-model="model.newStatus">
+                                            Schedule booking
+                                        </label>
+                                    </div>
+                                    <div v-if="bookingCanBe('cancelled')">
+                                        <label>
+                                            <input type="radio" name="action" value="cancelled" v-model="model.newStatus">
+                                            Cancel booking
+                                        </label>
+                                    </div>
+
+                                    <div style="margin-top: 3px">
+                                        <label>
+                                            <input type="radio" name="action" value="" v-model="model.newStatus">
+                                            <span style="opacity: .5">Don't change booking status</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="form-row__description" v-else>
+                                These are no actions to take at this time
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div slot="footer">
+                <template v-if="!removeConfirming">
+                    <div :class="isDoubleConfirming ? 'disabled' : ''">
+                        <template v-if="model.id">
+                            <input type="button" class="button button-alert" value="Delete" style="float: left" @click="removeConfirming = true">
+
+                            <input type="button" class="button" value="Cancel" @click="closeModal">
+                            <input type="button" class="button button-primary" value="Save Changes" @click="saveBooking">
+                        </template>
+                        <template v-else>
+                            <template v-if="isCreateConfirming">
+                                <div class="footer-confirm __wide __right" style="float: left;">
+                                    Are you sure you want to {{ model.newStatus === 'draft' ? 'save this booking as a draft' : 'schedule this booking' }}?
+                                </div>
+                                <input type="button" class="button button-primary"
+                                       :value="model.newStatus === 'draft' ? 'Save Draft' : 'Schedule'"
+                                       @click="confirmBookingCreation"
+                                >
+                                <input type="button" class="button" value="No, continue editing" @click="isCreateConfirming = false">
+                            </template>
+                            <template v-else>
+                                <input type="button" class="button" value="Save Draft" @click="saveNewBooking('draft')">
+                                <input type="button" class="button button-primary" value="Schedule Booking" @click="saveNewBooking('scheduled')">
+                            </template>
+                        </template>
+                    </div>
+                </template>
+                <template v-else>
+<!--                    <modal-confirm :msg="" :buttons="" class="..."></modal-confirm>-->
+                    <div class="footer-confirm __wide __right __alert" style="float: left;">
+                        Are you sure you want to delete this booking? There is no undo option.
+                    </div>
+
+                    <input type="button" class="button button-alert-solid" value="Yes, delete" @click="deleteItem">
+                    <input type="button" class="button" value="Cancel" @click="removeConfirming = false">
+                </template>
+            </div>
+        </modal>
+    </div>
+</booking-editor>

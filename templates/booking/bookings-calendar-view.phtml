@@ -1,0 +1,35 @@
+<bookings-calendar-view :statuses="screenStatuses"
+                        @edit="editBooking"
+                        @create="createBooking"
+                        inline-template
+>
+    <div>
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
+                <button class="fc-button fc-state-default" @click="goToToday">Today</button>
+            </div>
+            <div class="alignright actions" style="padding-right: 0;padding-bottom: .5rem">
+                <select v-model="service">
+                    <option value="all">All Services</option>
+                    <option :value="service.id" v-for="service in services">{{ service.title }}</option>
+                </select>
+                <select v-model="colorScheme">
+                    <option value="status">Booking Status Color Scheme</option>
+                    <option value="service">Services Color Scheme</option>
+                </select>
+            </div>
+            <br class="clear">
+        </div>
+
+        <div class="clear"></div>
+
+        <bookings-calendar :color-scheme="colorScheme"
+                           :bookings="filteredBookings"
+                           ref="calendar"
+                           @period-change="updateBookings"
+                           @booking-click="editBooking"
+                           class="rc-calendar rc-calendar--booking"
+        ></bookings-calendar>
+    </div>
+</bookings-calendar-view>

@@ -1,0 +1,53 @@
+<script type="text/x-template" id="datepicker-template">
+    <div class="form-control datetime-picker-control"
+         @click.self="openDatepicker"
+    >
+        <datepicker v-model="dateValue" :format="dateFormat" ref="datepicker" ref-name="dateInput"
+            placeholder="-- / -- / ----"
+            @opened="datepickerOpened"
+            @selected="dateSelected"
+        ></datepicker>
+        <vue-timepicker v-model="timeValue" format="HH:mm" :hide-clear-button="true" ref="timepicker"></vue-timepicker>
+    </div>
+</script>
+
+<script type="text/x-template" id="switcher-template">
+    <div class="fc-button-group">
+        <button type="button" :class="['fc-button fc-state-default', key === value ? 'fc-state-active' : '']" v-for="(title, key) in buttons"
+            @click="buttonClick(key)"
+        >{{ title }}</button>
+    </div>
+</script>
+
+<script type="text/x-template" id="bool-switcher-template">
+    <div class="bool-switcher" @click="switcherClicked">
+        <div :class="['bool-switcher__button', key === activeButton ? 'bool-switcher__button--active' : '']" v-for="(title, key) in buttons">
+            {{ title }}
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal-transition">
+        <div class="modal" v-if="active">
+            <div :class="['modal__body', this.modalBodyClass]">
+                <div class="modal__header">
+                    <slot name="header"></slot>
+                </div>
+                <div class="modal__content">
+                    <slot name="body"></slot>
+                </div>
+                <div class="modal__footer">
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<script type="text/x-template" id="availability-calendar-template">
+    <div class="rc-calendar rc-calendar--availability">
+        <div ref="calendar"></div>
+        <div class="button-floating">+</div>
+    </div>
+</script>
