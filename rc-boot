@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+$args = [
+    'default.composer.vendor'  => 'rebelcode',
+    'default.composer.type'    => 'library',
+    'default.composer.license' => 'GPL-3.0',
+    'default.composer.author'  => 'RebelCode',
+    'default.composer.email'   => 'dev@rebelcode.com',
+    'default.composer.minstab' => 'dev',
+    'default.composer.phpver'  => '^5.4 | ^7.0',
+    'organization'             => 'RebelCode',
+];
+
+$formattedArgs = [];
+foreach ($args as $k => $v) {
+    $formattedArgs[] = sprintf('-D%1$s="%2$s"', $k, $v);
+}
+
+$command = sprintf('"vendor/bin/phing" %1$s', implode(' ', $formattedArgs));
+
+passthru($command);
