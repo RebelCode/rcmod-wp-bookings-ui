@@ -2,7 +2,6 @@
 
 namespace RebelCode\Bookings\WordPress\Module;
 
-use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 
 /**
@@ -39,27 +38,25 @@ class TemplateManager
     /**
      * TemplateManager constructor.
      *
-     * @param ContainerInterface $c
+     * @param EventManagerInterface $eventManager
      * @param string $prefix
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $c, $prefix = 'eddbk')
+    public function __construct(EventManagerInterface $eventManager, $prefix = 'eddbk')
     {
-        $this->eventManager = $c->get('event-manager');
+        $this->eventManager = $eventManager;
         $this->prefix = $prefix;
     }
 
     /**
      * Register all templates in event manager.
+     *
+     * @param $templates array Array of templates to be registered.
      */
-    public function registerTemplates()
+    public function registerTemplates($templates)
     {
-        $this->_register(array_merge(
-            $this->_getGeneralTemplates(),
-            $this->_getServiceMetaboxTemplates(),
-            $this->_getBookingsTemplates()
-        ));
+        $this->_register($templates);
     }
 
     /**
@@ -83,7 +80,7 @@ class TemplateManager
     protected function _register($templates)
     {
         foreach ($templates as $template) {
-            $templateFilePath = __DIR__ . '/../templates/' . $template . '.phtml';
+            $templateFilePath = WP_BOOKINGS_UI_MODULE_DIR . '/templates/' . $template . '.phtml';
             $actionName = $this->_makeTemplateActionName($template);
 
             $this->eventManager->attach($actionName, function () use ($templateFilePath) {
@@ -116,51 +113,5 @@ class TemplateManager
     protected function _makeTemplateActionName($templatePath)
     {
         return $this->prefix . '_' . $templatePath;
-    }
-
-    /**
-     * General templates.
-     *
-     * @return array
-     */
-    protected function _getGeneralTemplates()
-    {
-        return [
-            'components',
-            'main',
-        ];
-    }
-
-    /**
-     * Service metabox templates.
-     *
-     * @return array
-     */
-    protected function _getServiceMetaboxTemplates()
-    {
-        return [
-            'availability/metabox',
-            'availability/service-availability-editor',
-            'availability/tab-availability',
-            'availability/tab-display-options',
-            'availability/tab-session-length',
-        ];
-    }
-
-    /**
-     * Bookings templates.
-     *
-     * @return array
-     */
-    protected function _getBookingsTemplates()
-    {
-        return [
-            'booking/booking-editor',
-            'booking/bookings-calendar-view',
-            'booking/bookings-list-view',
-            'booking/bookings-page',
-            'booking/general',
-            'booking/screen-options',
-        ];
     }
 }

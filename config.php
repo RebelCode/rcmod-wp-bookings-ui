@@ -27,5 +27,22 @@ return [
             'capability' => 'publish_posts', //publish_bookings
             'menu_slug' => 'eddbk-about'
         ]
+    ],
+    'templates' => [
+        'components',
+        'main',
+
+        'availability/metabox',
+        'availability/service-availability-editor',
+        'availability/tab-availability',
+        'availability/tab-display-options',
+        'availability/tab-session-length',
+
+        'booking/booking-editor',
+        'booking/bookings-calendar-view',
+        'booking/bookings-list-view',
+        'booking/bookings-page',
+        'booking/general',
+        'booking/screen-options',
     ]
 ];
