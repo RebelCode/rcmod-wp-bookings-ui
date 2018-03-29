@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\Wordpress\Module;
+namespace RebelCode\Bookings\WordPress\Module;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;

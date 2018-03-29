@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\Wordpress\Module;
+namespace RebelCode\Bookings\WordPress\Module;
 
 use Dhii\Data\Container\ContainerFactoryInterface;
 use Psr\Container\ContainerInterface;
@@ -88,7 +88,7 @@ class UIModule extends AbstractBaseModule
         /*
          * Add screen options on bookings management page.
          */
-        $eventManager->attach('screen_settings', function($settings, \WP_Screen $screen) use ($c) {
+        $eventManager->attach('screen_settings', function($settings, $screen = null) use ($c) {
             if ($this->bookingsPageId !== $screen->base)
                 return $settings;
 
