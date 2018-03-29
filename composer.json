@@ -1,7 +1,7 @@
 {
     "name": "rebelcode/wp-bookings-ui-module",
     "description": "WP Bookings plugin's UI",
-    "type": "rebelcode-module",
+    "type": "rc-module",
     "license": "GPL-3.0",
     "authors": [
         {
