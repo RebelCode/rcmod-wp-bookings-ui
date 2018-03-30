@@ -24,7 +24,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $this->_initModule(
             $containerFactory,
             'wp_bookings_ui',
-            ['wp_events_manager'],
+            ['wp_event_manager'],
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php')
         );
     }
