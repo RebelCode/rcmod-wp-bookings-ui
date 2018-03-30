@@ -1,12 +1,12 @@
 {
-    "name": "rebelcode/wp-bookings-ui-module",
-    "description": "WP Bookings plugin's UI",
+    "name": "rebelcode/rcmod-wp-bookings-ui",
+    "description": "A RebelCode module that provides the WordPress admin interface for bookings.",
     "type": "rc-module",
     "license": "GPL-3.0",
     "authors": [
         {
             "name": "RebelCode",
-            "email": "roman.lytvynenko@gmail.com"
+            "email": "dev@rebelcode.com"
         }
     ],
     "minimum-stability": "dev",
