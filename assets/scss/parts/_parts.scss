@@ -1,0 +1,45 @@
+@import "sessions";
+
+.tabs-content {
+  padding: .5rem;
+}
+
+.horizontal-tabs {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+
+  margin: 12px -12px 0 -12px;
+  display: flex;
+}
+
+.horizontal-tabs__item {
+  border-right: 1px solid #eee;
+  padding: 8px 22px;
+  cursor: pointer;
+}
+.horizontal-tabs__item._active {
+  font-weight: bold;
+  background-color: #eee;
+  cursor: default;
+}
+
+.flex-row {
+  display: flex;
+}
+
+.input-with-placeholder {
+  display: inline-block;
+  position: relative;
+}
+.input-with-placeholder span {
+  position: absolute;
+  left: 8px;
+  top: 5px;
+  opacity: .8;
+
+  pointer-events: none;
+  user-select: none;
+}
+.input-with-placeholder input {
+  padding-left: 16px;
+}

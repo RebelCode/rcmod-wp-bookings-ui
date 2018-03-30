@@ -3,4 +3,5 @@
 /vendor/
 /test/coverage/
 /test/log/
+/node_modules/
 /build/

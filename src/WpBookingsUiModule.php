@@ -54,6 +54,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
+        $this->_enqueueAssets();
+
         $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
             $this->_adminInit($eventManager, $templateManager);
         });
@@ -61,6 +63,27 @@ class WpBookingsUiModule extends AbstractBaseModule
         $eventManager->attach('admin_menu', function () use ($templateManager) {
             $this->_adminMenu($templateManager);
         });
+    }
+
+    /**
+     * Enqueue all UI assets.
+     */
+    protected function _enqueueAssets()
+    {
+        $assetsConfig = $this->_getConfig()['assets'];
+
+        wp_enqueue_script('rc-app-require', $assetsConfig['require'], [], false, true);
+        wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', $assetsConfig['require_assets']);
+
+        /*
+         * All application components located here
+         */
+        wp_enqueue_script('rc-app', $assetsConfig['app'], [], false, true);
+        wp_enqueue_style('rc-app', $assetsConfig['style']);
+
+        foreach ($assetsConfig['style_deps'] as $styleDep) {
+            wp_enqueue_style('rc-app-require', $styleDep);
+        }
     }
 
     /**

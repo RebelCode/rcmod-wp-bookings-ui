@@ -1,0 +1,67 @@
+.session-length {
+  padding: 16px 0;
+
+  &__options {
+    padding-right: 36px;
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    legend {
+      font-weight: bold;
+      padding-bottom: 6px;
+    }
+  }
+
+  &__validation {
+    font-weight: bold;
+    color: $alert-color;
+    line-height: 2.1;
+    padding-left: 8px;
+  }
+
+  &__buttons {
+  }
+
+  &__footer {
+    padding: 12px 0;
+    display: flex;
+  }
+
+  select {
+    vertical-align: inherit !important;
+  }
+}
+
+.session-bookable {
+  padding-top: 6px;
+
+  &__title {
+    font-weight: bold;
+    padding-bottom: 12px;
+  }
+
+  table {
+    max-width: 230px;
+    width: 100%;
+
+    th {
+      font-weight: normal;
+      text-align: left;
+    }
+
+    td {
+      color: #7a7a7a;
+
+      .dashicons {
+        opacity: .7;
+
+        &:hover {
+          opacity: 1;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

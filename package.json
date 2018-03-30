@@ -1,0 +1,19 @@
+{
+  "name": "booking-plugin",
+  "version": "0.1.0",
+  "description": "Booking plugin application",
+  "scripts": {
+    "watch:css": "./node_modules/.bin/webpack --watch",
+    "build:css": "./node_modules/.bin/webpack -p",
+    "build": "..."
+  },
+  "devDependencies": {
+    "booking-js": "git@github.com:RebelCode/bookings-js.git#56b97e166698b01d63c4836b0f3d731c9b16b873",
+    "css-loader": "^0.28.9",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "fast-sass-loader": "^1.4.0",
+    "node-sass": "^4.7.2",
+    "webpack": "^3.11.0"
+  },
+  "author": "RebelCode"
+}
