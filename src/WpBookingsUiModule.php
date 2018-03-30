@@ -108,7 +108,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_getConfig()['menu']['root']['capability'],
             $this->_getConfig()['menu']['root']['menu_slug'],
             function () use ($templateManager) {
-                return $this->_renderMainPage($templateManager);
+                echo $this->_renderMainPage($templateManager);
             },
             $this->_getConfig()['menu']['root']['icon'],
             $this->_getConfig()['menu']['root']['position']

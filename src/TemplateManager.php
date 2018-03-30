@@ -67,9 +67,11 @@ class TemplateManager
      */
     public function render($template)
     {
-        return $this->eventManager->trigger(
+        /** @var \Dhii\EventManager\Event $event */
+        $event = $this->eventManager->trigger(
             $this->_makeTemplateActionName($template)
         );
+        return $event->getParam('template');
     }
 
     /**
@@ -83,8 +85,8 @@ class TemplateManager
             $templateFilePath = WP_BOOKINGS_UI_MODULE_DIR . '/templates/' . $template . '.phtml';
             $actionName = $this->_makeTemplateActionName($template);
 
-            $this->eventManager->attach($actionName, function () use ($templateFilePath) {
-                return $this->_renderFile($templateFilePath);
+            $this->eventManager->attach($actionName, function ($event) use ($templateFilePath) {
+                $event->setParams(['template' => $this->_renderFile($templateFilePath)]);
             });
         }
     }
