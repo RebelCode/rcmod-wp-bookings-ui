@@ -54,7 +54,9 @@ class WpBookingsUiModule extends AbstractBaseModule
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
-        $this->_enqueueAssets();
+        $eventManager->attach('admin_enqueue_scripts', function () {
+            $this->_enqueueAssets();
+        });
 
         $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
             $this->_adminInit($eventManager, $templateManager);
