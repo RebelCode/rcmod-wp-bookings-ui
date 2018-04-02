@@ -16,17 +16,22 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
+     * @param $key
      * @param ContainerFactoryInterface $containerFactory The factory for creating container instances.
+     * @param $eventManager
+     * @param $eventFactory
      * @throws \Dhii\Exception\InternalException
      */
-    public function __construct(ContainerFactoryInterface $containerFactory)
+    public function __construct($key, ContainerFactoryInterface $containerFactory, $eventManager, $eventFactory)
     {
         $this->_initModule(
             $containerFactory,
-            'wp_bookings_ui',
+            $key,
             ['wp_event_manager'],
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php')
         );
+
+        $this->_initModuleEvents($eventManager, $eventFactory);
     }
 
     /**
@@ -35,8 +40,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     public function setup()
     {
         return $this->_createContainer([
-            'template_manager' => function (ContainerInterface $c) {
-                $templateManager = new TemplateManager($c->get('wp_event_manager'));
+            'template_manager' => function () {
+                $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
                 $templateManager->registerTemplates($this->_getConfig()['templates']);
                 return $templateManager;
             }
@@ -53,6 +58,9 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
+
+        $event = $this->_trigger('run_some_stuff');
+        $result = $event->getParam('result');
 
         $eventManager->attach('admin_enqueue_scripts', function () {
             $this->_enqueueAssets();
