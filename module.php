@@ -5,6 +5,7 @@ use RebelCode\Bookings\WordPress\Module\WpBookingsUiModule;
 
 define('WP_BOOKINGS_UI_MODULE_KEY', 'wp_bookings_ui');
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
+define('WP_BOOKINGS_UI_MODULE_RELATIVE_DIR', 'modules/rcmod-wp-bookings-ui');
 
 return function (ContainerInterface $c) {
     return new WpBookingsUiModule(

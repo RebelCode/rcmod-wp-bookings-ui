@@ -46,14 +46,14 @@ return [
         'booking/screen-options',
     ],
     'assets' => [
-        'app' => plugins_url(WP_BOOKINGS_UI_MODULE_DIR . '/assets/js/main.js', EDDBK_FILE),
+        'app' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/assets/js/main.js', EDDBK_FILE),
 
         'require' => 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.js',
         'require_assets' => [
-            'app' => plugins_url(WP_BOOKINGS_UI_MODULE_DIR . '/dist/js/app.min', EDDBK_FILE),
+            'app' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/node_modules/booking-js/dist/js/app.min', EDDBK_FILE),
         ],
 
-        'style' => plugins_url(WP_BOOKINGS_UI_MODULE_DIR . '/dist/css/app.css', EDDBK_FILE),
+        'style' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/dist/wp-booking-ui.css', EDDBK_FILE),
         'style_deps' => [
             'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css'
         ]
