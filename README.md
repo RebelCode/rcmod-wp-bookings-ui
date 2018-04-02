@@ -7,3 +7,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/rebelcode/rcmod-wp-bookings-ui/v/unstable)](https://packagist.org/packages/rebelcode/rcmod-wp-bookings-ui)
 
 WP Bookings plugin's UI Module
+
+## Run Front Assembling
+To run front assembling just run:
+```bash
+$ npm install # it will install JS dependencies and build `booking-js`
+$ npm run build:css # build UI css
+```
