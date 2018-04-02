@@ -2,7 +2,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 const config = {
-    context: path.resolve(__dirname, 'assets'),
+    context: path.resolve(__dirname, './'),
     entry: {
         app: './assets/scss/app.scss'
     },
