@@ -24,7 +24,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $this->_initModule(
             $containerFactory,
             'wp_bookings_ui',
-            ['wp_event_manager'],
+            [],
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php')
         );
     }
@@ -36,7 +36,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return $this->_createContainer([
             'template_manager' => function (ContainerInterface $c) {
-                $templateManager = new TemplateManager($c->get('wp_event_manager'));
+                $templateManager = new TemplateManager($c->get('event_manager'));
                 $templateManager->registerTemplates($this->_getConfig()['templates']);
                 return $templateManager;
             }
@@ -49,7 +49,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     public function run(ContainerInterface $c = null)
     {
         /* @var EventManagerInterface $eventManager  */
-        $eventManager = $c->get('wp_event_manager');
+        $eventManager = $c->get('event_manager');
 
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
