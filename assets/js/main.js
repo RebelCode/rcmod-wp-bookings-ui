@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function defineServices (di, dependencies) {
     var serviceList = dependencies.app.services(dependencies, document)
+    serviceList['APP_STATE'] = window.EDDBK_APP_STATE
     for (var i = 0; i < Object.keys(serviceList).length; i++) {
       var serviceName = Object.keys(serviceList)[i]
       di.factory(serviceName, serviceList[serviceName])
