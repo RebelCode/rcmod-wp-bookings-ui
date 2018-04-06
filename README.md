@@ -16,7 +16,7 @@ $ npm run build:css # build UI css
 ```
 
 ## Run Application
-This module's front-end logic expects to retrieve initial application state to initialize application. App state must is injected in services. By [default](assets/js/main.js) it is `window.EDDBK_APP_STATE`. 
+This module's front-end logic expects to retrieve initial application state to initialize application. By [default](assets/js/main.js) it is `window.EDDBK_APP_STATE` which should be generated on server using `wp_localize_script(...)`. 
 
 We have two separate pages that require different states to work. Bookings page and one service page. So for this 2 pages we need two different application states. 
 
