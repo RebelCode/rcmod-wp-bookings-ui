@@ -16,17 +16,22 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
+     * @param $key
      * @param ContainerFactoryInterface $containerFactory The factory for creating container instances.
+     * @param $eventManager
+     * @param $eventFactory
      * @throws \Dhii\Exception\InternalException
      */
-    public function __construct(ContainerFactoryInterface $containerFactory)
+    public function __construct($key, ContainerFactoryInterface $containerFactory, $eventManager, $eventFactory)
     {
         $this->_initModule(
             $containerFactory,
-            'wp_bookings_ui',
+            $key,
             [],
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php')
         );
+
+        $this->_initModuleEvents($eventManager, $eventFactory);
     }
 
     /**
@@ -35,8 +40,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     public function setup()
     {
         return $this->_createContainer([
-            'template_manager' => function (ContainerInterface $c) {
-                $templateManager = new TemplateManager($c->get('event_manager'));
+            'template_manager' => function () {
+                $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
                 $templateManager->registerTemplates($this->_getConfig()['templates']);
                 return $templateManager;
             }
@@ -54,6 +59,10 @@ class WpBookingsUiModule extends AbstractBaseModule
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
+        $eventManager->attach('admin_enqueue_scripts', function () {
+            $this->_enqueueAssets();
+        });
+
         $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
             $this->_adminInit($eventManager, $templateManager);
         });
@@ -61,6 +70,27 @@ class WpBookingsUiModule extends AbstractBaseModule
         $eventManager->attach('admin_menu', function () use ($templateManager) {
             $this->_adminMenu($templateManager);
         });
+    }
+
+    /**
+     * Enqueue all UI assets.
+     */
+    protected function _enqueueAssets()
+    {
+        $assetsConfig = $this->_getConfig()['assets'];
+
+        wp_enqueue_script('rc-app-require', $assetsConfig['require'], [], false, true);
+        wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', $assetsConfig['require_assets']);
+
+        /*
+         * All application components located here
+         */
+        wp_enqueue_script('rc-app', $assetsConfig['app'], [], false, true);
+        wp_enqueue_style('rc-app', $assetsConfig['style']);
+
+        foreach ($assetsConfig['style_deps'] as $styleDep) {
+            wp_enqueue_style('rc-app-require', $styleDep);
+        }
     }
 
     /**

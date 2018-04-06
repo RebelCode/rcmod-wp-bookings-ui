@@ -1,0 +1,48 @@
+.form-control {
+  border: 1px solid #ddd;
+  padding: 3px 5px;
+  margin: 1px;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
+}
+
+.datetime-picker-control {
+  cursor: text;
+
+  input {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .vdp-datepicker {
+    display: inline-block;
+    input {
+      width: 80px;
+    }
+    &__calendar {
+      top: calc(100% + 2px);
+      left: -6px;
+    }
+  }
+
+  .time-picker {
+    display: inline-block;
+    font-family: inherit;
+    vertical-align: inherit;
+    input {
+      height: inherit;
+      width: 50px;
+    }
+    .dropdown {
+      top: calc(2.2em + -6px);
+      left: 0px;
+    }
+  }
+}

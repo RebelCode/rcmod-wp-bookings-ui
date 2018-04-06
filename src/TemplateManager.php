@@ -2,7 +2,9 @@
 
 namespace RebelCode\Bookings\WordPress\Module;
 
+use Dhii\Event\EventFactoryInterface;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\Modular\Events\EventsConsumerTrait;
 
 /**
  * Class TemplateManager
@@ -24,9 +26,11 @@ use Psr\EventManager\EventManagerInterface;
 class TemplateManager
 {
     /**
-     * @var EventManagerInterface
+     * Provides all required functionality for working with events.
+     *
+     * @since [*next-version*]
      */
-    protected $eventManager;
+    use EventsConsumerTrait;
 
     /**
      * Template prefix
@@ -39,13 +43,13 @@ class TemplateManager
      * TemplateManager constructor.
      *
      * @param EventManagerInterface $eventManager
+     * @param $eventFactory
      * @param string $prefix
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(EventManagerInterface $eventManager, $prefix = 'eddbk')
+    public function __construct(EventManagerInterface $eventManager, $eventFactory, $prefix = 'eddbk')
     {
-        $this->eventManager = $eventManager;
+        $this->_setEventManager($eventManager);
+        $this->_setEventFactory($eventFactory);
         $this->prefix = $prefix;
     }
 
@@ -67,11 +71,7 @@ class TemplateManager
      */
     public function render($template)
     {
-        /** @var \Dhii\EventManager\Event $event */
-        $event = $this->eventManager->trigger(
-            $this->_makeTemplateActionName($template)
-        );
-        return $event->getParam('template');
+        return $this->_trigger($this->_makeTemplateActionName($template), ['rendered' => ''])->getParam('rendered');
     }
 
     /**
@@ -85,8 +85,8 @@ class TemplateManager
             $templateFilePath = WP_BOOKINGS_UI_MODULE_DIR . '/templates/' . $template . '.phtml';
             $actionName = $this->_makeTemplateActionName($template);
 
-            $this->eventManager->attach($actionName, function ($event) use ($templateFilePath) {
-                $event->setParams(['template' => $this->_renderFile($templateFilePath)]);
+            $this->_attach($actionName, function ($event) use ($templateFilePath) {
+                $event->setParams(['rendered' => $this->_renderFile($templateFilePath)]);
             });
         }
     }

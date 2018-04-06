@@ -3,4 +3,6 @@
 /vendor/
 /test/coverage/
 /test/log/
+/node_modules/
+/dist/_.js
 /build/
