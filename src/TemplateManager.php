@@ -4,6 +4,7 @@ namespace RebelCode\Bookings\WordPress\Module;
 
 use Dhii\Event\EventFactoryInterface;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\Modular\Events\EventsConsumerTrait;
 
 /**
  * Class TemplateManager
@@ -25,14 +26,11 @@ use Psr\EventManager\EventManagerInterface;
 class TemplateManager
 {
     /**
-     * @var EventManagerInterface
+     * Provides all required functionality for working with events.
+     *
+     * @since [*next-version*]
      */
-    protected $eventManager;
-
-    /**
-     * @var EventFactoryInterface
-     */
-    protected $eventFactory;
+    use EventsConsumerTrait;
 
     /**
      * Template prefix
@@ -50,8 +48,8 @@ class TemplateManager
      */
     public function __construct(EventManagerInterface $eventManager, $eventFactory, $prefix = 'eddbk')
     {
-        $this->eventManager = $eventManager;
-        $this->eventFactory = $eventFactory;
+        $this->_setEventManager($eventManager);
+        $this->_setEventFactory($eventFactory);
         $this->prefix = $prefix;
     }
 
@@ -73,10 +71,7 @@ class TemplateManager
      */
     public function render($template)
     {
-        $event = $this->eventFactory->make(['name' => $this->_makeTemplateActionName($template), 'params' => []]);
-        $this->eventManager->trigger($event);
-
-        return $event->getParam('rendered');
+        return $this->_trigger($this->_makeTemplateActionName($template), ['rendered' => ''])->getParam('rendered');
     }
 
     /**
@@ -90,7 +85,7 @@ class TemplateManager
             $templateFilePath = WP_BOOKINGS_UI_MODULE_DIR . '/templates/' . $template . '.phtml';
             $actionName = $this->_makeTemplateActionName($template);
 
-            $this->eventManager->attach($actionName, function ($event) use ($templateFilePath) {
+            $this->_attach($actionName, function ($event) use ($templateFilePath) {
                 $event->setParams(['rendered' => $this->_renderFile($templateFilePath)]);
             });
         }
