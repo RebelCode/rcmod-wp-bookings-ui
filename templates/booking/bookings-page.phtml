@@ -1,18 +1,24 @@
-<bookings-page inline-template>
-    <div class="wrap">
-        <?=$this->render('booking/booking-editor');?>
+<div id="eddbk-bookings-page">
+    <bookings-appliction inline-template>
+        <bookings-page inline-template>
+            <div class="wrap">
+                <?=$this->render('booking/booking-editor');?>
 
-        <h1 class="wp-heading-inline">Bookings</h1>
-        <button class="page-title-action" @click="createBooking">Add New</button>
-        <hr class="wp-header-end">
+                <h1 class="wp-heading-inline">Bookings</h1>
+                <button class="page-title-action" @click="createBooking">Add New</button>
+                <hr class="wp-header-end">
 
-        <tabs v-model="activeView" :options="tabsConfig">
-            <tab title="List View">
-                <?=$this->render('booking/bookings-list-view');?>
-            </tab>
-            <tab title="Calendar View">
-                <?=$this->render('booking/bookings-calendar-view');?>
-            </tab>
-        </tabs>
-    </div>
-</bookings-page>
+                <tabs v-model="activeView" :options="tabsConfig">
+                    <tab title="List View">
+                        <?=$this->render('booking/bookings-list-view');?>
+                    </tab>
+                    <tab title="Calendar View">
+                        <?=$this->render('booking/bookings-calendar-view');?>
+                    </tab>
+                </tabs>
+            </div>
+        </bookings-page>
+    </bookings-appliction>
+</div>
+
+<?=$this->render('components');?>

@@ -61,7 +61,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $eventManager->attach('admin_enqueue_scripts', function () {
             $this->_enqueueAssets();
-        });
+        }, 999);
 
         $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
             $this->_adminInit($eventManager, $templateManager);
@@ -73,10 +73,70 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
+     * Check current screen is screen where EDDBK UI should be rendered.
+     *
+     * @return bool
+     */
+    protected function _onAppPage()
+    {
+        return in_array(get_current_screen()->id, [
+            $this->bookingsPageId,
+            $this->_getConfig()['metabox']['post_type']
+        ]);
+    }
+
+    /**
+     * Check current screen is bookings page.
+     *
+     * @return bool
+     */
+    protected function _onBookingsPage()
+    {
+        return get_current_screen()->id === $this->bookingsPageId;
+    }
+
+    /**
+     * Get app state for booking page.
+     */
+    protected function _getBookingsAppState()
+    {
+        return [];
+    }
+
+    /**
+     * Get app state for service page
+     *
+     * @return array
+     */
+    protected function _getServiceAppState()
+    {
+        $pageId = get_post()->ID;
+
+        return [
+            'availabilities' => $this->_trigger('eddbk_service_availabilities', [
+                'id' => $pageId,
+                'availabilities' => []
+            ])->getParam('availabilities'),
+            'sessions' => $this->_trigger('eddbk_service_sessions', [
+                'id' => $pageId,
+                'sessions' => []
+            ])->getParam('sessions'),
+            'displayOptions' => $this->_trigger('eddbk_service_display_options', [
+                'id' => $pageId,
+                'displayOptions' => []
+            ])->getParam('displayOptions'),
+        ];
+    }
+
+    /**
      * Enqueue all UI assets.
      */
     protected function _enqueueAssets()
     {
+        if (!$this->_onAppPage()) {
+            return;
+        }
+
         $assetsConfig = $this->_getConfig()['assets'];
 
         wp_enqueue_script('rc-app-require', $assetsConfig['require'], [], false, true);
@@ -91,6 +151,10 @@ class WpBookingsUiModule extends AbstractBaseModule
         foreach ($assetsConfig['style_deps'] as $styleDep) {
             wp_enqueue_style('rc-app-require', $styleDep);
         }
+
+        $state = $this->_onBookingsPage() ? $this->_getBookingsAppState() : $this->_getServiceAppState();
+
+        wp_localize_script('rc-app', 'EDDBK_APP_STATE', $state);
     }
 
     /**
@@ -109,7 +173,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_getConfig()['metabox']['id'],
             $this->_getConfig()['metabox']['title'],
             function () use ($templateManager) {
-                return $this->_renderMetabox($templateManager);
+                echo $this->_renderMetabox($templateManager);
             },
             $this->_getConfig()['metabox']['post_type']
         );

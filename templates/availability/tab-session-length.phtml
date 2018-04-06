@@ -52,7 +52,7 @@
                 <tbody is="repeater" :collection="sessions" wrap="tbody">
                 <tr slot-scope="r">
                     <td>{{ r.item.sessionLength }} minutes</td>
-                    <td>$ {{ r.item.price }}.00</td>
+                    <td>$ {{ r.item.price }}</td>
                     <td><span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span></td>
                 </tr>
                 </tbody>

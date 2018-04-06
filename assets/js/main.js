@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex',
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       //
-      uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.0/dist/static/js/uiFramework', // @todo: check and fix
+      // uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.0/dist/static/js/uiFramework', // @todo: check and fix
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender', //fix
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',
@@ -75,7 +75,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function defineServices (di, dependencies) {
     var serviceList = dependencies.app.services(dependencies, document)
-    serviceList['APP_STATE'] = window.EDDBK_APP_STATE
+    serviceList['APP_STATE'] = function () {
+      return window.EDDBK_APP_STATE
+    }
+    serviceList['selectorList'] = function () {
+      return [
+        '#eddbk-bookings-page',
+        '#eddbk-service-page',
+        '#eddbk-bookings-screen-options'
+      ]
+    }
     for (var i = 0; i < Object.keys(serviceList).length; i++) {
       var serviceName = Object.keys(serviceList)[i]
       di.factory(serviceName, serviceList[serviceName])

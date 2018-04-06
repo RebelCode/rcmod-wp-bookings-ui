@@ -38,10 +38,10 @@
                     <div class="form-row__input">
                         <select v-model="model.repeats" style="min-width: 90px">
                             <option value="never">Never</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="yearly">Yearly</option>
+                            <option value="day">Daily</option>
+                            <option value="week">Weekly</option>
+                            <option value="month">Monthly</option>
+                            <option value="year">Yearly</option>
                         </select>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                             <input type="button" class="button button-alert" value="Delete" style="float: left" @click="removeConfirming = true">
                         </template>
                         <input type="button" class="button" value="Cancel" @click="closeModal">
-                        <input type="button" class="button button-primary" value="Save" @click="saveItem">
+                        <input type="button" class="button button-primary" value="Save" @click="saveItem()">
                     </div>
                 </template>
                 <template v-else>
