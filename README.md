@@ -23,7 +23,7 @@ We have two separate pages that require different states to work. Bookings page 
 ### Service Page
 #### State
 Expected structure of **state** on service page (when user open some service for editing):
-```json
+```
 {
   // List of all availabilities for this service.
   "availabilities": [
@@ -63,7 +63,7 @@ Expected structure of **state** on service page (when user open some service for
 ### Bookings Page
 #### State
 Expected structure of **state** on bookings page:
-```json
+```
 {
   // Statuses that should be displayed on screen options
   "screenStatuses": [
