@@ -3,7 +3,7 @@
 return [
     'metabox' => [
         'id' => 'service_booking_settings',
-        'post_type' => 'download',
+        'post_type' => 'post', //'download',
         'title' => __('Booking Options', 'eddbk'),
     ],
     'menu' => [
@@ -50,7 +50,8 @@ return [
 
         'require' => 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.js',
         'require_assets' => [
-            'app' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/node_modules/booking-js/dist/js/app.min', EDDBK_FILE),
+            'app' => plugins_url('/js/dist/js/app.min', RCC_FILE),
+            'uiFramework' => plugins_url('/js/dist/ui-framework/dist/static/js/uiFramework', RCC_FILE),
         ],
 
         'style' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/dist/wp-booking-ui.css', EDDBK_FILE),

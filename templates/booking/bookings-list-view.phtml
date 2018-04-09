@@ -1,29 +1,33 @@
+<code>{{ isLoading }}</code>
 <bookings-list-view @edit="editBooking"
+                    @update-filter="fetch"
+                    :is-loading="isLoading"
                     inline-template>
     <div>
         <list-table
             :columns="columns"
-            :loading="false"
-            :rows="items"
+            :loading="isLoading"
+            :rows="bookings"
             :actions="actions"
             :show-cb="true"
-            :total-pages="5"
-            :total-items="15"
-            :per-page="3"
-            :current-page="1"
+            :total-pages="pagesCount"
+            :total-items="bookingsCount"
+            :per-page="10"
+            :current-page="params.page"
             action-column="date"
             @pagination="goToPage"
             @action:click="onActionClick"
         >
             <template slot="filters">
-                <select>
-                    <option value="All Dates">All months</option>
+                <select v-model="month">
+                    <option selected :value="false">All months</option>
+                    <option :value="number" v-for="number in 12">{{ _month(number) }}</option>
                 </select>
                 <select v-model="service">
-                    <option value="all">All Services</option>
+                    <option :value="false">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.title }}</option>
                 </select>
-                <button class="button">Filter</button>
+                <button class="button" @click="updateFilter">Filter</button>
             </template>
 
             <template slot="date" slot-scope="data">

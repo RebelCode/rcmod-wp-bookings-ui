@@ -100,7 +100,27 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getBookingsAppState()
     {
-        return [];
+        return [
+            /*
+             * Statuses that enabled for filtering bookings.
+             */
+            'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
+                'screenStatuses' => [
+                    "draft", "approved", "scheduled", "pending", "completed"
+                ]
+            ])->getParam('screenStatuses'),
+
+            /*
+             * List of available services.
+             */
+            'services' => $this->_trigger('eddbk_bookings_services', [
+                'services' => []
+            ])->getParam('services'),
+
+            'endpointsConfig' => $this->_trigger('eddbk_bookings_endpoints_config', [
+                'endpointsConfig' => []
+            ])->getParam('endpointsConfig')
+        ];
     }
 
     /**
@@ -113,17 +133,30 @@ class WpBookingsUiModule extends AbstractBaseModule
         $pageId = get_post()->ID;
 
         return [
+            /*
+             * List of availabilities for current service.
+             */
             'availabilities' => $this->_trigger('eddbk_service_availabilities', [
                 'id' => $pageId,
                 'availabilities' => []
             ])->getParam('availabilities'),
+
+            /*
+             * List of available sessions for current service.
+             */
             'sessions' => $this->_trigger('eddbk_service_sessions', [
                 'id' => $pageId,
                 'sessions' => []
             ])->getParam('sessions'),
+
+            /*
+             * Display options settings for current service.
+             */
             'displayOptions' => $this->_trigger('eddbk_service_display_options', [
                 'id' => $pageId,
-                'displayOptions' => []
+                'displayOptions' => [
+                    'useCustomerTimezone' => false
+                ]
             ])->getParam('displayOptions'),
         ];
     }
@@ -181,12 +214,22 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Add screen options on bookings management page.
          */
-        $eventManager->attach('screen_settings', function($settings, $screen = null) use ($templateManager) {
-            if ($this->bookingsPageId !== $screen->base)
+        add_filter('screen_settings', function( $settings, \WP_Screen $screen ) use ($templateManager) {
+            if (!$this->_onBookingsPage())
                 return $settings;
 
             return $this->_renderBookingsScreenOptions($templateManager);
-        });
+        }, 10, 2);
+
+        /*
+         * @todo: this is not working as expected (nothing happens).
+         */
+//        $this->_attach('screen_settings', function ($event) use ($templateManager) {
+//            if (!$this->_onBookingsPage())
+//                return $event->getParam(0);
+//
+//            return $this->_renderBookingsScreenOptions($templateManager);
+//        }, 10);
     }
 
     /**

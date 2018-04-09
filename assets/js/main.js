@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.4/vue',
       vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex',
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
+      axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
       //
       // uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.0/dist/static/js/uiFramework', // @todo: check and fix
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender', //fix
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'bottle',
     'vue',
     'vuex',
+    'axios',
     'calendar',
     'vueselect',
     'datetimePicker',
