@@ -117,9 +117,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'services' => []
             ])->getParam('services'),
 
-            'endpointsConfig' => $this->_trigger('eddbk_bookings_endpoints_config', [
-                'endpointsConfig' => []
-            ])->getParam('endpointsConfig')
+            'endpointsConfig' => $this->_getConfig()['endpointsConfig']
         ];
     }
 

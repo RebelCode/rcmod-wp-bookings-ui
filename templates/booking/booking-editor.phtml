@@ -1,4 +1,8 @@
-<booking-editor inline-template>
+<booking-editor
+        @updated="fetch"
+        @delete="deleteBooking(model, false)"
+        inline-template
+>
     <div>
         <modal @close="closeModal"
                modal-body-class="modal__body--wide"
@@ -33,17 +37,17 @@
                             <div class="form-row__label">Client</div>
                             <div class="form-row__input">
                                 <template v-if="isCreatingClient">
-                                    <input type="text" placeholder="Enter full name" class="form-control--wide"/>
-                                    <input type="email" placeholder="Enter client email" class="form-control--wide"/>
+                                    <input type="text" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
+                                    <input type="email" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide"/>
                                     <div class="text-right">
                                         <div class="button button-outline" @click="isCreatingClient = false">Existing client</div>
-                                        <div class="button button-primary">Create client</div>
+                                        <div class="button button-primary" @click="saveNewClient">Create client</div>
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <vueselect :options="[]" v-model="model.client" label="name"></vueselect>
+                                    <vueselect :options="foundClients" v-model="model.client" label="name" :on-search="onClientSearch"/>
                                     <div class="text-right">
-                                        <div class="button button-outline" @click="isCreatingClient = true">Create new client</div>
+                                        <div class="button button-outline" @click="createClient">Create new client</div>
                                     </div>
                                 </template>
                             </div>
@@ -267,7 +271,7 @@
                         Are you sure you want to delete this booking? There is no undo option.
                     </div>
 
-                    <input type="button" class="button button-alert-solid" value="Yes, delete" @click="deleteItem">
+                    <input type="button" class="button button-alert-solid" value="Yes, delete" @click="deleteBooking">
                     <input type="button" class="button" value="Cancel" @click="removeConfirming = false">
                 </template>
             </div>

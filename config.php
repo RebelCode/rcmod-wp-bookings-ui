@@ -58,5 +58,35 @@ return [
         'style_deps' => [
             'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css'
         ]
+    ],
+    'endpointsConfig' => [
+        'bookings' => [
+            'fetch' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings',
+            ],
+            'update' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_update',
+            ],
+            'create' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_create',
+            ],
+            'delete' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_delete',
+            ]
+        ],
+        'clients' => [
+            'fetch' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_clients',
+            ],
+            'create' => [
+                'method' => 'post',
+                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_clients_create',
+            ]
+        ]
     ]
 ];

@@ -1,6 +1,7 @@
-<code>{{ isLoading }}</code>
 <bookings-list-view @edit="editBooking"
+                    @delete="deleteBooking"
                     @update-filter="fetch"
+                    @ready="clearBookings"
                     :is-loading="isLoading"
                     inline-template>
     <div>

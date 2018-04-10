@@ -1,6 +1,8 @@
 <bookings-calendar-view :statuses="screenStatuses"
                         @edit="editBooking"
                         @create="createBooking"
+                        @ready="clearBookings"
+                        @update-filter="fetch"
                         inline-template
 >
     <div>
@@ -30,6 +32,6 @@
                            @period-change="updateBookings"
                            @booking-click="editBooking"
                            class="rc-calendar rc-calendar--booking"
-        ></bookings-calendar>
+        />
     </div>
 </bookings-calendar-view>
