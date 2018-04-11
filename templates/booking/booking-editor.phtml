@@ -1,6 +1,6 @@
 <booking-editor
         @updated="fetch"
-        @delete="deleteBooking(model, false)"
+        @delete="deleteBooking"
         inline-template
 >
     <div>
@@ -41,7 +41,7 @@
                                     <input type="email" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide"/>
                                     <div class="text-right">
                                         <div class="button button-outline" @click="isCreatingClient = false">Existing client</div>
-                                        <div class="button button-primary" @click="saveNewClient">Create client</div>
+                                        <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
                                     </div>
                                 </template>
                                 <template v-else>
@@ -242,21 +242,25 @@
                 <template v-if="!removeConfirming">
                     <div :class="isDoubleConfirming ? 'disabled' : ''">
                         <template v-if="model.id">
-                            <input type="button" class="button button-alert" value="Delete" style="float: left" @click="removeConfirming = true">
+                            <input type="button" class="button button-alert" value="Delete" style="float: left" @click="confirmBookingDeletion">
 
                             <input type="button" class="button" value="Cancel" @click="closeModal">
                             <input type="button" class="button button-primary" value="Save Changes" @click="saveBooking">
                         </template>
                         <template v-else>
                             <template v-if="isCreateConfirming">
-                                <div class="footer-confirm __wide __right" style="float: left;">
-                                    Are you sure you want to {{ model.newStatus === 'draft' ? 'save this booking as a draft' : 'schedule this booking' }}?
+                                <div class="footer-confirm">
+                                    <div class="footer-confirm__message __right">
+                                        Are you sure you want to {{ model.newStatus === 'draft' ? 'save this booking as a draft' : 'schedule this booking' }}?
+                                    </div>
+                                    <div class="footer-confirm__buttons">
+                                        <input type="button" class="button button-primary"
+                                               :value="model.newStatus === 'draft' ? 'Save Draft' : 'Schedule'"
+                                               @click="confirmBookingCreation"
+                                        >
+                                        <input type="button" class="button" value="No, continue editing" @click="isCreateConfirming = false">
+                                    </div>
                                 </div>
-                                <input type="button" class="button button-primary"
-                                       :value="model.newStatus === 'draft' ? 'Save Draft' : 'Schedule'"
-                                       @click="confirmBookingCreation"
-                                >
-                                <input type="button" class="button" value="No, continue editing" @click="isCreateConfirming = false">
                             </template>
                             <template v-else>
                                 <input type="button" class="button" value="Save Draft" @click="saveNewBooking('draft')">
@@ -266,13 +270,15 @@
                     </div>
                 </template>
                 <template v-else>
-<!--                    <modal-confirm :msg="" :buttons="" class="..."></modal-confirm>-->
-                    <div class="footer-confirm __wide __right __alert" style="float: left;">
-                        Are you sure you want to delete this booking? There is no undo option.
+                    <div class="footer-confirm">
+                        <div class="footer-confirm__message __wide __right __alert">
+                            Are you sure you want to delete this booking? There is no undo option.
+                        </div>
+                        <div class="footer-confirm__buttons">
+                            <button :class="['button button-alert-solid', isDeleting ? 'loading-button' : '']" @click="deleteBooking">Yes, delete</button>
+                            <input type="button" class="button" value="Cancel" @click="removeConfirming = false">
+                        </div>
                     </div>
-
-                    <input type="button" class="button button-alert-solid" value="Yes, delete" @click="deleteBooking">
-                    <input type="button" class="button" value="Cancel" @click="removeConfirming = false">
                 </template>
             </div>
         </modal>

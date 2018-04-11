@@ -2,10 +2,11 @@
                         @edit="editBooking"
                         @create="createBooking"
                         @ready="clearBookings"
+                        :is-loading="isLoading"
                         @update-filter="fetch"
                         inline-template
 >
-    <div>
+    <div :class="isLoading ? 'loading-container' : ''">
         <div class="tablenav top">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>

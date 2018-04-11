@@ -4,13 +4,13 @@
                     @ready="clearBookings"
                     :is-loading="isLoading"
                     inline-template>
-    <div>
+    <div :class="isLoading ? 'loading-container' : ''">
         <list-table
             :columns="columns"
-            :loading="isLoading"
             :rows="bookings"
             :actions="actions"
-            :show-cb="true"
+            :show-cb="false"
+            :bulk-actions="[]"
             :total-pages="pagesCount"
             :total-items="bookingsCount"
             :per-page="10"
@@ -36,6 +36,7 @@
                     <strong>{{ humanizeDate(data.row.start) }}</strong>
                 </a>
                 <span style="opacity: .6; margin-left: 4px">ID: {{ data.row.id }}</span>
+                <span class="loading-inline" v-if="data.row.isDeleting"></span>
             </template>
 
             <template slot="client" slot-scope="data">
