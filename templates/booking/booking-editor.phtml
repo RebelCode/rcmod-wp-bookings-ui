@@ -45,7 +45,11 @@
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <vueselect :options="foundClients" v-model="model.client" label="name" :on-search="onClientSearch"/>
+                                    <vueselect :options="foundClients" v-model="model.client" label="name" :on-search="onClientSearch">
+                                        <template slot="spinner" slot-scope="options">
+                                            <div class="loading-inline" v-if="isClientsLoading"></div>
+                                        </template>
+                                    </vueselect>
                                     <div class="text-right">
                                         <div class="button button-outline" @click="createClient">Create new client</div>
                                     </div>
@@ -245,7 +249,7 @@
                             <input type="button" class="button button-alert" value="Delete" style="float: left" @click="confirmBookingDeletion">
 
                             <input type="button" class="button" value="Cancel" @click="closeModal">
-                            <input type="button" class="button button-primary" value="Save Changes" @click="saveBooking">
+                            <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']" @click="saveBooking">Save Changes</button>
                         </template>
                         <template v-else>
                             <template v-if="isCreateConfirming">
@@ -254,10 +258,9 @@
                                         Are you sure you want to {{ model.newStatus === 'draft' ? 'save this booking as a draft' : 'schedule this booking' }}?
                                     </div>
                                     <div class="footer-confirm__buttons">
-                                        <input type="button" class="button button-primary"
-                                               :value="model.newStatus === 'draft' ? 'Save Draft' : 'Schedule'"
-                                               @click="confirmBookingCreation"
-                                        >
+                                        <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
+                                                @click="confirmBookingCreation"
+                                        >{{ model.newStatus === 'draft' ? 'Save Draft' : 'Schedule' }}</button>
                                         <input type="button" class="button" value="No, continue editing" @click="isCreateConfirming = false">
                                     </div>
                                 </div>
