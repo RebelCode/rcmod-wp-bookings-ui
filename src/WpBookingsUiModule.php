@@ -59,8 +59,12 @@ class WpBookingsUiModule extends AbstractBaseModule
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
-        $eventManager->attach('admin_enqueue_scripts', function () {
-            $this->_enqueueAssets();
+        $assetsContainer = $this->_getContainerFactory()->make([
+            'definitions' => $this->_getConfig()['assets']
+        ]);
+
+        $eventManager->attach('admin_enqueue_scripts', function () use ($assetsContainer) {
+            $this->_enqueueAssets($assetsContainer);
         }, 999);
 
         $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
@@ -161,25 +165,29 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Enqueue all UI assets.
+     *
+     * @param ContainerInterface $c Assets container
      */
-    protected function _enqueueAssets()
+    protected function _enqueueAssets(ContainerInterface $c)
     {
         if (!$this->_onAppPage()) {
             return;
         }
 
-        $assetsConfig = $this->_getConfig()['assets'];
+        wp_enqueue_script('rc-app-require', $c->get('require'), [], false, true);
 
-        wp_enqueue_script('rc-app-require', $assetsConfig['require'], [], false, true);
-        wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', $assetsConfig['require_assets']);
+        wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
+            'app' => $c->get('ui-module::dist/js/app.min.js'),
+            'uiFramework' => $c->get('ui-module::dist/js/uiFramework.min.js')
+        ]);
 
         /*
          * All application components located here
          */
-        wp_enqueue_script('rc-app', $assetsConfig['app'], [], false, true);
-        wp_enqueue_style('rc-app', $assetsConfig['style']);
+        wp_enqueue_script('rc-app', $c->get('ui-module::assets/js/main.js'), [], false, true);
+        wp_enqueue_style('rc-app', $c->get('ui-module::dist/wp-booking-ui.css'));
 
-        foreach ($assetsConfig['style_deps'] as $styleDep) {
+        foreach ($c->get('style_deps') as $styleDep) {
             wp_enqueue_style('rc-app-require', $styleDep);
         }
 
