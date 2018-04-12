@@ -2,11 +2,15 @@
     <div class="form-control datetime-picker-control"
          @click.self="openDatepicker"
     >
-        <datepicker v-model="dateValue" :format="dateFormat" ref="datepicker" ref-name="dateInput"
-            placeholder="-- / -- / ----"
-            @opened="datepickerOpened"
-            @selected="dateSelected"
-        ></datepicker>
+        <datepicker v-model="dateValue"
+                    :format="dateFormat"
+                    ref="datepicker"
+                    ref-name="dateInput"
+                    :disabled="disabled"
+                    placeholder="-- / -- / ----"
+                    @opened="datepickerOpened"
+                    @selected="dateSelected"
+        />
         <vue-timepicker v-model="timeValue" format="HH:mm" :hide-clear-button="true" ref="timepicker"></vue-timepicker>
     </div>
 </script>

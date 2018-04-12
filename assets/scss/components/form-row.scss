@@ -63,6 +63,13 @@
       padding-left: 3px;
       display: inline-block;
     }
+
+    &--small {
+      padding-top: 5px;
+      font-weight: normal;
+      font-size: .8em;
+      opacity: 0.5;
+    }
   }
 
   &__label {

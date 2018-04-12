@@ -65,7 +65,7 @@
                             <div class="form-row__label">Start</div>
                             <div class="form-row__input">
                                 <datetime-picker class="form-control--wide" v-model="model.start"></datetime-picker>
-                                <div class="form-row__description">
+                                <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
                                     <div>Client time: {{ format(model.start, model.clientTimezone) }}</div>
                                 </div>
@@ -76,8 +76,8 @@
                         <div class="form-row form-row--vertical">
                             <div class="form-row__label">End</div>
                             <div class="form-row__input">
-                                <datetime-picker class="form-control--wide" v-model="model.end"></datetime-picker>
-                                <div class="form-row__description">
+                                <datetime-picker class="form-control--wide" v-model="model.end" :disabled-before="model.start"/>
+                                <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.end) }}</div>
                                     <div>Client time: {{ format(model.end, model.clientTimezone) }}</div>
                                 </div>

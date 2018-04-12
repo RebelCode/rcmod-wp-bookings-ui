@@ -8,7 +8,13 @@
 }
 
 .datetime-picker-control {
-  cursor: text;
+  cursor: default !important;
+  &:hover {
+    cursor: default !important;
+  }
+  input {
+    cursor: default !important;
+  }
 
   input {
     border: none;
@@ -29,6 +35,13 @@
     &__calendar {
       top: calc(100% + 2px);
       left: -6px;
+    }
+    .cell.today {
+      border: 1px solid #4bd;
+    }
+    .disabled:after {
+      height: auto;
+      background-color: inherit;
     }
   }
 
