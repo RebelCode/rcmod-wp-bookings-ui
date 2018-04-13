@@ -4,11 +4,11 @@
             <?=$this->render('availability/service-availability-editor');?>
             <div>
                 <label class="selectit">
-                    <input value="1" type="checkbox" name="enable_booking" id="enable_booking" checked>
+                    <input value="1" type="checkbox" name="enable_booking" id="enable_booking" v-model="enableBookings">
                     Enable booking for this download
                 </label>
             </div>
-            <tabs :options="tabsConfig" v-model="activeTab">
+            <tabs :options="tabsConfig" v-model="activeTab" v-if="enableBookings">
                 <tab title="Availability">
                     <?=$this->render('availability/tab-availability');?>
                 </tab>
