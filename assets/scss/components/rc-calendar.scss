@@ -9,6 +9,9 @@
   .fc-widget-content.fc-today {
     background: $white !important;
   }
+  .fc-event {
+    cursor: pointer;
+  }
 
   &--booking {
     padding: 1rem;
