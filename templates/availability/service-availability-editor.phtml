@@ -24,9 +24,11 @@
                 <div class="form-row">
                     <div class="form-row__label">Available time</div>
                     <div class="form-row__input">
-                        <vue-timepicker v-model="fromTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"></vue-timepicker>
+                        <time-picker v-model="fromTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"></time-picker>
                         <span class="form-row__word">to</span>
-                        <vue-timepicker v-model="toTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"></vue-timepicker>
+                        <time-picker v-model="toTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"
+                                     :disabled-to="fromTimeModel"
+                        ></time-picker>
 
                         <label for="all-day" class="form-row__word">
                             <input type="checkbox" id="all-day" v-model="model.isAllDay"> All day

@@ -3,12 +3,24 @@
 namespace RebelCode\Bookings\WordPress\Module;
 
 use Dhii\Data\Container\ContainerFactoryInterface;
+use Dhii\Data\Container\ContainerGetCapableTrait;
+use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
+use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
+use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 
 class WpBookingsUiModule extends AbstractBaseModule
 {
+    use ContainerGetCapableTrait;
+
+    use CreateContainerExceptionCapableTrait;
+
+    use CreateNotFoundExceptionCapableTrait;
+
+    use NormalizeKeyCapableTrait;
+
     private $bookingsPageId;
 
     /**
@@ -60,7 +72,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $templateManager = $c->get('template_manager');
 
         $assetsContainer = $this->_getContainerFactory()->make([
-            'definitions' => $this->_getConfig()['assets']
+            'definitions' => $this->_containerGet($this->_getConfig(), 'assets')
         ]);
 
         $eventManager->attach('admin_enqueue_scripts', function () use ($assetsContainer) {
@@ -177,15 +189,15 @@ class WpBookingsUiModule extends AbstractBaseModule
         wp_enqueue_script('rc-app-require', $c->get('require'), [], false, true);
 
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
-            'app' => $c->get('ui-module::dist/js/app.min.js'),
-            'uiFramework' => $c->get('ui-module::dist/js/uiFramework.min.js')
+            'app' => $c->get('bookings_ui/dist/js/app.min.js'),
+            'uiFramework' => $c->get('bookings_ui/dist/js/uiFramework.min.js')
         ]);
 
         /*
          * All application components located here
          */
-        wp_enqueue_script('rc-app', $c->get('ui-module::assets/js/main.js'), [], false, true);
-        wp_enqueue_style('rc-app', $c->get('ui-module::dist/wp-booking-ui.css'));
+        wp_enqueue_script('rc-app', $c->get('bookings_ui/assets/js/main.js'), [], false, true);
+        wp_enqueue_style('rc-app', $c->get('bookings_ui/dist/wp-booking-ui.css'));
 
         foreach ($c->get('style_deps') as $styleDep) {
             wp_enqueue_style('rc-app-require', $styleDep);

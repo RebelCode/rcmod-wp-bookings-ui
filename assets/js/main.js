@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex',
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
+      humanizeDuration: 'https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.14.0/humanize-duration.min',
       //
       // uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.0/dist/static/js/uiFramework', // @todo: check and fix
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender', //fix
@@ -57,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'lodash',
     'moment',
     'cjs!fastDeepEqual',
-    'cjs!wpListTable'
+    'cjs!wpListTable',
+    'humanizeDuration'
   ]
 
   require(dependenciesList, function () {
