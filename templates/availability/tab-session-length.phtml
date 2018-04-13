@@ -8,8 +8,8 @@
                            ref="sessionLength"
                            data-validation-error="Please enter a session length bigger than 0."
                     >
-                    <select>
-                        <option value="" selected>mins</option>
+                    <select v-model="sessionTimeUnit">
+                        <option :value="unit.seconds" v-for="unit in timeUnits">{{ unit.title }}</option>
                     </select>
                 </fieldset>
                 <fieldset class="session-length__options">
@@ -51,7 +51,7 @@
                 </thead>
                 <tbody is="repeater" :collection="sessions" wrap="tbody">
                 <tr slot-scope="r">
-                    <td>{{ r.item.sessionLength }} minutes</td>
+                    <td>{{ humanize(r.item.sessionLength) }}</td>
                     <td>$ {{ r.item.price }}</td>
                     <td><span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span></td>
                 </tr>
