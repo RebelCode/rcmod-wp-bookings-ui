@@ -1,14 +1,13 @@
 <script type="text/x-template" id="bookings-filter-template">
     <div>
-        <ul class="subsubsub">
-            <li class="all">
-                <a href="edit.php?post_type=post" class="current" aria-current="page">All <span class="count">({{ bookingsCount }})</span>
+        <selection-list :collection="items" wrap="ul" class="subsubsub" v-model="statusModel">
+            <li :class="r.item.id" slot-scope="r">
+                <a @click="r.select(r.item)" href="#" :class="[r.isItemSelected(r.item) ? 'current' : '']">{{ r.item.title }}
+                    <span class="count" v-if="r.item.count">({{ r.item.count }})</span>
                 </a>
-                <!--                    |-->
+                <span class="list-sep">|</span>
             </li>
-            <!--                <li class="publish"><a href="edit.php?post_status=publish&amp;post_type=post">Published <span-->
-            <!--                                class="count">(2)</span></a></li>-->
-        </ul>
+        </selection-list>
         <p class="search-box">
             <label class="screen-reader-text" for="bookings-search-input">
                 Search Bookings:

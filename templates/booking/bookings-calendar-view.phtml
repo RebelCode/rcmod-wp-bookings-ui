@@ -7,15 +7,15 @@
                         inline-template
 >
     <div :class="isLoading ? 'loading-container' : ''">
-        <bookings-filter @submit="updateFilter" :search-string.sync="searchString"></bookings-filter>
+        <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <div class="tablenav top">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
                 <button class="fc-button fc-state-default" @click="goToToday">Today</button>
             </div>
             <div class="alignright actions" style="padding-right: 0;padding-bottom: .5rem">
-                <select v-model="service">
-                    <option value="all">All Services</option>
+                <select v-model="service" @change="updateFilter">
+                    <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.title }}</option>
                 </select>
                 <select v-model="colorScheme">
@@ -29,7 +29,7 @@
         <div class="clear"></div>
 
         <bookings-calendar :color-scheme="colorScheme"
-                           :bookings="filteredBookings"
+                           :bookings="bookings"
                            ref="calendar"
                            @period-change="updateBookings"
                            @booking-click="editBooking"

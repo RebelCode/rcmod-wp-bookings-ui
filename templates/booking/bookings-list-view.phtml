@@ -5,12 +5,7 @@
                     :is-loading="isLoading"
                     inline-template>
     <div :class="isLoading ? 'loading-container' : ''">
-        <div>
-            <code>
-                {{ searchString }}
-            </code>
-        </div>
-        <bookings-filter @submit="updateFilter" :search-string.sync="searchString"></bookings-filter>
+        <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <list-table
             :columns="columns"
             :rows="bookings"
@@ -31,7 +26,7 @@
                     <option :value="number" v-for="number in 12">{{ _month(number) }}</option>
                 </select>
                 <select v-model="service">
-                    <option :value="false">All Services</option>
+                    <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.title }}</option>
                 </select>
                 <button class="button" @click="updateFilter">Filter</button>
