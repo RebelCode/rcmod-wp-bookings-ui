@@ -87,7 +87,13 @@ Here is endpoints required for bookings page. Paths are not real, this is just d
 
 ##### Bookings
  
-`GET /booking` - Retrieve list of bookings. It should accept next parameters to filter result:  
+`GET /booking` - Retrieve **list of bookings, screen statuses list with items count for each status, filtered items count**. It should accept next parameters to filter result:
+
+Both views:
+- `search` - Search string to filter bookings by it. Allows to filter bookings via client name or client email address. If empty - no searching happens. For example: `client@rebelcode.com`,
+- `service` - Service to filter by it. If empty - no service filtering happens. For example: `1`,
+- `statuses` - Enabled screen statues to filter bookings by them. For example: `draft,scheduled`,
+- `status` - Current status to filter. For example: `all` or `draft`.  
 
 Calendar filtering:
 - `start` - Start date to get bookings. For example: `"2017-07-11"`,
@@ -95,10 +101,7 @@ Calendar filtering:
 
 List view filtering:   
 - `page` - Page number for pagination. For exmple: `1`,
-- `service` - Service to filter by it. If empty - no service filtering happens. For example: `1`,
-- `month` - Month number to filter bookings by it. If empty - no month filtering happens. For example: `1`,
-- `search` - Search string to filter bookings by it. Allows to filter bookings via client name or client email address. If empty - no searching happens. For example: `client@rebelcode.com`,
-- `statuses` - Statues to filter bookings by them. For example: `draft,scheduled`.
+- `month` - Month number to filter bookings by it. If empty - no month filtering happens. For example: `1`.
 
 `POST /booking` - Create one booking.
 
