@@ -36,13 +36,6 @@
       top: calc(100% + 2px);
       left: -6px;
     }
-    .cell.today {
-      border: 1px solid #4bd;
-    }
-    .disabled:after {
-      height: auto;
-      background-color: inherit;
-    }
   }
 
   .time-picker {
@@ -57,5 +50,16 @@
       top: calc(2.2em + -6px);
       left: 0px;
     }
+  }
+}
+
+.vdp-datepicker {
+  .cell.today {
+    border: 1px solid #4bd;
+  }
+  .disabled:after {
+    height: auto;
+    width: auto;
+    background-color: inherit;
   }
 }

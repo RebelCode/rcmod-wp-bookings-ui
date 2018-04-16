@@ -17,7 +17,9 @@
                 <div class="form-row">
                     <div class="form-row__label">Starting from</div>
                     <div class="form-row__input">
-                        <datepicker name="fromDate" placeholder="-- / -- / ----" format="dd/MM/yyyy" v-model="model.fromDate" style="width: 90px"></datepicker>
+                        <datepicker name="fromDate" placeholder="-- / -- / ----" format="dd/MM/yyyy" v-model="model.fromDate" style="width: 90px"
+                            :disabled="{to: currentDay}"
+                        ></datepicker>
 <!--                        <input type="text" placeholder="-- / -- / ----" v-model="model.fromDate" style="width: 90px">-->
                     </div>
                 </div>
@@ -101,7 +103,10 @@
                             <label for="ends-on" style="width: 90px; display: inline-block">
                                 <input type="radio" id="ends-on" value="onDate" v-model="model.repeatsEnds"> On
                             </label>
-                            <datepicker name="repeatsEndsDate" v-model="model.repeatsEndsDate" placeholder="-- / -- / ----" format="dd/MM/yyyy" style="width: 90px"></datepicker>
+                            <datepicker name="repeatsEndsDate" v-model="model.repeatsEndsDate" placeholder="-- / -- / ----" format="dd/MM/yyyy"
+                                        style="width: 90px"
+                                        :disabled="{to: availabilityStart}"
+                            ></datepicker>
                         </div>
                     </div>
                 </div>
@@ -121,7 +126,11 @@
                         </div>
 
                         <div class="exclusions-datepicker" v-if="exclusionsPickerVisible">
-                            <datepicker :inline="true" :highlighted="excludesDatesModels" @selected="excludeDateSelected" ref="exclusions"></datepicker>
+                            <datepicker :inline="true"
+                                        :highlighted="excludesDatesModels"
+                                        @selected="excludeDateSelected"
+                                        ref="exclusions"
+                            ></datepicker>
                         </div>
 
                         <repeater :collection="excludesDatesCollection" class="exclusions-list" v-if="model.excludesDates.length">
