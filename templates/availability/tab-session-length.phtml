@@ -42,21 +42,32 @@
         <div class="session-bookable">
             <div class="session-bookable__title">Bookable session lengths and prices for <u>Teeth Whitening</u>.</div>
 
-            <table v-if="sessions.getItems().length">
-                <thead>
-                <tr>
-                    <th>Session length</th>
-                    <th>Price</th>
-                </tr>
-                </thead>
-                <tbody is="repeater" :collection="sessions" wrap="tbody">
-                <tr slot-scope="r">
-                    <td>{{ humanize(r.item.sessionLength) }}</td>
-                    <td>$ {{ r.item.price }}</td>
-                    <td><span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="session-items" v-if="sessions.getItems().length">
+                <div class="session-items__header">
+                    <div class="session-head">
+                        <div class="session-item__length">
+                            Session length
+                        </div>
+                        <div class="session-item__price">
+                            Price
+                        </div>
+                        <div class="session-item__action"></div>
+                    </div>
+                </div>
+                <repeater :collection="sessions" class="session-items__holder">
+                    <div class="session-item" slot-scope="r">
+                        <div class="session-item__length">
+                            {{ humanize(r.item.sessionLength) }}
+                        </div>
+                        <div class="session-item__price">
+                            $ {{ r.item.price }}
+                        </div>
+                        <div class="session-item__action">
+                            <span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span>
+                        </div>
+                    </div>
+                </repeater>
+            </div>
         </div>
     </div>
 </session-length>

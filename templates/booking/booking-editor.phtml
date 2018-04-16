@@ -51,7 +51,7 @@
                                         </template>
                                     </vueselect>
                                     <div class="text-right">
-                                        <div class="button button-outline" @click="createClient">Create new client</div>
+                                        <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
                                     </div>
                                 </template>
                             </div>
