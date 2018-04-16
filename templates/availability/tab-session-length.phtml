@@ -16,7 +16,8 @@
                     <legend>Price</legend>
                     <div class="input-with-placeholder">
                         <span>$</span>
-                        <input type="number" step="1" min="1" max="59" placeholder="20.00" v-model="sessionDefault.price"
+                        <input type="number" step="1" min="1" placeholder="20.00" v-model="sessionDefault.price"
+                               style="width: 80px"
                                ref="price"
                                data-validation-error="Please enter a session price. If this session duration is free, enter 0."
                         >
