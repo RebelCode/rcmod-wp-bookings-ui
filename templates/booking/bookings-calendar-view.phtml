@@ -7,6 +7,7 @@
                         inline-template
 >
     <div :class="isLoading ? 'loading-container' : ''">
+        <bookings-filter @submit="updateFilter" :search-string.sync="searchString"></bookings-filter>
         <div class="tablenav top">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>

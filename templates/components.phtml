@@ -1,3 +1,24 @@
+<script type="text/x-template" id="bookings-filter-template">
+    <div>
+        <ul class="subsubsub">
+            <li class="all">
+                <a href="edit.php?post_type=post" class="current" aria-current="page">All <span class="count">({{ bookingsCount }})</span>
+                </a>
+                <!--                    |-->
+            </li>
+            <!--                <li class="publish"><a href="edit.php?post_status=publish&amp;post_type=post">Published <span-->
+            <!--                                class="count">(2)</span></a></li>-->
+        </ul>
+        <p class="search-box">
+            <label class="screen-reader-text" for="bookings-search-input">
+                Search Bookings:
+            </label>
+            <input type="search" id="bookings-search-input" name="s" v-model="searchStringModel" @keyup.enter="submit">
+            <input type="submit" id="search-submit" class="button" value="Search Bookings" @click="submit">
+        </p>
+    </div>
+</script>
+
 <script type="text/x-template" id="vue-timepicker-template">
     <span class="time-picker">
   <input class="display-time" :id="id" v-model="displayTime" @click.stop="toggleDropdown" type="text" readonly />

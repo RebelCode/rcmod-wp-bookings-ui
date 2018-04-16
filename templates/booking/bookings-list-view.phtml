@@ -5,6 +5,12 @@
                     :is-loading="isLoading"
                     inline-template>
     <div :class="isLoading ? 'loading-container' : ''">
+        <div>
+            <code>
+                {{ searchString }}
+            </code>
+        </div>
+        <bookings-filter @submit="updateFilter" :search-string.sync="searchString"></bookings-filter>
         <list-table
             :columns="columns"
             :rows="bookings"
