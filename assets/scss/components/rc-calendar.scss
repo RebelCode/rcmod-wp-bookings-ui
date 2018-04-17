@@ -9,8 +9,18 @@
   .fc-widget-content.fc-today {
     background: $white !important;
   }
+
+  .fc-past {
+    opacity: .6;
+  }
+
   .fc-event {
     cursor: pointer;
+
+    &.fc-event--past {
+      opacity: .5;
+      filter: grayscale(.5);
+    }
   }
 
   &--booking {
@@ -100,10 +110,6 @@
   &--availability {
     position: relative;
 
-    .fc-past {
-      opacity: .6;
-    }
-
     .fc-event {
       border: none;
       border-radius: 0;
@@ -114,8 +120,6 @@
 
       &.fc-event--past {
         pointer-events: none;
-        opacity: .5;
-        filter: grayscale(.5);
       }
 
       .fc-time {
@@ -167,4 +171,10 @@
 
 .tab-item {
   display: inline-block;
+}
+
+.fc-state-default--rc {
+  &:focus {
+    outline: none;
+  }
 }

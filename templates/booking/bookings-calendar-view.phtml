@@ -11,7 +11,7 @@
         <div class="tablenav top">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
-                <button class="fc-button fc-state-default" @click="goToToday">Today</button>
+                <button class="fc-button fc-state-default--rc fc-state-default" @click="goToToday">Today</button>
             </div>
             <div class="alignright actions" style="padding-right: 0;padding-bottom: .5rem">
                 <select v-model="service" @change="updateFilter">

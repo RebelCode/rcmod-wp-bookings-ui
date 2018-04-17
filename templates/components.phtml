@@ -75,7 +75,7 @@
 
 <script type="text/x-template" id="switcher-template">
     <div class="fc-button-group">
-        <button type="button" :class="['fc-button fc-state-default', key === value ? 'fc-state-active' : '']" v-for="(title, key) in buttons"
+        <button type="button" :class="['fc-button fc-state-default fc-state-default--rc', key === value ? 'fc-state-active' : '']" v-for="(title, key) in buttons"
             @click="buttonClick(key)"
         >{{ title }}</button>
     </div>
