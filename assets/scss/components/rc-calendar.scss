@@ -6,8 +6,15 @@
       font-weight: bold;
     }
   }
-  .fc-widget-content.fc-today {
-    background: $white !important;
+  .fc-agenda-view {
+    .fc-widget-content.fc-today {
+      background: $white !important;
+    }
+  }
+  .fc-today {
+    .fc-day-number {
+      font-weight: bold;
+    }
   }
 
   .fc-past {
@@ -176,5 +183,11 @@
 .fc-state-default--rc {
   &:focus {
     outline: none;
+  }
+}
+
+.actions--wide {
+  select {
+    max-width: inherit !important;
   }
 }

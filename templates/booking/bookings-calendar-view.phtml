@@ -13,7 +13,7 @@
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
                 <button class="fc-button fc-state-default--rc fc-state-default" @click="goToToday">Today</button>
             </div>
-            <div class="alignright actions" style="padding-right: 0;padding-bottom: .5rem">
+            <div class="alignright actions actions--wide" style="padding-right: 0;padding-bottom: .5rem">
                 <select v-model="service" @change="updateFilter">
                     <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.title }}</option>
