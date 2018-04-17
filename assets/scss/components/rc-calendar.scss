@@ -100,6 +100,10 @@
   &--availability {
     position: relative;
 
+    .fc-past {
+      opacity: .6;
+    }
+
     .fc-event {
       border: none;
       border-radius: 0;
@@ -107,6 +111,17 @@
       opacity: .65;
 
       color: #000 !important;
+
+      &.fc-event--past {
+        pointer-events: none;
+        opacity: .5;
+        filter: grayscale(.5);
+      }
+
+      .fc-time {
+        font-size: 1em;
+        padding: 3px 5px;
+      }
     }
 
     .fc-event-container {
