@@ -176,7 +176,7 @@
                                 <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
                             </div>
                             <div class="form-row__input">
-                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.note"></textarea>
+                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.note" style="min-height: 28px"></textarea>
                             </div>
                         </div>
                     </div>
@@ -191,53 +191,19 @@
                             </div>
                         </div>
 
-                        <div class="form-row form-row--vertical">
+                        <div class="form-row form-row--vertical" style="margin-top: -1px;">
                             <div class="form-row__label">Actions</div>
                             <template v-if="availableActions.length">
                                 <div class="form-row__input">
-                                    <div v-if="bookingCanBe('in-cart')">
-                                        <label>
-                                            <input type="radio" name="action" value="in-cart" v-model="model.newStatus">
-                                            Set booking to In Cart
-                                        </label>
-                                    </div>
-                                    <div v-if="bookingCanBe('approved')">
-                                        <label>
-                                            <input type="radio" name="action" value="approved" v-model="model.newStatus">
-                                            Approve booking
-                                        </label>
-                                    </div>
-                                    <div v-if="bookingCanBe('draft')">
-                                        <label>
-                                            <input type="radio" name="action" value="draft" v-model="model.newStatus">
-                                            Set booking to Draft
-                                        </label>
-                                    </div>
-                                    <div v-if="bookingCanBe('pending')">
-                                        <label>
-                                            <input type="radio" name="action" value="pending" v-model="model.newStatus">
-                                            Set booking to Pending
-                                        </label>
-                                    </div>
-                                    <div v-if="bookingCanBe('scheduled')">
-                                        <label>
-                                            <input type="radio" name="action" value="scheduled" v-model="model.newStatus">
-                                            Schedule booking
-                                        </label>
-                                    </div>
-                                    <div v-if="bookingCanBe('cancelled')">
-                                        <label>
-                                            <input type="radio" name="action" value="cancelled" v-model="model.newStatus">
-                                            Cancel booking
-                                        </label>
-                                    </div>
-
-                                    <div style="margin-top: 3px">
-                                        <label>
-                                            <input type="radio" name="action" value="" v-model="model.newStatus">
-                                            <span style="opacity: .5">Don't change booking status</span>
-                                        </label>
-                                    </div>
+                                    <select v-model="model.newStatus" style="width: 100%">
+                                        <option value="">Don't change booking status</option>
+                                        <option value="in-cart" v-if="bookingCanBe('in-cart')">Set booking to In Cart</option>
+                                        <option value="approved" v-if="bookingCanBe('approved')">Approve booking</option>
+                                        <option value="draft" v-if="bookingCanBe('draft')">Set booking to Draft</option>
+                                        <option value="pending" v-if="bookingCanBe('pending')">Set booking to Pending</option>
+                                        <option value="scheduled" v-if="bookingCanBe('scheduled')">Schedule booking</option>
+                                        <option value="cancelled" v-if="bookingCanBe('cancelled')">Cancel booking</option>
+                                    </select>
                                 </div>
                             </template>
                             <div class="form-row__description" v-else>
