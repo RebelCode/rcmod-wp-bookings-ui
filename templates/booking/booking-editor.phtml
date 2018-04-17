@@ -10,9 +10,6 @@
         >
             <div slot="header">
                 {{ model.id ? 'Edit Booking' : 'Add a New Booking' }}
-                <span v-if="model.id" style="opacity: .5">
-                    ({{ statusTitle }})
-                </span>
 
                 <div class="modal__close modal--right" @click="closeModal" v-if="!closeConfirming">&times;</div>
                 <div class="modal__header-buttons modal--right" v-else>
@@ -185,6 +182,15 @@
                     </div>
 
                     <div class="col-6 columns">
+                        <div class="form-row" v-if="model.id">
+                            <div class="form-row__label form-row__label--no-top">Status</div>
+                            <div class="form-row__input">
+                                <span class="booking-status" :style="statusStyle">
+                                    {{ statusTitle }}
+                                </span>
+                            </div>
+                        </div>
+
                         <div class="form-row form-row--vertical">
                             <div class="form-row__label">Actions</div>
                             <template v-if="availableActions.length">
