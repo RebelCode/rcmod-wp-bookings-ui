@@ -49,8 +49,7 @@ return [
         'require' => 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.js',
 
         'bookings_ui/assets/js/main.js' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/assets/js/main.js', EDDBK_FILE),
-        'bookings_ui/dist/js/app.min.js' => plugins_url('/js/dist/js/app.min', RCC_FILE),
-        'bookings_ui/dist/js/uiFramework.min.js' => plugins_url('/js/dist/ui-framework/dist/static/js/uiFramework', RCC_FILE),
+        'bookings_ui/dist/app.min.js' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/dist/app.min', EDDBK_FILE),
         'bookings_ui/dist/wp-booking-ui.css' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/dist/wp-booking-ui.css', EDDBK_FILE),
 
         'style_deps' => [

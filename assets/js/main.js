@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
       humanizeDuration: 'https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.14.0/humanize-duration.min',
-      //
-      // uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.0/dist/static/js/uiFramework', // @todo: check and fix
+
+      uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender', //fix
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',

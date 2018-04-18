@@ -189,8 +189,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         wp_enqueue_script('rc-app-require', $c->get('require'), [], false, true);
 
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
-            'app' => $c->get('bookings_ui/dist/js/app.min.js'),
-            'uiFramework' => $c->get('bookings_ui/dist/js/uiFramework.min.js')
+            'app' => $c->get('bookings_ui/dist/app.min.js')
         ]);
 
         /*
