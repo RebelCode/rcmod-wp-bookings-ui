@@ -1,3 +1,10 @@
+<script type="text/x-template" id="double-confirm-template">
+    <div>
+        <slot name="default" :show="show" v-if="!value"></slot>
+        <slot name="confirmation" :submit="submit" :cancel="cancel" v-else></slot>
+    </div>
+</script>
+
 <script type="text/x-template" id="bookings-filter-template">
     <div>
         <selection-list :collection="items" wrap="ul" class="subsubsub" v-model="statusModel">
