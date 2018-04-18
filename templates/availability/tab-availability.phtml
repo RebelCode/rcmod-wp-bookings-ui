@@ -4,7 +4,15 @@
     exclude dates where the availability does not apply, and much more.
     <a href="#">Learn more.</a>
 </p>
+<div class="alert alert-warning" v-if="overlappingAvailabilities">
+    <span class="dashicons dashicons-info"></span>
+    <span>
+        There are two availabilities for this service which are overlapping. Only one of these availabilities will be
+    available to your clients in the booking wizard. We recommend removing one of them. <a href="#">Click here to learn more.</a>
+    </span>
+</div>
 <availability-calendar :availabilities="availabilities"
                        class="rc-calendar rc-calendar--availability"
                        @availability-click="openAvailabilityEditor"
+                       :overlapping-availabilities.sync="overlappingAvailabilities"
 />
