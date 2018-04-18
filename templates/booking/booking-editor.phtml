@@ -21,17 +21,17 @@
             <div slot="body" :class="[isDoubleConfirming ? 'disabled' : '']">
                 <div class="row">
                     <div class="col-6 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Service</div>
+                        <div :class="['form-row form-row--vertical', errors.has('service') ? 'form-row--with-error' : '']">
+                            <div class="form-row__label">Service*</div>
                             <div class="form-row__input">
-                                <vueselect :options="services" v-model="model.service" label="title"></vueselect>
+                                <vueselect :options="services" v-validate="'required'" name="service" @input="errors.remove('service')" v-model="model.service" label="title"></vueselect>
                                 <a href="#" v-if="model.service">Click here to view service details in new tab</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-6 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Client</div>
+                        <div :class="['form-row form-row--vertical', errors.has('client') ? 'form-row--with-error' : '']">
+                            <div class="form-row__label">Client*</div>
                             <div class="form-row__input">
                                 <template v-if="isCreatingClient">
                                     <input type="text" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
@@ -42,7 +42,7 @@
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <vueselect :options="foundClients" v-model="model.client" label="name" :on-search="onClientSearch">
+                                    <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
                                         <template slot="spinner" slot-scope="options">
                                             <div class="loading-inline" v-if="isClientsLoading"></div>
                                         </template>
@@ -58,10 +58,12 @@
 
                 <div class="row">
                     <div class="col-3 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Start</div>
+                        <div :class="['form-row form-row--vertical', errors.has('start') ? 'form-row--with-error' : '']">
+                            <div class="form-row__label">Start*</div>
                             <div class="form-row__input">
-                                <datetime-picker class="form-control--wide" v-model="model.start"></datetime-picker>
+                                <datetime-picker v-validate="'required|date_format:YYYY-MM-DD HH:mm:ss'"
+                                                 data-vv-name="start"
+                                                 name="start" ref="start" @input="errors.remove('start')" class="form-control--wide" v-model="model.start"></datetime-picker>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
                                     <div>Client time: {{ format(model.start, model.clientTimezone) }}</div>
@@ -70,10 +72,11 @@
                         </div>
                     </div>
                     <div class="col-3 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">End</div>
+                        <div :class="['form-row form-row--vertical', errors.has('end') ? 'form-row--with-error' : '']">
+                            <div class="form-row__label">End*</div>
                             <div class="form-row__input">
-                                <datetime-picker class="form-control--wide" v-model="model.end" :disabled-before="model.start"></datetime-picker>
+                                <datetime-picker v-validate="'required|date_format:YYYY-MM-DD HH:mm:ss|after:$start'" name="end" @input="errors.remove('end')" class="form-control--wide" v-model="model.end" :disabled-before="model.start"></datetime-picker>
+                                <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.end) }}</div>
                                     <div>Client time: {{ format(model.end, model.clientTimezone) }}</div>
@@ -83,10 +86,10 @@
                     </div>
 
                     <div class="col-3 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Client Timezone</div>
+                        <div :class="['form-row form-row--vertical', errors.has('clientTimezone') ? 'form-row--with-error' : '']">
+                            <div class="form-row__label">Client Timezone*</div>
                             <div class="form-row__input">
-                                <select class="form-control--wide" v-model="model.clientTimezone">
+                                <select class="form-control--wide" v-validate="'required'" name="clientTimezone" @change="errors.remove('clientTimezone')" v-model="model.clientTimezone">
                                     <option value="-12">UTC-12</option>
                                     <option value="-11.5">UTC-11:30</option>
                                     <option value="-11">UTC-11</option>
@@ -150,7 +153,7 @@
                         <div class="form-row form-row--vertical">
                             <div class="form-row__label">Payment Number</div>
                             <div class="form-row__input">
-                                <input type="text" class="form-control--wide" v-model="model.paymentNumber">
+                                <input name="paymentNumber" type="text" class="form-control--wide" v-model="model.paymentNumber">
                             </div>
                         </div>
                     </div>
@@ -238,8 +241,15 @@
                                 </div>
                             </template>
                             <template v-else>
-                                <input type="button" class="button" value="Save Draft" @click="saveNewBooking('draft')">
-                                <input type="button" class="button button-primary" value="Schedule Booking" @click="saveNewBooking('scheduled')">
+                                <div class="footer-confirm">
+                                    <div class="footer-confirm__message __right __alert">
+                                        <template v-if="errors.any()">There was a problem with your booking. The errors have been highlighted above.</template>
+                                    </div>
+                                    <div class="footer-confirm__buttons">
+                                        <input type="button" class="button" value="Save Draft" @click="saveNewBooking('draft')">
+                                        <input type="button" class="button button-primary" value="Schedule Booking" @click="saveNewBooking('scheduled')">
+                                    </div>
+                                </div>
                             </template>
                         </template>
                     </div>

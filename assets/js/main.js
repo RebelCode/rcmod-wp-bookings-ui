@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
       cjs: 'https://rawgit.com/guybedford/cjs/master/cjs',
       'amd-loader': 'https://rawgit.com/guybedford/amd-loader/master/amd-loader',
       bottle: 'https://cdnjs.cloudflare.com/ajax/libs/bottlejs/1.6.1/bottle.min',
+
       vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.4/vue',
       vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex',
+      validate: 'https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate',
+
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
       humanizeDuration: 'https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.14.0/humanize-duration.min',
@@ -44,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'bottle',
     'vue',
     'vuex',
+    'validate',
     'axios',
     'calendar',
     'vueselect',

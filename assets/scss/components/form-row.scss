@@ -21,6 +21,15 @@
   display: flex;
   margin-bottom: 1.5rem;
 
+  &--with-error {
+    .form-row__label {
+      color: $alert-color;
+    }
+    .form-row__error {
+      color: $alert-color;
+    }
+  }
+
   &--vertical {
     display: block;
 
