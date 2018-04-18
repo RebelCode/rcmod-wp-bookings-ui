@@ -60,29 +60,29 @@ return [
         'bookings' => [
             'fetch' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings'),
             ],
             'update' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_update',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_update'),
             ],
             'create' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_create',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_create'),
             ],
             'delete' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_bookings_delete',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_delete'),
             ]
         ],
         'clients' => [
             'fetch' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_clients',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_clients'),
             ],
             'create' => [
                 'method' => 'post',
-                'endpoint' => '/wp/wp-admin/admin-ajax.php?action=eddbk_clients_create',
+                'endpoint' => admin_url('admin-ajax.php?action=eddbk_clients_create'),
             ]
         ]
     ]
