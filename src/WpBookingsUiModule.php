@@ -11,6 +11,7 @@ use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
+use Dhii\Util\String\StringableInterface as Stringable;
 
 class WpBookingsUiModule extends AbstractBaseModule
 {
@@ -28,6 +29,13 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @var
      */
     public $bookingsPageId;
+
+    /**
+     * Page where metabox application should be shown.
+     *
+     * @var
+     */
+    public $metaboxPageId;
 
     /**
      * Constructor.
@@ -61,12 +69,12 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function setup()
     {
-        return $this->_createContainer(
+        return $this->_setupContainer(
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php'),
             [
-                'template_manager' => function () {
+                'template_manager' => function ($c) {
                     $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
-                    $templateManager->registerTemplates($this->_getConfig()['templates']);
+                    $templateManager->registerTemplates($c->get('templates'));
                     return $templateManager;
                 }
             ]);
@@ -77,26 +85,27 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
+        $this->metaboxPageId = $c->get('metabox/post_type');
+
         /* @var EventManagerInterface $eventManager */
         $eventManager = $c->get('event_manager');
 
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
-        $assetsContainer = $this->_getContainerFactory()->make([
-            'definitions' => $this->_containerGet($this->_getConfig(), 'assets')
+        $assetsConfig = $this->_getContainerFactory()->make([
+            'definitions' => $c->get('assets')
         ]);
-
-        $eventManager->attach('admin_enqueue_scripts', function () use ($assetsContainer) {
-            $this->_enqueueAssets($assetsContainer);
+        $eventManager->attach('admin_enqueue_scripts', function () use ($assetsConfig, $c) {
+            $this->_enqueueAssets($assetsConfig, $c);
         }, 999);
 
-        $eventManager->attach('admin_init', function () use ($eventManager, $templateManager) {
-            $this->_adminInit($eventManager, $templateManager);
+        $eventManager->attach('admin_init', function () use ($eventManager, $templateManager, $c) {
+            $this->_adminInit($eventManager, $templateManager, $c);
         });
 
-        $eventManager->attach('admin_menu', function () use ($templateManager) {
-            $this->_adminMenu($templateManager);
+        $eventManager->attach('admin_menu', function () use ($templateManager, $c) {
+            $this->_adminMenu($templateManager, $c);
         });
     }
 
@@ -109,7 +118,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return in_array(get_current_screen()->id, [
             $this->bookingsPageId,
-            $this->_getConfig()['metabox']['post_type']
+            $this->metaboxPageId,
         ]);
     }
 
@@ -125,8 +134,11 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Get app state for booking page.
+     *
+     * @param ContainerInterface $c
+     * @return array
      */
-    protected function _getBookingsAppState()
+    protected function _getBookingsAppState($c)
     {
         return [
             /*
@@ -145,7 +157,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'services' => []
             ])->getParam('services'),
 
-            'endpointsConfig' => $this->_getConfig()['endpointsConfig']
+            'endpointsConfig' => $c->get('endpointsConfig')
         ];
     }
 
@@ -190,31 +202,32 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Enqueue all UI assets.
      *
-     * @param ContainerInterface $c Assets container
+     * @param ContainerInterface $assetsConfig Assets container config
+     * @param ContainerInterface $c Module config
      */
-    protected function _enqueueAssets(ContainerInterface $c)
+    protected function _enqueueAssets(ContainerInterface $assetsConfig, ContainerInterface $c)
     {
         if (!$this->_onAppPage()) {
             return;
         }
 
-        wp_enqueue_script('rc-app-require', $c->get('require'), [], false, true);
+        wp_enqueue_script('rc-app-require', $assetsConfig->get('require'), [], false, true);
 
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
-            'app' => $c->get('bookings_ui/dist/app.min.js')
+            'app' => $assetsConfig->get('bookings_ui/dist/app.min.js')
         ]);
 
         /*
          * All application components located here
          */
-        wp_enqueue_script('rc-app', $c->get('bookings_ui/assets/js/main.js'), [], false, true);
-        wp_enqueue_style('rc-app', $c->get('bookings_ui/dist/wp-booking-ui.css'));
+        wp_enqueue_script('rc-app', $assetsConfig->get('bookings_ui/assets/js/main.js'), [], false, true);
+        wp_enqueue_style('rc-app', $assetsConfig->get('bookings_ui/dist/wp-booking-ui.css'));
 
-        foreach ($c->get('style_deps') as $styleDep) {
+        foreach ($assetsConfig->get('style_deps') as $styleDep) {
             wp_enqueue_style('rc-app-require', $styleDep);
         }
 
-        $state = $this->_onBookingsPage() ? $this->_getBookingsAppState() : $this->_getServiceAppState();
+        $state = $this->_onBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
 
         wp_localize_script('rc-app', 'EDDBK_APP_STATE', $state);
     }
@@ -225,19 +238,19 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @param EventManagerInterface $eventManager
      * @param TemplateManager $templateManager
      */
-    protected function _adminInit($eventManager, $templateManager)
+    protected function _adminInit($eventManager, $templateManager, $c)
     {
         /*
          * Add metabox with availabilities configuration to
          * service's edit page.
          */
         add_meta_box(
-            $this->_getConfig()['metabox']['id'],
-            $this->_getConfig()['metabox']['title'],
+            $c->get('metabox/id'),
+            $c->get('metabox/title'),
             function () use ($templateManager) {
                 echo $this->_renderMetabox($templateManager);
             },
-            $this->_getConfig()['metabox']['post_type']
+            $c->get('metabox/post_type')
         );
 
         /*
@@ -265,38 +278,39 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Register pages in the admin menu.
      *
      * @param TemplateManager $templateManager
+     * @param ContainerInterface $c
      */
-    protected function _adminMenu(TemplateManager $templateManager)
+    protected function _adminMenu($templateManager, $c)
     {
         $this->bookingsPageId = add_menu_page(
-            $this->_getConfig()['menu']['root']['page_title'],
-            $this->_getConfig()['menu']['root']['menu_title'],
-            $this->_getConfig()['menu']['root']['capability'],
-            $this->_getConfig()['menu']['root']['menu_slug'],
+            $c->get('menu/root/page_title'),
+            $c->get('menu/root/menu_title'),
+            $c->get('menu/root/capability'),
+            $c->get('menu/root/menu_slug'),
             function () use ($templateManager) {
                 echo $this->_renderMainPage($templateManager);
             },
-            $this->_getConfig()['menu']['root']['icon'],
-            $this->_getConfig()['menu']['root']['position']
+            $c->get('menu/root/icon'),
+            $c->get('menu/root/position')
         );
 
         add_submenu_page(
-            $this->_getConfig()['menu']['root']['menu_slug'],
-            $this->_getConfig()['menu']['settings']['page_title'],
-            $this->_getConfig()['menu']['settings']['menu_title'],
-            $this->_getConfig()['menu']['settings']['capability'],
-            $this->_getConfig()['menu']['settings']['menu_slug'],
+            $c->get('menu/root/menu_slug'),
+            $c->get('menu/settings/page_title'),
+            $c->get('menu/settings/menu_title'),
+            $c->get('menu/settings/capability'),
+            $c->get('menu/settings/menu_slug'),
             function () use ($templateManager) {
                 return $this->_renderSettingsPage($templateManager);
             }
         );
 
         add_submenu_page(
-            $this->_getConfig()['menu']['root']['menu_slug'],
-            $this->_getConfig()['menu']['about']['page_title'],
-            $this->_getConfig()['menu']['about']['menu_title'],
-            $this->_getConfig()['menu']['about']['capability'],
-            $this->_getConfig()['menu']['about']['menu_slug'],
+            $c->get('menu/root/menu_slug'),
+            $c->get('menu/about/page_title'),
+            $c->get('menu/about/menu_title'),
+            $c->get('menu/about/capability'),
+            $c->get('menu/about/menu_slug'),
             function () use ($templateManager) {
                 return $this->_renderAboutPage($templateManager);
             }
