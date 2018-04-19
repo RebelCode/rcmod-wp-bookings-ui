@@ -7,6 +7,7 @@ use Dhii\Data\Container\ContainerGetCapableTrait;
 use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
+use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
@@ -21,28 +22,37 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     use NormalizeKeyCapableTrait;
 
-    private $bookingsPageId;
+    /**
+     * Registered booking's page ID.
+     *
+     * @var
+     */
+    public $bookingsPageId;
 
     /**
      * Constructor.
      *
      * @since [*next-version*]
      *
-     * @param $key
-     * @param ContainerFactoryInterface $containerFactory The factory for creating container instances.
-     * @param $eventManager
-     * @param $eventFactory
-     * @throws \Dhii\Exception\InternalException
+     * @param string|Stringable $key The module key.
+     * @param string[]|Stringable[] $dependencies The module  dependencies.
+     * @param ContainerFactoryInterface $configFactory The config factory.
+     * @param ContainerFactoryInterface $containerFactory The container factory.
+     * @param ContainerFactoryInterface $compContainerFactory The composite container factory.
+     * @param EventManagerInterface $eventManager The event manager.
+     * @param EventFactoryInterface $eventFactory The event factory.
      */
-    public function __construct($key, ContainerFactoryInterface $containerFactory, $eventManager, $eventFactory)
+    public function __construct(
+        $key,
+        $dependencies,
+        $configFactory,
+        $containerFactory,
+        $compContainerFactory,
+        $eventManager,
+        $eventFactory
+    )
     {
-        $this->_initModule(
-            $containerFactory,
-            $key,
-            [],
-            $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php')
-        );
-
+        $this->_initModule($key, $dependencies, $configFactory, $containerFactory, $compContainerFactory);
         $this->_initModuleEvents($eventManager, $eventFactory);
     }
 
@@ -51,13 +61,15 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function setup()
     {
-        return $this->_createContainer([
-            'template_manager' => function () {
-                $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
-                $templateManager->registerTemplates($this->_getConfig()['templates']);
-                return $templateManager;
-            }
-        ]);
+        return $this->_createContainer(
+            $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php'),
+            [
+                'template_manager' => function () {
+                    $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
+                    $templateManager->registerTemplates($this->_getConfig()['templates']);
+                    return $templateManager;
+                }
+            ]);
     }
 
     /**
@@ -65,7 +77,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        /* @var EventManagerInterface $eventManager  */
+        /* @var EventManagerInterface $eventManager */
         $eventManager = $c->get('event_manager');
 
         /** @var TemplateManager $templateManager */
@@ -231,7 +243,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Add screen options on bookings management page.
          */
-        add_filter('screen_settings', function( $settings, \WP_Screen $screen ) use ($templateManager) {
+        add_filter('screen_settings', function ($settings, \WP_Screen $screen) use ($templateManager) {
             if (!$this->_onBookingsPage())
                 return $settings;
 
