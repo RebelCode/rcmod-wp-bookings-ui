@@ -30,6 +30,12 @@
     }
   }
 
+  &--inline {
+    .form-row__label {
+      width: auto;
+    }
+  }
+
   &--vertical {
     display: block;
 

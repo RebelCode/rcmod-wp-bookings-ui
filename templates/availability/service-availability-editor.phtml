@@ -96,7 +96,7 @@
                             <label for="ends-after" style="width: 90px; display: inline-block">
                                 <input type="radio" id="ends-after" value="afterWeeks" v-model="model.repeatsEnds"> After
                             </label>
-                            <input type="number" min="1" placeholder="4" style="width: 90px" v-model="model.repeatsEndsWeeks"> weeks
+                            <input type="number" min="1" placeholder="4" style="width: 90px" v-model="model.repeatsEndsWeeks"> {{ repeatsEndsWeeksTitle }}
                         </div>
 
                         <div style="margin-top: 4px" class="inline-datepicker">
@@ -146,11 +146,10 @@
             </div>
 
             <div slot="footer">
-                <div v-if="!removeConfirming && !cancelConfirming" :class="isDoubleConfirming ? 'disabled' : ''">
+                <div v-if="!removeConfirming" :class="isDoubleConfirming ? 'disabled' : ''">
                     <template v-if="model.id && entityCanBeModified()">
                         <input type="button" class="button button-alert" value="Delete" style="float: left" @click="removeConfirming = true">
                     </template>
-                    <input type="button" class="button" value="Cancel" @click="cancelModal">
                     <input type="button" class="button button-primary" v-if="!model.id || entityCanBeModified()" value="Save" @click="saveItem()">
                 </div>
                 <div class="footer-confirm" v-else-if="removeConfirming">

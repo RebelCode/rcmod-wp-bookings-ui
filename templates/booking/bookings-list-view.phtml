@@ -7,6 +7,7 @@
     <div :class="isLoading ? 'loading-container' : ''">
         <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <list-table
+            class="table-eddbk-bookings"
             :columns="columns"
             :rows="bookings"
             :actions="actions"

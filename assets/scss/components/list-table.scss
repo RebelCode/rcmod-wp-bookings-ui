@@ -1,4 +1,9 @@
-
+.table-eddbk-bookings {
+  .column.date {
+    width: 40%;
+    text-wrap: avoid;
+  }
+}
 .table-loading {
   position: relative;
 }

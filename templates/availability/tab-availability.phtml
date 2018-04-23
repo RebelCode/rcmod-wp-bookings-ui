@@ -7,8 +7,13 @@
 <div class="alert alert-warning" v-if="overlappingAvailabilities">
     <span class="dashicons dashicons-info"></span>
     <span>
-        There are two availabilities for this service which are overlapping. Only one of these availabilities will be
-    available to your clients in the booking wizard. We recommend removing one of them. <a href="#">Click here to learn more.</a>
+        There are at least two availabilities for this service that overlap. Only one of these availabilities will be available to your clients in the booking wizard. We recommend removing one of them. <a href="#">Click here to learn more.</a>
+    </span>
+</div>
+<div class="alert alert-warning" v-if="!availabilities.length">
+    <span class="dashicons dashicons-info"></span>
+    <span>
+        There is no availability set for this service. Please add at least one available date and time in order to start accepting bookings for this service.
     </span>
 </div>
 <availability-calendar :availabilities="availabilities"

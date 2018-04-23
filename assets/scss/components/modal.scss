@@ -111,4 +111,21 @@
   padding: 2px 8px;
   margin-top: -5px;
   border-radius: 4px;
+  position: relative;
+
+  span {
+    position: relative;
+  }
+
+  &:before {
+    border-radius: 4px;
+    position: absolute;
+    content: '';
+    left: 1px;
+    top: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    background: #fff;
+    opacity: .25;
+  }
 }

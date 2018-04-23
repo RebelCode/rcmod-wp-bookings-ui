@@ -160,7 +160,7 @@
 
                 <div class="row">
                     <div class="col-6 columns">
-                        <div class="form-row">
+                        <div class="form-row form-row--inline">
                             <div class="form-row__label form-row__label--no-top">Duration</div>
                             <div class="form-row__input">
                                 <template v-if="duration">
@@ -184,11 +184,11 @@
                     </div>
 
                     <div class="col-6 columns">
-                        <div class="form-row" v-if="model.id">
+                        <div class="form-row form-row--inline" v-if="model.id">
                             <div class="form-row__label form-row__label--no-top">Status</div>
                             <div class="form-row__input">
                                 <span class="booking-status" :style="statusStyle">
-                                    {{ statusTitle }}
+                                    <span>{{ statusTitle }}</span>
                                 </span>
                             </div>
                         </div>
@@ -217,12 +217,11 @@
             </div>
 
             <div slot="footer">
-                <div v-if="!removeConfirming && !cancelConfirming" :class="isDoubleConfirming ? 'disabled' : ''">
+                <div v-if="!removeConfirming" :class="isDoubleConfirming ? 'disabled' : ''">
                     <template v-if="model.id">
                         <input type="button" class="button button-alert" value="Delete" style="float: left"
                                @click="confirmBookingDeletion">
 
-                        <input type="button" class="button" value="Cancel" @click="cancelModal">
                         <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
                                 @click="saveBooking">Save Changes
                         </button>

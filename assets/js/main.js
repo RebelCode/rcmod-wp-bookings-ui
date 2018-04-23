@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
       lodash: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min',
       moment: 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min',
       fastDeepEqual: 'https://cdn.jsdelivr.net/npm/fast-deep-equal@1.1.0/index.min',
+      pluralize: 'https://cdnjs.cloudflare.com/ajax/libs/pluralize/7.0.0/pluralize.min',
 
       cfToggleable: 'https://unpkg.com/@rebelcode/vc-toggleable@0.1.3/dist/umd/lib.min',
       vueselect: 'https://unpkg.com/vue-select@2.4.0/dist/vue-select',
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'validate',
     'axios',
     'calendar',
+    'pluralize',
     'vueselect',
     'datetimePicker',
     'tabs',
