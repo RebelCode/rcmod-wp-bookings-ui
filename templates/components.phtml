@@ -76,7 +76,13 @@
                     @opened="datepickerOpened"
                     @selected="dateSelected"
         />
-        <time-picker v-model="timeValue" format="HH:mm" :hide-clear-button="true" ref="timepicker" :disabled-to="disabledTime"/>
+        <time-picker v-model="timeValue"
+                     format="HH:mm"
+                     :hide-clear-button="true"
+                     ref="timepicker"
+                     :disabled-to="disabledTime"
+                     @opened="closeDatepicker"
+        />
     </div>
 </script>
 

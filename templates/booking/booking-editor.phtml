@@ -29,18 +29,22 @@
                         </div>
                     </div>
                     <div class="col-6 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('client') ? 'form-row--with-error' : '']">
+                        <div :class="['form-row form-row--vertical', errors.has('client') || errors.any('client-editor') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Client*</div>
                             <div class="form-row__input">
-                                <template v-if="isCreatingClient">
-                                    <input type="text" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
-                                    <input type="email" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide"/>
+                                <form class="form-row__form" data-vv-scope="client-editor" v-show="isCreatingClient">
+                                    <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
+                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
+
+                                    <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide"/>
+                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
+
                                     <div class="text-right">
-                                        <div class="button button-outline" @click="isCreatingClient = false">Existing client</div>
+                                        <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
                                         <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
                                     </div>
-                                </template>
-                                <template v-else>
+                                </form>
+                                <div v-show="!isCreatingClient">
                                     <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
                                         <template slot="spinner" slot-scope="options">
                                             <div class="loading-inline" v-if="isClientsLoading"></div>
@@ -49,7 +53,7 @@
                                     <div class="text-right">
                                         <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
                                     </div>
-                                </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,7 +66,11 @@
                             <div class="form-row__input">
                                 <datetime-picker v-validate="'required|date_format:YYYY-MM-DD HH:mm:ss'"
                                                  data-vv-name="start"
-                                                 name="start" ref="start" @input="errors.remove('start')" class="form-control--wide" v-model="model.start"></datetime-picker>
+                                                 name="start"
+                                                 ref="start"
+                                                 @input="startChanged"
+                                                 class="form-control--wide" v-model="model.start"
+                                ></datetime-picker>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
                                     <div>Client time: {{ format(model.start, model.clientTimezone) }}</div>
@@ -217,7 +225,7 @@
             </div>
 
             <div slot="footer">
-                <div v-if="!removeConfirming" :class="isDoubleConfirming ? 'disabled' : ''">
+                <div v-if="!removeConfirming" :class="isDoubleConfirming || isCreatingClient ? 'disabled' : ''">
                     <template v-if="model.id">
                         <input type="button" class="button button-alert" value="Delete" style="float: left"
                                @click="confirmBookingDeletion">
@@ -245,7 +253,7 @@
                         <template v-else>
                             <div class="footer-confirm">
                                 <div class="footer-confirm__message __right __alert">
-                                    <template v-if="errors.any()">There was a problem with your booking. The errors have
+                                    <template v-if="errors.any() && !errors.any('client-editor')">There was a problem with your booking. The errors have
                                         been highlighted above.
                                     </template>
                                 </div>

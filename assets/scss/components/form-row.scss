@@ -57,6 +57,13 @@
     margin-bottom: 0;
   }
 
+  &__form {
+    .form-row__error {
+      margin-top: -4px;
+      margin-bottom: 6px;
+    }
+  }
+
   &__word {
     margin: 0 2px;
   }
