@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
       humanizeDuration: 'https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.14.0/humanize-duration.min',
 
+      textFormatter: 'https://unpkg.com/sprintf-js@1.1.1/dist/sprintf.min',
       uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender', //fix
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'moment',
     'cjs!fastDeepEqual',
     'cjs!wpListTable',
+    'textFormatter',
     'humanizeDuration'
   ]
 
