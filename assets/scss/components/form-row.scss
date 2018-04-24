@@ -68,11 +68,35 @@
     margin: 0 2px;
   }
 
+  @include breakpoint(mobile) {
+    display: block;
+
+    .form-row__label {
+      width: auto;
+      padding-bottom: 4px;
+    }
+
+    .form-row__input {
+      padding-left: 0;
+    }
+  }
+
   &__input {
     flex-grow: 1;
     padding-left: 8px;
     &--padded {
       padding-top: 4px;
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 120px;
+    padding-top: 4px;
+
+    &--no-top {
+      padding-top: 0;
     }
   }
 
@@ -94,17 +118,6 @@
     }
   }
 
-  &__label {
-    font-weight: 600;
-    flex-shrink: 0;
-    width: 120px;
-    padding-top: 4px;
-
-    &--no-top {
-      padding-top: 0;
-    }
-  }
-
   .add-new {
     font-weight: 600;
     text-decoration-color: transparentize(#0073aa, .5)
@@ -116,6 +129,12 @@
 
   &:last-child {
     padding-right: 0;
+  }
+
+  @include breakpoint(mobile) {
+    display: inline-block;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
   }
 }
 

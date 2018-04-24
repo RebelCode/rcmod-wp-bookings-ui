@@ -62,4 +62,14 @@
     width: auto;
     background-color: inherit;
   }
+  @include breakpoint(mobile) {
+    position: static !important;
+    width: auto !important;
+    input {
+      width: 120px !important;
+    }
+    .vdp-datepicker__calendar {
+      left: calc(50% - 150px)
+    }
+  }
 }
