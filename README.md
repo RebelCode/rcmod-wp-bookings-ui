@@ -35,8 +35,8 @@ Expected structure of **state** on service page (when user open some service for
       "repeatsEvery": 2,
       "repeatsOn": ["mon", "tue", "thu"],
       
-      "repeatsEnds": "afterWeeks",
-      "repeatsEndsWeeks": 12,
+      "repeatsEnds": "afterPeriod",
+      "repeatsEndsPeriod": 12,
       
       "fromTime": "09:30:00",
       "toTime": "12:30:00"

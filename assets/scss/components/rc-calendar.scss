@@ -30,10 +30,32 @@
     }
   }
 
+
+  @include breakpoint(mobile) {
+    .fc-scroller {
+      min-height: 50vh !important;
+    }
+    .fc-view-container {
+      overflow-x: auto;
+    }
+    .fc-view {
+      min-width: 600px;
+    }
+    .fc-popover {
+      position: fixed;
+      left: calc(50% - 111px) !important;
+      top: 3rem !important;
+    }
+  }
+
   &--booking {
     padding: 1rem;
     background-color: #fff;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+
+    @include breakpoint(mobile) {
+      margin-bottom: 2rem;
+    }
 
     .fc-event {
       padding: 1px 4px;
@@ -117,6 +139,10 @@
   &--availability {
     position: relative;
 
+    @include breakpoint(mobile) {
+      margin-top: 2rem;
+    }
+
     .fc-event {
       border: none;
       border-radius: 0;
@@ -189,5 +215,13 @@
 .actions--wide {
   select {
     max-width: inherit !important;
+  }
+}
+
+.tablenav--eddbk-calendar {
+  @include breakpoint(mobile) {
+    .alignleft.actions {
+      display: block;
+    }
   }
 }

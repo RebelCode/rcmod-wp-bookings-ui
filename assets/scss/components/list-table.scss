@@ -2,6 +2,22 @@
   .column.date {
     width: 40%;
     text-wrap: avoid;
+
+    @include breakpoint(mobile) {
+      width: 100%;
+    }
+  }
+  @include breakpoint(mobile) {
+    thead, tfoot {
+      .column {
+        display: none;
+        visibility: collapse;
+        &:first-child {
+          display: table-cell;
+          visibility: initial;
+        }
+      }
+    }
   }
 }
 .table-loading {

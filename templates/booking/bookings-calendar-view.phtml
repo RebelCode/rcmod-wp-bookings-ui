@@ -8,7 +8,7 @@
 >
     <div :class="isLoading ? 'loading-container' : ''">
         <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
-        <div class="tablenav top">
+        <div class="tablenav top tablenav--eddbk-calendar">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
                 <button class="fc-button fc-state-default--rc fc-state-default" @click="goToToday">Today</button>

@@ -9,7 +9,7 @@
     "postinstall": "cp ./node_modules/booking-js/dist/js/app.min.js ./dist/app.min.js"
   },
   "devDependencies": {
-    "booking-js": "git@github.com:RebelCode/bookings-js.git#2a5dca324571ce3912cfaee0a384c4de4f40f80b",
+    "booking-js": "git@github.com:RebelCode/bookings-js.git#11bc8c09ea0d6f52ed5e587297c8ddb3bf456fcc",
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "fast-sass-loader": "^1.4.0",

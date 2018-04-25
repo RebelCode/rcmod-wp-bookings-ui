@@ -45,6 +45,10 @@
     input {
       height: inherit;
       width: 50px;
+
+      @include breakpoint(mobile) {
+        width: 60px !important;
+      }
     }
     .dropdown {
       top: calc(2.2em + -6px);

@@ -19,6 +19,22 @@ $breakpoint-large: 60em; // 960px
   }
 }
 
+.mobile-collapsed {
+  display: initial;
+}
+.mobile-only {
+  display: none !important;
+}
+
+@include breakpoint(mobile) {
+  .mobile-only {
+    display: inherit !important;
+  }
+  .mobile-collapsed {
+    display: none !important;
+  }
+}
+
 .container {
   width: 90%;
   margin-left: auto;

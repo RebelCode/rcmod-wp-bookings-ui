@@ -4,6 +4,10 @@
   &__options {
     padding-right: 36px;
 
+    @include breakpoint(mobile) {
+      padding-right: 1rem;
+    }
+
     &:last-child {
       padding-right: 0;
     }
@@ -19,6 +23,10 @@
     color: $alert-color;
     line-height: 2.1;
     padding-left: 8px;
+
+    @include breakpoint(mobile) {
+      line-height: initial;
+    }
   }
 
   &__buttons {

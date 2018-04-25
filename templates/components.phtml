@@ -15,11 +15,11 @@
                 <span class="list-sep">|</span>
             </li>
         </selection-list>
-        <p class="search-box">
+        <p class="search-box search-box--bookings">
             <label class="screen-reader-text" for="bookings-search-input">
                 Search Bookings:
             </label>
-            <input type="search" id="bookings-search-input" name="s" v-model="searchStringModel" @keyup.enter="submit">
+            <input type="search" id="bookings-search-input" placeholder="Start typing..." name="s" v-model="searchStringModel" @keyup.enter="submit">
             <input type="submit" id="search-submit" class="button" value="Search Bookings" @click="submit">
         </p>
     </div>
