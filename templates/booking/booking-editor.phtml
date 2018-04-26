@@ -23,7 +23,7 @@
                         <div :class="['form-row form-row--vertical', errors.has('service') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Service*</div>
                             <div class="form-row__input">
-                                <vueselect :options="services" v-validate="'required'" name="service" @input="errors.remove('service')" v-model="model.service" label="title"></vueselect>
+                                <vueselect :options="services" v-validate="'required'" name="service" @input="errors.remove('service')" v-model="model.service" label="name"></vueselect>
                                 <a href="#" v-if="model.service">Click here to view service details in new tab</a>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                                     <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
                                     <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
 
-                                    <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide"/>
+                                    <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
                                     <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
 
                                     <div class="text-right">
@@ -273,7 +273,7 @@
                                     <input type="button" class="button" value="Save Draft"
                                            @click="saveNewBooking('draft')">
                                     <input type="button" class="button button-primary" value="Schedule Booking"
-                                           @click="saveNewBooking('scheduled')">
+                                           @click="saveNewBooking('cart')">
                                 </div>
                             </div>
                         </template>

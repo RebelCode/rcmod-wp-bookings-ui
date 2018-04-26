@@ -59,30 +59,30 @@ return [
     'endpointsConfig' => [
         'bookings' => [
             'fetch' => [
-                'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings'),
+                'method' => 'get',
+                'endpoint' => '/eddbk/v1/bookings/',
             ],
             'update' => [
-                'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_update'),
+                'method' => 'patch',
+                'endpoint' => '/eddbk/v1/bookings/',
             ],
             'create' => [
                 'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_create'),
+                'endpoint' => '/eddbk/v1/bookings/',
             ],
             'delete' => [
-                'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_bookings_delete'),
+                'method' => 'delete',
+                'endpoint' => '/eddbk/v1/bookings/',
             ]
         ],
         'clients' => [
             'fetch' => [
-                'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_clients'),
+                'method' => 'get',
+                'endpoint' => '/eddbk/v1/clients/',
             ],
             'create' => [
                 'method' => 'post',
-                'endpoint' => admin_url('admin-ajax.php?action=eddbk_clients_create'),
+                'endpoint' => '/eddbk/v1/clients/',
             ]
         ]
     ]

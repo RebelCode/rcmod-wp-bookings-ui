@@ -94,7 +94,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $templateManager = $c->get('template_manager');
 
         $assetsConfig = $this->_getContainerFactory()->make([
-            'definitions' => $c->get('assets')
+            ContainerFactoryInterface::K_DATA => $c->get('assets')
         ]);
         $eventManager->attach('admin_enqueue_scripts', function () use ($assetsConfig, $c) {
             $this->_enqueueAssets($assetsConfig, $c);
@@ -140,13 +140,35 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getBookingsAppState($c)
     {
+        $endpointsConfig = $c->get('endpointsConfig');
+        foreach ($endpointsConfig as $namespace => $endpoints) {
+            foreach ($endpoints as $purpose => $endpoint) {
+                $endpointsConfig[$namespace][$purpose]['endpoint'] = rest_url($endpointsConfig[$namespace][$purpose]['endpoint']);
+            }
+        }
         return [
+            /*
+             * All available statuses in application.
+             */
+            'statuses' => $this->_trigger('eddbk_bookings_statuses', [
+                'statuses' => [
+                    "draft" => __("Draft", EDDBK_TEXT_DOMAIN),
+                    "in_cart" => __("Cart", EDDBK_TEXT_DOMAIN),
+                    "pending" => __("Pending", EDDBK_TEXT_DOMAIN),
+                    "approved" => __("Approved", EDDBK_TEXT_DOMAIN),
+                    "rejected" => __("Rejected", EDDBK_TEXT_DOMAIN),
+                    "scheduled" => __("Scheduled", EDDBK_TEXT_DOMAIN),
+                    "cancelled" => __("Cancelled", EDDBK_TEXT_DOMAIN),
+                    "completed" => __("Completed", EDDBK_TEXT_DOMAIN)
+                ]
+            ])->getParam('statuses'),
+
             /*
              * Statuses that enabled for filtering bookings.
              */
             'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
                 'screenStatuses' => [
-                    "draft", "approved", "scheduled", "pending", "completed"
+                    "draft", "pending", "approved", "scheduled", "cancelled", "completed"
                 ]
             ])->getParam('screenStatuses'),
 
@@ -157,7 +179,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'services' => []
             ])->getParam('services'),
 
-            'endpointsConfig' => $c->get('endpointsConfig')
+            'endpointsConfig' => $endpointsConfig
         ];
     }
 

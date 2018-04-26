@@ -28,7 +28,7 @@
                 </select>
                 <select v-model="service">
                     <option :value="null">All Services</option>
-                    <option :value="service.id" v-for="service in services">{{ service.title }}</option>
+                    <option :value="service.id" v-for="service in services">{{ service.name }}</option>
                 </select>
                 <button class="button" @click="updateFilter">Filter</button>
             </template>
@@ -49,7 +49,7 @@
 
             <template slot="service" slot-scope="data">
                 <a href="#">
-                    {{ data.row.service.title }}
+                    {{ data.row.service.name }}
                 </a>
             </template>
 
