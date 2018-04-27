@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'screen_options' => [
+        'key' => WP_BOOKINGS_UI_SCREEN_STATUSES_KEY,
+        'endpoint' => admin_url('admin-ajax.php?action=set_' . WP_BOOKINGS_UI_SCREEN_STATUSES_KEY)
+    ],
     'metabox' => [
         'id' => 'service_booking_settings',
         'post_type' => 'post', //'download',

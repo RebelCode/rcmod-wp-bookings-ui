@@ -4,6 +4,7 @@ use Psr\Container\ContainerInterface;
 use RebelCode\Bookings\WordPress\Module\WpBookingsUiModule;
 
 define('WP_BOOKINGS_UI_MODULE_KEY', 'wp_bookings_ui');
+define('WP_BOOKINGS_UI_SCREEN_STATUSES_KEY', 'eddbk_screen_options');
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
 define('WP_BOOKINGS_UI_MODULE_RELATIVE_DIR', 'modules/rcmod-wp-bookings-ui');
 

@@ -107,6 +107,12 @@ class WpBookingsUiModule extends AbstractBaseModule
         $eventManager->attach('admin_menu', function () use ($templateManager, $c) {
             $this->_adminMenu($templateManager, $c);
         });
+
+        $eventManager->attach('wp_ajax_set_' . $c->get('screen_options/key'), function () use ($c) {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $statuses = $data['statuses'];
+            $this->_setScreenStatuses($c, $statuses);
+        });
     }
 
     /**
@@ -167,9 +173,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * Statuses that enabled for filtering bookings.
              */
             'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
-                'screenStatuses' => [
-                    "draft", "pending", "approved", "scheduled", "cancelled", "completed"
-                ]
+                'screenStatuses' => $this->_getScreenStatuses($c)
             ])->getParam('screenStatuses'),
 
             /*
@@ -179,8 +183,52 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'services' => []
             ])->getParam('services'),
 
+            'statusesEndpoint' => $c->get('screen_options/endpoint'),
+
             'endpointsConfig' => $endpointsConfig
         ];
+    }
+
+    /**
+     * Save visible screen statuses in per-user options.
+     *
+     * @param ContainerInterface $c
+     * @param array $statuses
+     */
+    protected function _setScreenStatuses($c, $statuses)
+    {
+        if (!($user = wp_get_current_user())) {
+            wp_die('0');
+        }
+
+        update_user_option(
+            $user->ID,
+            $c->get('screen_options/key'),
+            json_encode($statuses)
+        );
+
+        wp_die('1');
+    }
+
+    /**
+     * Return list of all statuses that is available for user by default.
+     *
+     * @return array|mixed|object
+     */
+    protected function _getScreenStatuses($c)
+    {
+        if (!$user = wp_get_current_user())
+            return [];
+
+        $screenOptions = get_user_option($c->get('screen_options/key'), $user->ID);
+        if (!$screenOptions) {
+            return [
+                "in_cart", "draft", "pending", "approved", "rejected", "scheduled", "cancelled", "completed"
+            ];
+        }
+        $screenOptions = json_decode($screenOptions);
+
+        return $screenOptions;
     }
 
     /**
