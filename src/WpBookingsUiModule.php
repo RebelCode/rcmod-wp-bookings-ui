@@ -10,6 +10,7 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\EddBookings\RestApi\Controller\ControllerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
 
@@ -152,6 +153,11 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $endpointsConfig[$namespace][$purpose]['endpoint'] = rest_url($endpointsConfig[$namespace][$purpose]['endpoint']);
             }
         }
+
+        /* @var ControllerInterface $controller */
+        $controller = $c->get('eddbk_services_controller');
+        $services = iterator_to_array($controller->get());
+
         return [
             /*
              * All available statuses in application.
@@ -180,7 +186,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * List of available services.
              */
             'services' => $this->_trigger('eddbk_bookings_services', [
-                'services' => []
+                'services' => $services
             ])->getParam('services'),
 
             'statusesEndpoint' => $c->get('screen_options/endpoint'),
