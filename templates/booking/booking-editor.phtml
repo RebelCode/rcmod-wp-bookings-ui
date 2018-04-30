@@ -39,7 +39,7 @@
                                     <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
                                     <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
 
-                                    <div class="text-right">
+                                    <div class="text-right mt-4">
                                         <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
                                         <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
                                     </div>
@@ -50,10 +50,19 @@
                                             <div class="loading-inline" v-if="isClientsLoading"></div>
                                         </template>
                                     </vueselect>
-                                    <div class="text-right">
+                                    <div class="text-right mt-4">
                                         <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row--inline mobile-only mb-3/2" v-if="model.id">
+                            <div class="form-row__label form-row__label--no-top">Status</div>
+                            <div class="form-row__input">
+                                <span class="booking-status" :style="statusStyle">
+                                    <span>{{ statusTitle }}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -204,7 +213,7 @@
                     </div>
 
                     <div class="col-6 columns">
-                        <div class="form-row form-row--inline" v-if="model.id">
+                        <div class="form-row form-row--inline mobile-collapsed" v-if="model.id">
                             <div class="form-row__label form-row__label--no-top">Status</div>
                             <div class="form-row__input">
                                 <span class="booking-status" :style="statusStyle">

@@ -77,3 +77,16 @@
     }
   }
 }
+
+.time-picker {
+  @include breakpoint(mobile) {
+    .dropdown, .select-list {
+      width: 11em !important;
+      height: 15.5em !important;
+
+      li {
+        padding: .5em 0 !important;
+      }
+    }
+  }
+}

@@ -138,10 +138,18 @@
 }
 
 .booking-status {
-  padding: 2px 8px;
+  padding: 6px 20px;
   margin-top: -5px;
   border-radius: 4px;
   position: relative;
+  font-size: 16px;
+  margin-left: 1rem;
+
+  @include breakpoint(mobile) {
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 0;
+  }
 
   span {
     position: relative;

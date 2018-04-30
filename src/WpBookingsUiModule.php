@@ -150,7 +150,10 @@ class WpBookingsUiModule extends AbstractBaseModule
         $endpointsConfig = $c->get('endpointsConfig');
         foreach ($endpointsConfig as $namespace => $endpoints) {
             foreach ($endpoints as $purpose => $endpoint) {
-                $endpointsConfig[$namespace][$purpose]['endpoint'] = rest_url($endpointsConfig[$namespace][$purpose]['endpoint']);
+                if ($endpoint['endpoint'][0] !== '/') {
+                    continue;
+                }
+                $endpointsConfig[$namespace][$purpose]['endpoint'] = rest_url($endpoint['endpoint']);
             }
         }
 
