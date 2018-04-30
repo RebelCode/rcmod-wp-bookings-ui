@@ -1,13 +1,24 @@
-<p class="info">
+<p class="info mobile-collapsed">
     Click on any time or day in the calendar bellow to start adding your available
     times for this service. You may set recurring availabilities to save time,
     exclude dates where the availability does not apply, and much more.
     <a href="#">Learn more.</a>
 </p>
+
+<p class="info mobile-only">
+    Tap on the blue plus button on the bottom right of the calendar to set a new availability. You may set recurring
+    availabilities to save time, exclude dates where the availability does not apply, and much more.
+    <a href="#">Learn more.</a>
+</p>
+<p class="info mobile-only">
+    Scroll sideways on the calendar to view more.
+</p>
+
 <div class="alert alert-warning" v-if="overlappingAvailabilities">
     <span class="dashicons dashicons-info"></span>
     <span>
-        There are at least two availabilities for this service that overlap. Only one of these availabilities will be available to your clients in the booking wizard. We recommend removing one of them. <a href="#">Click here to learn more.</a>
+        There are at least two availabilities for this service that overlap. Only one of these availabilities will be available to your clients in the booking wizard. We recommend removing one of them. <a
+                href="#">Click here to learn more.</a>
     </span>
 </div>
 <div class="alert alert-warning" v-if="!availabilities.length">

@@ -3,13 +3,13 @@
         @delete="deleteBooking"
         inline-template
 >
-    <div>
+    <div class="eddbk-inputs">
         <modal @close="closeModal"
                modal-body-class="modal__body--wide"
                :active="modalState.isOn()"
         >
             <div slot="header">
-                {{ model.id ? 'Edit Booking' : 'Add a New Booking' }}
+                {{ model.id ? 'Edit Booking | ID. ' + model.id  : 'Add a New Booking' }}
                 <div :class="['modal__close modal--right', isDoubleConfirming ? 'disabled' : '']" @click="closeModal()" v-if="!closeConfirming">&times;</div>
                 <div class="modal__header-buttons modal--right" v-else>
                     <input type="button" class="button button-dark-solid" value="Close" @click="forceCloseModal">

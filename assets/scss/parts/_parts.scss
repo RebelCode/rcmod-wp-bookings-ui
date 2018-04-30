@@ -44,25 +44,28 @@
 .input-with-placeholder {
   display: inline-block;
   position: relative;
-}
-.input-with-placeholder span {
-  position: absolute;
-  left: 8px;
-  top: 5px;
-  opacity: .8;
+  span {
+    position: absolute;
+    left: 8px;
+    top: 5px;
+    opacity: .8;
 
-  pointer-events: none;
-  user-select: none;
+    pointer-events: none;
+    user-select: none;
 
-  @include breakpoint(mobile) {
-    left: 9px;
-    top: 13px;
+    @include breakpoint(mobile) {
+      left: 9px;
+      top: 13px;
+      font-size: 16px;
+    }
+  }
+  input {
+    padding-left: 16px;
+    @include breakpoint(mobile) {
+      padding-left: 21px;
+    }
   }
 }
-.input-with-placeholder input {
-  padding-left: 16px;
-}
-
 @include breakpoint(mobile) {
   .loading-container .search-box--bookings {
     display: none;
@@ -74,6 +77,24 @@
     width: calc(100% - 12px) !important;
     input[type="search"] {
       margin: 0 0 8px 0 !important;
+    }
+  }
+}
+
+.eddbk-inputs {
+  $placeholder-color: $light-gray;
+  input, textarea {
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: $placeholder-color;
+      opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: $placeholder-color;
+    }
+
+    &::-ms-input-placeholder { /* Microsoft Edge */
+      color: $placeholder-color;
     }
   }
 }

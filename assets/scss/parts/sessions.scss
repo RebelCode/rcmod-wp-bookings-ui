@@ -6,6 +6,19 @@
 
     @include breakpoint(mobile) {
       padding-right: 1rem;
+      &:first-child {
+        flex-grow: 1;
+        input {
+          width: 50%;
+        }
+      }
+      &:last-child {
+        flex-shrink: 0;
+        width: 30%;
+        input {
+          width: 100% !important;
+        }
+      }
     }
 
     &:last-child {

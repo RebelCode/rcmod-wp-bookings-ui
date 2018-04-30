@@ -17,7 +17,7 @@ $breakpoint-large: 68em; // 960px
 }
 
 .mobile-collapsed {
-  display: initial;
+  display: inherit;
 }
 .mobile-only {
   display: none !important;

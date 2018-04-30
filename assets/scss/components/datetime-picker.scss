@@ -66,6 +66,20 @@
     width: auto;
     background-color: inherit;
   }
+  input {
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: black !important;
+      opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: inherit;
+    }
+
+    &::-ms-input-placeholder { /* Microsoft Edge */
+      color: inherit;
+    }
+  }
   @include breakpoint(mobile) {
     position: static !important;
     width: auto !important;
