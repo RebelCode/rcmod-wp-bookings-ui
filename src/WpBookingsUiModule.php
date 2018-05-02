@@ -8,7 +8,6 @@ use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
-use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\EddBookings\RestApi\Controller\ControllerInterface;
