@@ -75,7 +75,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             [
                 'template_manager' => function ($c) {
                     $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
-                    $templateManager->registerTemplates($c->get('templates'));
+                    $templateManager->registerTemplates($c->get('wp_bookings_ui/templates'));
                     return $templateManager;
                 },
                 'assets_urls_map' => function () {
@@ -92,7 +92,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        $this->metaboxPageId = $c->get('metabox/post_type');
+        $this->metaboxPageId = $c->get('wp_bookings_ui/metabox/post_type');
 
         /* @var EventManagerInterface $eventManager */
         $eventManager = $c->get('event_manager');
@@ -114,7 +114,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_adminMenu($templateManager, $c);
         });
 
-        $eventManager->attach('wp_ajax_set_' . $c->get('screen_options/key'), function () use ($c) {
+        $eventManager->attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), function () use ($c) {
             $data = json_decode(file_get_contents('php://input'), true);
             $statuses = $data['statuses'];
             $this->_setScreenStatuses($c, $statuses);
@@ -187,9 +187,9 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'services' => $services
             ])->getParam('services'),
 
-            'statusesEndpoint' => $c->get('screen_options/endpoint'),
+            'statusesEndpoint' => $c->get('wp_bookings_ui/screen_options/endpoint'),
 
-            'endpointsConfig' => $this->_prepareEndpoints($c->get('endpointsConfig'))
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config'))
         ];
     }
 
@@ -236,7 +236,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         update_user_option(
             $user->ID,
-            $c->get('screen_options/key'),
+            $c->get('wp_bookings_ui/screen_options/key'),
             json_encode($statuses)
         );
 
@@ -253,7 +253,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         if (!$user = wp_get_current_user())
             return [];
 
-        $screenOptions = get_user_option($c->get('screen_options/key'), $user->ID);
+        $screenOptions = get_user_option($c->get('wp_bookings_ui/screen_options/key'), $user->ID);
         if (!$screenOptions) {
             return [
                 "in_cart", "draft", "pending", "approved", "rejected", "scheduled", "cancelled", "completed"
@@ -318,11 +318,11 @@ class WpBookingsUiModule extends AbstractBaseModule
          * Enqueue require-related script and script list from the container
          */
         wp_enqueue_script('rc-app-require', $assetsUrlMap->get(
-            $c->get('assets/require.js')
+            $c->get('wp_bookings_ui/assets/require.js')
         ), [], false, true);
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
             'app' => $assetsUrlMap->get(
-                $c->get('assets/bookings/app.min.js')
+                $c->get('wp_bookings_ui/assets/bookings/app.min.js')
             )
         ]);
 
@@ -330,13 +330,13 @@ class WpBookingsUiModule extends AbstractBaseModule
          * All application components located here
          */
         wp_enqueue_script('rc-app', $assetsUrlMap->get(
-            $c->get('assets/bookings/main.js')
+            $c->get('wp_bookings_ui/assets/bookings/main.js')
         ), [], false, true);
 
         /*
          * Enqueue all styles from assets URL map
          */
-        foreach ($c->get('assets/styles') as $styleId => $styleDependency) {
+        foreach ($c->get('wp_bookings_ui/assets/styles') as $styleId => $styleDependency) {
             wp_enqueue_style('rc-app-' . $styleId, $assetsUrlMap->get($styleDependency));
         }
 
@@ -353,17 +353,18 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _adminInit($eventManager, $templateManager, $c)
     {
+        $metaboxConfig = $c->get('wp_bookings_ui/metabox');
         /*
          * Add metabox with availabilities configuration to
          * service's edit page.
          */
         add_meta_box(
-            $c->get('metabox/id'),
-            $c->get('metabox/title'),
+            $metaboxConfig->get('id'),
+            $metaboxConfig->get('title'),
             function () use ($templateManager) {
                 echo $this->_renderMetabox($templateManager);
             },
-            $c->get('metabox/post_type')
+            $metaboxConfig->get('post_type')
         );
 
         /*
@@ -395,35 +396,39 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _adminMenu($templateManager, $c)
     {
+        $rootMenuConfig = $c->get('wp_bookings_ui/menu/root');
+        $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
+        $aboutMenuConfig = $c->get('wp_bookings_ui/menu/about');
+
         $this->bookingsPageId = add_menu_page(
-            $c->get('menu/root/page_title'),
-            $c->get('menu/root/menu_title'),
-            $c->get('menu/root/capability'),
-            $c->get('menu/root/menu_slug'),
+            $rootMenuConfig->get('page_title'),
+            $rootMenuConfig->get('menu_title'),
+            $rootMenuConfig->get('capability'),
+            $rootMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
                 echo $this->_renderMainPage($templateManager);
             },
-            $c->get('menu/root/icon'),
-            $c->get('menu/root/position')
+            $rootMenuConfig->get('icon'),
+            $rootMenuConfig->get('position')
         );
 
         add_submenu_page(
-            $c->get('menu/root/menu_slug'),
-            $c->get('menu/settings/page_title'),
-            $c->get('menu/settings/menu_title'),
-            $c->get('menu/settings/capability'),
-            $c->get('menu/settings/menu_slug'),
+            $rootMenuConfig->get('menu_slug'),
+            $settingsMenuConfig->get('page_title'),
+            $settingsMenuConfig->get('menu_title'),
+            $settingsMenuConfig->get('capability'),
+            $settingsMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
                 return $this->_renderSettingsPage($templateManager);
             }
         );
 
         add_submenu_page(
-            $c->get('menu/root/menu_slug'),
-            $c->get('menu/about/page_title'),
-            $c->get('menu/about/menu_title'),
-            $c->get('menu/about/capability'),
-            $c->get('menu/about/menu_slug'),
+            $rootMenuConfig->get('menu_slug'),
+            $aboutMenuConfig->get('page_title'),
+            $aboutMenuConfig->get('menu_title'),
+            $aboutMenuConfig->get('capability'),
+            $aboutMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
                 return $this->_renderAboutPage($templateManager);
             }
