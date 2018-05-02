@@ -360,7 +360,7 @@ class WpBookingsUiModule extends AbstractBaseModule
          */
         add_meta_box(
             $metaboxConfig->get('id'),
-            $metaboxConfig->get('title'),
+            __($metaboxConfig->get('title'), EDDBK_TEXT_DOMAIN),
             function () use ($templateManager) {
                 echo $this->_renderMetabox($templateManager);
             },
@@ -401,8 +401,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         $aboutMenuConfig = $c->get('wp_bookings_ui/menu/about');
 
         $this->bookingsPageId = add_menu_page(
-            $rootMenuConfig->get('page_title'),
-            $rootMenuConfig->get('menu_title'),
+            __($rootMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
+            __($rootMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
             $rootMenuConfig->get('capability'),
             $rootMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
@@ -414,8 +414,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
-            $settingsMenuConfig->get('page_title'),
-            $settingsMenuConfig->get('menu_title'),
+            __($settingsMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
+            __($settingsMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
@@ -425,8 +425,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
-            $aboutMenuConfig->get('page_title'),
-            $aboutMenuConfig->get('menu_title'),
+            __($aboutMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
+            __($aboutMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
