@@ -8,6 +8,7 @@ use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
+use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\EddBookings\RestApi\Controller\ControllerInterface;
@@ -23,6 +24,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     use CreateNotFoundExceptionCapableTrait;
 
     use NormalizeKeyCapableTrait;
+
+    use NormalizeArrayCapableTrait;
 
     /**
      * Registered booking's page ID.
@@ -71,12 +74,18 @@ class WpBookingsUiModule extends AbstractBaseModule
     public function setup()
     {
         return $this->_setupContainer(
-            $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_DIR . '/config.php'),
+            $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_CONFIG_FILE),
             [
                 'template_manager' => function ($c) {
                     $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
                     $templateManager->registerTemplates($c->get('templates'));
                     return $templateManager;
+                },
+                'assets_urls_map' => function () {
+                    $assetsUrlsMap = require_once WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/assets_urls_map.php';
+                    return $this->_getContainerFactory()->make([
+                        ContainerFactoryInterface::K_DATA => $assetsUrlsMap
+                    ]);
                 }
             ]);
     }
@@ -94,9 +103,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
 
-        $assetsConfig = $this->_getContainerFactory()->make([
-            ContainerFactoryInterface::K_DATA => $c->get('assets')
-        ]);
+        $assetsConfig = $c->get('assets_urls_map');
+
         $eventManager->attach('admin_enqueue_scripts', function () use ($assetsConfig, $c) {
             $this->_enqueueAssets($assetsConfig, $c);
         }, 999);
@@ -147,16 +155,6 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getBookingsAppState($c)
     {
-        $endpointsConfig = $c->get('endpointsConfig');
-        foreach ($endpointsConfig as $namespace => $endpoints) {
-            foreach ($endpoints as $purpose => $endpoint) {
-                if ($endpoint['endpoint'][0] !== '/') {
-                    continue;
-                }
-                $endpointsConfig[$namespace][$purpose]['endpoint'] = rest_url($endpoint['endpoint']);
-            }
-        }
-
         /* @var ControllerInterface $controller */
         $controller = $c->get('eddbk_services_controller');
         $services = iterator_to_array($controller->get());
@@ -194,8 +192,37 @@ class WpBookingsUiModule extends AbstractBaseModule
 
             'statusesEndpoint' => $c->get('screen_options/endpoint'),
 
-            'endpointsConfig' => $endpointsConfig
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('endpointsConfig'))
         ];
+    }
+
+    /**
+     * Prepare endpoints for consuming in the UI
+     *
+     * @param $endpointsConfig
+     * @return array
+     */
+    protected function _prepareEndpoints($endpointsConfig)
+    {
+        $resultingConfig = [];
+
+        foreach ($endpointsConfig as $namespace => $endpoints) {
+            $resultingConfig[$namespace] = [];
+            foreach ($endpoints as $purpose => $endpoint) {
+                $endpointUrl = $endpoint->get('endpoint');
+
+                $resultingConfig[$namespace][$purpose] = [
+                    'method' => $endpoint->get('method'),
+                    'endpoint' => $endpointUrl
+                ];
+
+                if ($endpointUrl[0] === '/') {
+                    $resultingConfig[$namespace][$purpose]['endpoint'] = rest_url($endpointUrl);
+                }
+            }
+        }
+
+        return $resultingConfig;
     }
 
     /**
@@ -284,26 +311,36 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @param ContainerInterface $assetsConfig Assets container config
      * @param ContainerInterface $c Module config
      */
-    protected function _enqueueAssets(ContainerInterface $assetsConfig, ContainerInterface $c)
+    protected function _enqueueAssets(ContainerInterface $assetsUrlMap, ContainerInterface $c)
     {
         if (!$this->_onAppPage()) {
             return;
         }
 
-        wp_enqueue_script('rc-app-require', $assetsConfig->get('require'), [], false, true);
-
+        /*
+         * Enqueue require-related script and script list from the container
+         */
+        wp_enqueue_script('rc-app-require', $assetsUrlMap->get(
+            $c->get('assets/require.js')
+        ), [], false, true);
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
-            'app' => $assetsConfig->get('bookings_ui/dist/app.min.js')
+            'app' => $assetsUrlMap->get(
+                $c->get('assets/bookings/app.min.js')
+            )
         ]);
 
         /*
          * All application components located here
          */
-        wp_enqueue_script('rc-app', $assetsConfig->get('bookings_ui/assets/js/main.js'), [], false, true);
-        wp_enqueue_style('rc-app', $assetsConfig->get('bookings_ui/dist/wp-booking-ui.css'));
+        wp_enqueue_script('rc-app', $assetsUrlMap->get(
+            $c->get('assets/bookings/main.js')
+        ), [], false, true);
 
-        foreach ($assetsConfig->get('style_deps') as $styleDep) {
-            wp_enqueue_style('rc-app-require', $styleDep);
+        /*
+         * Enqueue all styles from assets URL map
+         */
+        foreach ($c->get('assets/styles') as $styleId => $styleDependency) {
+            wp_enqueue_style('rc-app-' . $styleId, $assetsUrlMap->get($styleDependency));
         }
 
         $state = $this->_onBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
