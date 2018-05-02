@@ -25,8 +25,6 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     use NormalizeKeyCapableTrait;
 
-    use NormalizeArrayCapableTrait;
-
     /**
      * Registered booking's page ID.
      *
