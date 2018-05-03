@@ -8,14 +8,14 @@ return [
         ],
         'metabox' => [
             'id' => 'service_booking_settings',
-            'post_type' => 'post', //'download',
+            'post_type' => 'download',
             'title' => 'Booking Options',
         ],
         'menu' => [
             'root' => [
                 'page_title' => 'Bookings',
                 'menu_title' => 'Bookings',
-                'capability' => 'publish_posts', //publish_bookings
+                'capability' => 'publish_bookings',
                 'menu_slug' => 'eddbk-bookings',
                 'icon' => 'dashicons-calendar-alt',
                 'position' => 20
@@ -23,13 +23,13 @@ return [
             'settings' => [
                 'page_title' => 'Settings',
                 'menu_title' => 'Settings',
-                'capability' => 'publish_posts', //publish_bookings
+                'capability' => 'publish_bookings',
                 'menu_slug' => 'eddbk-settings'
             ],
             'about' => [
                 'page_title' => 'About',
                 'menu_title' => 'About',
-                'capability' => 'publish_posts', //publish_bookings
+                'capability' => 'publish_bookings',
                 'menu_slug' => 'eddbk-about'
             ]
         ],
