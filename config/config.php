@@ -50,6 +50,7 @@ return [
             'booking/general',
             'booking/screen-options',
         ],
+        'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/assets_urls_map.php',
         'assets' => [
             'require.js' => 'require',
             'bookings' => [

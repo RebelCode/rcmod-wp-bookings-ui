@@ -78,8 +78,8 @@ class WpBookingsUiModule extends AbstractBaseModule
                     $templateManager->registerTemplates($c->get('wp_bookings_ui/templates'));
                     return $templateManager;
                 },
-                'assets_urls_map' => function () {
-                    $assetsUrlsMap = require_once WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/assets_urls_map.php';
+                'assets_urls_map' => function ($c) {
+                    $assetsUrlsMap = require_once $c->get('wp_bookings_ui/assets_urls_map_path');
                     return $this->_getContainerFactory()->make([
                         ContainerFactoryInterface::K_DATA => $assetsUrlsMap
                     ]);
