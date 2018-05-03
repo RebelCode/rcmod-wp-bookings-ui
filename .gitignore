@@ -4,6 +4,6 @@
 /test/coverage/
 /test/log/
 /node_modules/
-/dist/
+/dist/*
 !/dist/.gitkeep
 /build/
