@@ -5,11 +5,11 @@
   "scripts": {
     "watch:css": "./node_modules/.bin/webpack --watch",
     "build:css": "./node_modules/.bin/webpack -p",
-    "build": "...",
-    "postinstall": "cp ./node_modules/booking-js/dist/js/app.min.js ./dist/app.min.js"
+    "build:js": "cd ./node_modules/booking-js/ && npm run build -- --output-path='booking-js' && cp -a ./booking-js/ ../../dist",
+    "build": "..."
   },
   "devDependencies": {
-    "booking-js": "git@github.com:RebelCode/bookings-js.git#11bc8c09ea0d6f52ed5e587297c8ddb3bf456fcc",
+    "booking-js": "git@github.com:RebelCode/bookings-js.git#08cd9cbf8554f4b2835ffc1790bf0badbd4fe551",
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "fast-sass-loader": "^1.4.0",

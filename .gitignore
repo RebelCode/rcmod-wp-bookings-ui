@@ -4,6 +4,6 @@
 /test/coverage/
 /test/log/
 /node_modules/
-/dist/_.js
-/dist/app.min.js
+/dist/
+!/dist/.gitkeep
 /build/
