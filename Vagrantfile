@@ -97,7 +97,6 @@ Vagrant.configure(2) do |config|
     # Allow GitHub
     ssh-keyscan github.com >> githubKey
     cat githubKey >> ~/.ssh/known_hosts
-EOL
 
   SCRIPT
 
