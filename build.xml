@@ -21,7 +21,7 @@
 
     <target name="install_js">
         <echo msg="Installing JS dependencies" />
-        <exec command="npm install" dir="${module_base_dir}" checkreturn="true" />
+        <exec command="npm install --no-bin-links" dir="${module_base_dir}" checkreturn="true" />
     </target>
 
     <target name="maybe_install_js" unless="js_installed">
