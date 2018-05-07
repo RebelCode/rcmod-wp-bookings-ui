@@ -79,7 +79,6 @@ class WpBookingsUiModule extends AbstractBaseModule
                     return $templateManager;
                 },
                 'assets_urls_map' => function ($c) {
-//                    var_dump($c->get('wp_bookings_ui/assets_urls_map_path'));die;
                     $assetsUrlsMap = require_once $c->get('wp_bookings_ui/assets_urls_map_path');
                     return $this->_getContainerFactory()->make([
                         ContainerFactoryInterface::K_DATA => $assetsUrlsMap

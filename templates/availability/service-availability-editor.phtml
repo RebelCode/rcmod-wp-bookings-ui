@@ -56,7 +56,12 @@
                     <div class="form-row">
                         <div class="form-row__label">Repeats after</div>
                         <div class="form-row__input">
-                            <input type="number" style="width: 90px;vertical-align: middle;" min="1" :max="repeatingDuration" v-model="model.repeatPeriod"/>
+                            <input type="number" style="width: 90px;vertical-align: middle;"
+                                   :min="minimalRepeatPeriod"
+                                   :max="repeatingDuration"
+                                   @blur="normalizeRepeatPeriod"
+                                   v-model="model.repeatPeriod"
+                            />
 
                             <select v-model="model.repeatUnit" style="min-width: 90px">
                                 <option value="days">{{ pluralize(_('day'), Number(model.repeatPeriod)) }}</option>
@@ -64,6 +69,8 @@
                                 <option value="months">{{ pluralize(_('month'), Number(model.repeatPeriod)) }}</option>
                                 <option value="years">{{ pluralize(_('year'), Number(model.repeatPeriod)) }}</option>
                             </select>
+
+                            <span class="dashicons dashicons-editor-help eddbk-help" title="Repeats after x units.  Example: repeats after 3 days, starting on Monday woud make this available on Monday, then Thursday, then Sunday.  For instance, starting on Monday 30th April, the next availabilities would be Thursday 3rd May, then Sunday 6th May, then Wednesday 9th, and so on."></span>
                         </div>
                     </div>
 
