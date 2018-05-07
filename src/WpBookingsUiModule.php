@@ -163,14 +163,14 @@ class WpBookingsUiModule extends AbstractBaseModule
              */
             'statuses' => $this->_trigger('eddbk_bookings_statuses', [
                 'statuses' => [
-                    "draft" => __("Draft", EDDBK_TEXT_DOMAIN),
-                    "in_cart" => __("Cart", EDDBK_TEXT_DOMAIN),
-                    "pending" => __("Pending", EDDBK_TEXT_DOMAIN),
-                    "approved" => __("Approved", EDDBK_TEXT_DOMAIN),
-                    "rejected" => __("Rejected", EDDBK_TEXT_DOMAIN),
-                    "scheduled" => __("Scheduled", EDDBK_TEXT_DOMAIN),
-                    "cancelled" => __("Cancelled", EDDBK_TEXT_DOMAIN),
-                    "completed" => __("Completed", EDDBK_TEXT_DOMAIN)
+                    "draft" => $this->__('Draft'),
+                    "in_cart" => $this->__('Cart'),
+                    "pending" => $this->__('Pending'),
+                    "approved" => $this->__('Approved'),
+                    "rejected" => $this->__('Rejected'),
+                    "scheduled" => $this->__('Scheduled'),
+                    "cancelled" => $this->__('Cancelled'),
+                    "completed" => $this->__('Completed')
                 ]
             ])->getParam('statuses'),
 
@@ -361,7 +361,7 @@ class WpBookingsUiModule extends AbstractBaseModule
          */
         add_meta_box(
             $metaboxConfig->get('id'),
-            __($metaboxConfig->get('title'), EDDBK_TEXT_DOMAIN),
+            $this->__($metaboxConfig->get('title')),
             function () use ($templateManager) {
                 echo $this->_renderMetabox($templateManager);
             },
@@ -402,8 +402,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         $aboutMenuConfig = $c->get('wp_bookings_ui/menu/about');
 
         $this->bookingsPageId = add_menu_page(
-            __($rootMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
-            __($rootMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
+            $this->__($rootMenuConfig->get('page_title')),
+            $this->__($rootMenuConfig->get('menu_title')),
             $rootMenuConfig->get('capability'),
             $rootMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
@@ -415,8 +415,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
-            __($settingsMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
-            __($settingsMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
+            $this->__($settingsMenuConfig->get('page_title')),
+            $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
@@ -426,8 +426,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
-            __($aboutMenuConfig->get('page_title'), EDDBK_TEXT_DOMAIN),
-            __($aboutMenuConfig->get('menu_title'), EDDBK_TEXT_DOMAIN),
+            $this->__($aboutMenuConfig->get('page_title')),
+            $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
             function () use ($templateManager) {
