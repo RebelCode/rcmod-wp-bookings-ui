@@ -9,11 +9,11 @@
                 </label>
             </div>
             <tabs :options="tabsConfig" v-model="activeTab" v-if="enableBookings">
-                <tab title="Availability">
-                    <?=$this->render('availability/tab-availability');?>
-                </tab>
                 <tab title="Session Length">
                     <?=$this->render('availability/tab-session-length');?>
+                </tab>
+                <tab title="Availability">
+                    <?=$this->render('availability/tab-availability');?>
                 </tab>
                 <tab title="Display Options">
                     <?=$this->render('availability/tab-display-options');?>
