@@ -43,7 +43,7 @@
 
             <template slot="client" slot-scope="data">
                 <a href="#">
-                    {{ data.row.client.name }}
+                    {{ data.row.client ? data.row.client.name : null }}
                 </a>
             </template>
 
