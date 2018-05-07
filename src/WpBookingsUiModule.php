@@ -102,19 +102,19 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $assetsConfig = $c->get('assets_urls_map');
 
-        $eventManager->attach('admin_enqueue_scripts', function () use ($assetsConfig, $c) {
+        $this->_attach('admin_enqueue_scripts', function () use ($assetsConfig, $c) {
             $this->_enqueueAssets($assetsConfig, $c);
         }, 999);
 
-        $eventManager->attach('admin_init', function () use ($eventManager, $templateManager, $c) {
+        $this->_attach('admin_init', function () use ($eventManager, $templateManager, $c) {
             $this->_adminInit($eventManager, $templateManager, $c);
         });
 
-        $eventManager->attach('admin_menu', function () use ($templateManager, $c) {
+        $this->_attach('admin_menu', function () use ($templateManager, $c) {
             $this->_adminMenu($templateManager, $c);
         });
 
-        $eventManager->attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), function () use ($c) {
+        $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), function () use ($c) {
             $data = json_decode(file_get_contents('php://input'), true);
             $statuses = $data['statuses'];
             $this->_setScreenStatuses($c, $statuses);
