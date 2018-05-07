@@ -15,22 +15,13 @@
 
             <div slot="body" :class="isDoubleConfirming ? 'disabled' : ''">
                 <div class="form-row">
-                    <div class="form-row__label">Starting from</div>
+                    <div class="form-row__label">Starts on</div>
                     <div class="form-row__input">
-                        <datepicker name="fromDate" placeholder="-- / -- / ----" format="dd/MM/yyyy" v-model="model.fromDate" style="width: 90px"
-                            :disabled="{to: currentDay}"
-                        ></datepicker>
-<!--                        <input type="text" placeholder="-- / -- / ----" v-model="model.fromDate" style="width: 90px">-->
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-row__label">Available time</div>
-                    <div class="form-row__input">
-                        <time-picker v-model="fromTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"></time-picker>
-                        <span class="form-row__word">to</span>
-                        <time-picker v-model="toTimeModel" format="HH:mm" :class="model.isAllDay ? 'disabled':''" style="width: 90px"
-                                     :disabled-to="fromTimeModel"
-                        ></time-picker>
+                        <datetime-picker class="datetime-picker--inline"
+                                         v-model="model.start"
+                                         :time-disabled="model.isAllDay"
+                                         :disabled-before="currentDay"
+                        ></datetime-picker>
 
                         <label for="all-day" class="form-row__word">
                             <input type="checkbox" id="all-day" v-model="model.isAllDay"> All day
@@ -38,111 +29,131 @@
                     </div>
                 </div>
                 <div class="form-row">
+                    <div class="form-row__label">Ends on</div>
+                    <div class="form-row__input">
+                        <datetime-picker class="datetime-picker--inline"
+                                         v-model="model.end"
+                                         :time-disabled="model.isAllDay"
+                                         :disabled-before="model.start"
+                        ></datetime-picker>
+                    </div>
+                </div>
+
+<!--                <hr>-->
+
+                <div class="form-row">
                     <div class="form-row__label">Repeats</div>
                     <div class="form-row__input">
-                        <select v-model="model.repeats" style="min-width: 90px">
-                            <option value="never">Never</option>
-                            <option value="day">Daily</option>
-                            <option value="week">Weekly</option>
-                            <option value="month">Monthly</option>
-                            <option value="year">Yearly</option>
-                        </select>
+                        <label for="is-repeated" class="form-row__word">
+                            <input type="checkbox" id="is-repeated" v-model="model.repeat">
+                        </label>
                     </div>
                 </div>
 
-                <div class="form-row" v-if="model.repeats !== 'never'">
-                    <div class="form-row__label">Repeats every</div>
-                    <div class="form-row__input">
-                        <select style="min-width: 90px" v-model="model.repeatsEvery">
-                            <option :value="i" v-for="i in repeatingDuration">{{ i }}</option>
-                        </select>
-                        {{ repeatingTitle }}
-                    </div>
-                </div>
 
-                <template v-if="model.repeats === 'week'">
+                <template v-if="model.repeat">
+<!--                    <hr>-->
                     <div class="form-row">
-                        <div class="form-row__label">Repeats on</div>
+                        <div class="form-row__label">Repeats after</div>
                         <div class="form-row__input">
-                            <selection-list :collection="repeatsOnCollection" v-model="model.repeatsOn" :multiple="true">
-                                <label class="label__rared" :for="r.getKey(r.item)" slot-scope="r">
-                                    <input type="checkbox"
-                                           :id="r.getKey(r.item)"
-                                           :value="r.getKey(r.item)"
-                                           @change="r.select(r.item)"
-                                           :checked="r.isItemSelected(r.item)"
-                                    > {{ r.item.value }}
+                            <input type="number" style="width: 90px;vertical-align: middle;" min="1" :max="repeatingDuration" v-model="model.repeatPeriod"/>
+
+                            <select v-model="model.repeatUnit" style="min-width: 90px">
+                                <option value="days">{{ pluralize(_('day'), Number(model.repeatPeriod)) }}</option>
+                                <option value="weeks">{{ pluralize(_('week'), Number(model.repeatPeriod)) }}</option>
+                                <option value="months">{{ pluralize(_('month'), Number(model.repeatPeriod)) }}</option>
+                                <option value="years">{{ pluralize(_('year'), Number(model.repeatPeriod)) }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <template v-if="model.repeatUnit === 'weeks' && isSameDay()">
+                        <div class="form-row">
+                            <div class="form-row__label">Repeats on</div>
+                            <div class="form-row__input">
+                                <selection-list :collection="repeatsOnCollection" v-model="model.repeatWeeklyOn" :multiple="true">
+                                    <label class="label__rared" :for="r.getKey(r.item)" slot-scope="r">
+                                        <input type="checkbox"
+                                               :id="r.getKey(r.item)"
+                                               :value="r.getKey(r.item)"
+                                               @change="r.select(r.item)"
+                                               :checked="r.isItemSelected(r.item)"
+                                        > {{ r.item.value }}
+                                    </label>
+                                </selection-list>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template v-if="model.repeatUnit === 'months'">
+                        <div class="form-row">
+                            <div class="form-row__label">Repeats on</div>
+                            <div class="form-row__input">
+                                <selection-list :collection="repeatsOnCollection" v-model="model.repeatMonthlyOn" wrap="select">
+                                    <option :value="r.getKey(r.item)" slot-scope="r">{{ r.item.value }}</option>
+                                </selection-list>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="form-row">
+                        <div class="form-row__label">Ends</div>
+                        <div class="form-row__input">
+                            <div>
+                                <label for="ends-after" style="width: 90px; display: inline-block">
+                                    <input type="radio" id="ends-after" value="period" v-model="model.repeatUntil"> After
                                 </label>
-                            </selection-list>
+                                <input type="number" min="1" placeholder="4" style="width: 90px" v-model="model.repeatUntilPeriod"> {{ repeatsUntilPeriodTitle }}
+                            </div>
+
+                            <div style="margin-top: 4px" class="inline-datepicker">
+                                <label for="ends-on" style="width: 90px; display: inline-block">
+                                    <input type="radio" id="ends-on" value="date" v-model="model.repeatUntil"> On
+                                </label>
+                                <datepicker name="repeatsEndsDate"
+                                            v-model="model.repeatUntilDate"
+                                            placeholder="-- / -- / ----"
+                                            format="dd/MM/yyyy"
+                                            style="width: 90px"
+                                            :disabled="{to: availabilityStart}"
+                                ></datepicker>
+                            </div>
                         </div>
                     </div>
-                </template>
 
-                <template v-if="model.repeats === 'month'">
                     <div class="form-row">
-                        <div class="form-row__label">Repeats on</div>
-                        <div class="form-row__input">
-                            <selection-list :collection="repeatsOnCollection" v-model="model.repeatsOn" wrap="select">
-                                <option :value="r.getKey(r.item)" slot-scope="r">{{ r.item.value }}</option>
-                            </selection-list>
+                        <div class="form-row__label">
+                            Exclusions
+                            <div class="form-row__description">
+                                Days excluded from the availability range
+                            </div>
                         </div>
-                    </div>
-                </template>
-
-                <div class="form-row" v-if="model.repeats !== 'never'">
-                    <div class="form-row__label">Ends</div>
-                    <div class="form-row__input">
-                        <div>
-                            <label for="ends-after" style="width: 90px; display: inline-block">
-                                <input type="radio" id="ends-after" value="afterPeriod" v-model="model.repeatsEnds"> After
-                            </label>
-                            <input type="number" min="1" placeholder="4" style="width: 90px" v-model="model.repeatsEndsPeriod"> {{ repeatsEndsTitle }}
-                        </div>
-
-                        <div style="margin-top: 4px" class="inline-datepicker">
-                            <label for="ends-on" style="width: 90px; display: inline-block">
-                                <input type="radio" id="ends-on" value="onDate" v-model="model.repeatsEnds"> On
-                            </label>
-                            <datepicker name="repeatsEndsDate" v-model="model.repeatsEndsDate" placeholder="-- / -- / ----" format="dd/MM/yyyy"
-                                        style="width: 90px"
-                                        :disabled="{to: availabilityStart}"
-                            ></datepicker>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row" v-if="model.repeats !== 'never'">
-                    <div class="form-row__label">
-                        Exclusions
-                        <div class="form-row__description">
-                            Days excluded from the availability range
-                        </div>
-                    </div>
-                    <div class="form-row__input form-row__input--padded">
-                        <div>
-                            <a href="#set-new-exclusions" class="add-new" @click="exclusionsPickerVisible = !exclusionsPickerVisible">
-                                {{ exclusionsPickerVisible ? '- Hide Exclusion\'s Picker' : '+ Set New Exclusions' }}
-                            </a>
-                        </div>
-
-                        <div class="exclusions-datepicker" v-if="exclusionsPickerVisible">
-                            <datepicker :inline="true"
-                                        :highlighted="excludesDatesModels"
-                                        @selected="excludeDateSelected"
-                                        ref="exclusions"
-                            ></datepicker>
-                        </div>
-
-                        <repeater :collection="excludesDatesCollection" class="exclusions-list" v-if="model.excludesDates.length">
-                            <div class="exclusions-list__item" slot-scope="r">
-                                <div class="exclusions-list__item-title" v-text="_getExclusionItemTitle(r.item)"></div>
-                                <a href="#removed" class="trash-can trash-can--right" @click="r.remove(r.item)">
-                                    <span class="trash-can__icon dashicons dashicons-trash"></span>
+                        <div class="form-row__input form-row__input--padded">
+                            <div>
+                                <a href="#set-new-exclusions" class="add-new" @click="exclusionsPickerVisible = !exclusionsPickerVisible">
+                                    {{ exclusionsPickerVisible ? '- Hide Exclusion\'s Picker' : '+ Set New Exclusions' }}
                                 </a>
                             </div>
-                        </repeater>
+
+                            <div class="exclusions-datepicker" v-if="exclusionsPickerVisible">
+                                <datepicker :inline="true"
+                                            :highlighted="excludesDatesModels"
+                                            @selected="excludeDateSelected"
+                                            ref="exclusions"
+                                ></datepicker>
+                            </div>
+
+                            <repeater :collection="excludesDatesCollection" class="exclusions-list" v-if="model.excludesDates.length">
+                                <div class="exclusions-list__item" slot-scope="r">
+                                    <div class="exclusions-list__item-title" v-text="_getExclusionItemTitle(r.item)"></div>
+                                    <a href="#removed" class="trash-can trash-can--right" @click="r.remove(r.item)">
+                                        <span class="trash-can__icon dashicons dashicons-trash"></span>
+                                    </a>
+                                </div>
+                            </repeater>
+                        </div>
                     </div>
-                </div>
+                </template>
             </div>
 
             <div slot="footer">
