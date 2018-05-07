@@ -9,17 +9,17 @@
                 </label>
             </div>
             <tabs :options="tabsConfig" v-model="activeTab" v-if="enableBookings">
-                <tab title="Availability">
-                    <?=$this->render('availability/tab-availability');?>
-                </tab>
                 <tab title="Session Length">
                     <?=$this->render('availability/tab-session-length');?>
+                </tab>
+                <tab title="Availability">
+                    <?=$this->render('availability/tab-availability');?>
                 </tab>
                 <tab title="Display Options">
                     <?=$this->render('availability/tab-display-options');?>
                 </tab>
             </tabs>
-            <input type="hidden" name="eddbk_bookings_options" :value="bookingOptionsFormData">
+            <input type="hidden" name="eddbk[service_options]" :value="bookingOptionsFormData">
         </div>
     </service-bookings-application>
 </div>
