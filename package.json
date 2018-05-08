@@ -9,7 +9,7 @@
     "build": "..."
   },
   "devDependencies": {
-    "booking-js": "git@github.com:RebelCode/bookings-js.git#63b785b48e563904313551beb7f8f914fc6d7707",
+    "booking-js": "RebelCode/bookings-js.git#63b785b48e563904313551beb7f8f914fc6d7707",
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "fast-sass-loader": "^1.4.0",
