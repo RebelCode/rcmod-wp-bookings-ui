@@ -14,29 +14,40 @@ use RebelCode\EddBookings\RestApi\Controller\ControllerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
 
+/**
+ * Class WpBookingsUiModule
+ *
+ * Responsible for providing UI in the dashboard.
+ *
+ * @since [*next-version*]
+ */
 class WpBookingsUiModule extends AbstractBaseModule
 {
+    /* @since [*next-version*] */
     use ContainerGetCapableTrait;
 
+    /* @since [*next-version*] */
     use CreateContainerExceptionCapableTrait;
 
+    /* @since [*next-version*] */
     use CreateNotFoundExceptionCapableTrait;
 
+    /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
 
     /**
      * Registered booking's page ID.
      *
-     * @var
+     * @var string
      */
-    public $bookingsPageId;
+    protected $bookingsPageId;
 
     /**
      * Page where metabox application should be shown.
      *
-     * @var
+     * @var string
      */
-    public $metaboxPageId;
+    protected $metaboxPageId;
 
     /**
      * Constructor.
@@ -66,7 +77,9 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @since [*next-version*]
      */
     public function setup()
     {
@@ -88,14 +101,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @since [*next-version*]
      */
     public function run(ContainerInterface $c = null)
     {
         $this->metaboxPageId = $c->get('wp_bookings_ui/metabox/post_type');
-
-        /* @var EventManagerInterface $eventManager */
-        $eventManager = $c->get('event_manager');
 
         /** @var TemplateManager $templateManager */
         $templateManager = $c->get('template_manager');
@@ -106,8 +118,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_enqueueAssets($assetsConfig, $c);
         }, 999);
 
-        $this->_attach('admin_init', function () use ($eventManager, $templateManager, $c) {
-            $this->_adminInit($eventManager, $templateManager, $c);
+        $this->_attach('admin_init', function () use ($templateManager, $c) {
+            $this->_adminInit($templateManager, $c);
         });
 
         $this->_attach('admin_menu', function () use ($templateManager, $c) {
@@ -124,9 +136,11 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Check current screen is screen where EDDBK UI should be rendered.
      *
+     * @since [*next-version*]
+     *
      * @return bool
      */
-    protected function _onAppPage()
+    protected function _isOnAppPage()
     {
         return in_array(get_current_screen()->id, [
             $this->bookingsPageId,
@@ -137,15 +151,19 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Check current screen is bookings page.
      *
+     * @since [*next-version*]
+     *
      * @return bool
      */
-    protected function _onBookingsPage()
+    protected function _isOnBookingsPage()
     {
         return get_current_screen()->id === $this->bookingsPageId;
     }
 
     /**
      * Get app state for booking page.
+     *
+     * @since [*next-version*]
      *
      * @param ContainerInterface $c
      * @return array
@@ -196,6 +214,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Prepare endpoints for consuming in the UI
      *
+     * @since [*next-version*]
+     *
      * @param $endpointsConfig
      * @return array
      */
@@ -225,6 +245,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Save visible screen statuses in per-user options.
      *
+     * @since [*next-version*]
+     *
      * @param ContainerInterface $c
      * @param array $statuses
      */
@@ -246,6 +268,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Return list of all statuses that is available for user by default.
      *
+     * @since [*next-version*]
+     *
      * @return array|mixed|object
      */
     protected function _getScreenStatuses($c)
@@ -266,6 +290,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Get app state for service page
+     *
+     * @since [*next-version*]
      *
      * @return array
      */
@@ -305,12 +331,14 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Enqueue all UI assets.
      *
+     * @since [*next-version*]
+     *
      * @param ContainerInterface $assetsConfig Assets container config
      * @param ContainerInterface $c Module config
      */
     protected function _enqueueAssets(ContainerInterface $assetsUrlMap, ContainerInterface $c)
     {
-        if (!$this->_onAppPage()) {
+        if (!$this->_isOnAppPage()) {
             return;
         }
 
@@ -340,7 +368,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             wp_enqueue_style('rc-app-' . $styleId, $assetsUrlMap->get($styleDependency));
         }
 
-        $state = $this->_onBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
+        $state = $this->_isOnBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
 
         wp_localize_script('rc-app', 'EDDBK_APP_STATE', $state);
     }
@@ -348,10 +376,11 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Register hook on admin init which will register everything else.
      *
-     * @param EventManagerInterface $eventManager
+     * @since [*next-version*]
+     *
      * @param TemplateManager $templateManager
      */
-    protected function _adminInit($eventManager, $templateManager, $c)
+    protected function _adminInit($templateManager, $c)
     {
         $metaboxConfig = $c->get('wp_bookings_ui/metabox');
         /*
@@ -371,7 +400,7 @@ class WpBookingsUiModule extends AbstractBaseModule
          * Add screen options on bookings management page.
          */
         add_filter('screen_settings', function ($settings, \WP_Screen $screen) use ($templateManager) {
-            if (!$this->_onBookingsPage())
+            if (!$this->_isOnBookingsPage())
                 return $settings;
 
             return $this->_renderBookingsScreenOptions($templateManager);
@@ -381,7 +410,7 @@ class WpBookingsUiModule extends AbstractBaseModule
          * @todo: this is not working as expected (nothing happens).
          */
 //        $this->_attach('screen_settings', function ($event) use ($templateManager) {
-//            if (!$this->_onBookingsPage())
+//            if (!$this->_isOnBookingsPage())
 //                return $event->getParam(0);
 //
 //            return $this->_renderBookingsScreenOptions($templateManager);
@@ -390,6 +419,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Register pages in the admin menu.
+     *
+     * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
      * @param ContainerInterface $c
@@ -438,6 +469,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Render screen options
      *
+     * @since [*next-version*]
+     *
      * @param TemplateManager $templateManager
      * @return mixed
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -450,6 +483,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Register metabox for service's bookings settings.
+     *
+     * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
      * @return string
@@ -465,6 +500,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     /**
      * Render main booking view.
      *
+     * @since [*next-version*]
+     *
      * @param TemplateManager $templateManager
      * @return mixed
      */
@@ -475,6 +512,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Render settings page.
+     *
+     * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
      * @return string
@@ -487,6 +526,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /**
      * Render about page.
+     *
+     * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
      * @return string
