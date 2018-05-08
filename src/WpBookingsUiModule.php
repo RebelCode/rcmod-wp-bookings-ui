@@ -299,33 +299,26 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         $pageId = get_post()->ID;
 
-        return [
+        return $this->_trigger('eddbk_services_nedit_ui_state', [
+            'id' => $pageId,
+
             /*
              * List of availabilities for current service.
              */
-            'availabilities' => $this->_trigger('eddbk_service_availabilities', [
-                'id' => $pageId,
-                'availabilities' => []
-            ])->getParam('availabilities'),
+            'availabilities' => [],
 
             /*
              * List of available sessions for current service.
              */
-            'sessions' => $this->_trigger('eddbk_service_sessions', [
-                'id' => $pageId,
-                'sessions' => []
-            ])->getParam('sessions'),
+            'sessions' => [],
 
             /*
              * Display options settings for current service.
              */
-            'displayOptions' => $this->_trigger('eddbk_service_display_options', [
-                'id' => $pageId,
-                'displayOptions' => [
-                    'useCustomerTimezone' => false
-                ]
-            ])->getParam('displayOptions'),
-        ];
+            'displayOptions' => [
+                'useCustomerTimezone' => false
+            ],
+        ])->getParams();
     }
 
     /**
@@ -348,6 +341,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         wp_enqueue_script('rc-app-require', $assetsUrlMap->get(
             $c->get('wp_bookings_ui/assets/require.js')
         ), [], false, true);
+
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
             'app' => $assetsUrlMap->get(
                 $c->get('wp_bookings_ui/assets/bookings/app.min.js')
