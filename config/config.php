@@ -33,6 +33,16 @@ return [
                 'menu_slug' => 'eddbk-about'
             ]
         ],
+        'statuses_labels' => [
+            'draft' => 'Draft',
+            'in_cart' => 'Cart',
+            'pending' => 'Pending',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'scheduled' => 'Scheduled',
+            'cancelled' => 'Cancelled',
+            'completed' => 'Completed'
+        ],
         'templates' => [
             'components',
             'main',

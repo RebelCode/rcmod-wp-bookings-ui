@@ -179,16 +179,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * All available statuses in application.
              */
             'statuses' => $this->_trigger('eddbk_bookings_statuses', [
-                'statuses' => [
-                    "draft" => $this->__('Draft'),
-                    "in_cart" => $this->__('Cart'),
-                    "pending" => $this->__('Pending'),
-                    "approved" => $this->__('Approved'),
-                    "rejected" => $this->__('Rejected'),
-                    "scheduled" => $this->__('Scheduled'),
-                    "cancelled" => $this->__('Cancelled'),
-                    "completed" => $this->__('Completed')
-                ]
+                'statuses' => $this->_getTranslatedStatuses($c)
             ])->getParam('statuses'),
 
             /*
@@ -209,6 +200,33 @@ class WpBookingsUiModule extends AbstractBaseModule
 
             'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config'))
         ];
+    }
+
+    /**
+     * Get all translated statuses.
+     *
+     * @since [*next-version*]
+     *
+     * @param ContainerInterface $c Config container of module.
+     * @return array
+     */
+    protected function _getTranslatedStatuses($c)
+    {
+        $statuses = $c->get('booking_logic/statuses');
+        $statusesLabels = $c->get('wp_bookings_ui/statuses_labels');
+
+        $translatedStatuses = [];
+
+        foreach ($statuses as $status) {
+            if ($status === 'none') {
+                continue;
+            }
+            $translatedStatuses[$status] = $this->_containerHas($statusesLabels, $status)
+                ? $this->__($this->_containerGet($statusesLabels, $status))
+                : $status;
+        }
+
+        return $translatedStatuses;
     }
 
     /**
