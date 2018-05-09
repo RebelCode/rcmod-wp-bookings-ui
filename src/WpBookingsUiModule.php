@@ -164,8 +164,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $c
-     * @return array
+     * @param ContainerInterface $c Configuration container of module.
+     * @return array Front-end application's state on bookings page.
      */
     protected function _getBookingsAppState($c)
     {
@@ -203,7 +203,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @param mixed $statuses List of statuses
      * @param mixed $statusesLabels Map of statuses and it's labels
      *
-     * @return array
+     * @return array Map of statuse codes and translations.
      */
     protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
@@ -226,7 +226,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @return mixed List of all services.
+     * @return array List of all services.
      */
     protected function _getListOfServices()
     {
@@ -236,12 +236,12 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Prepare endpoints for consuming in the UI
+     * Prepare endpoints for consuming in the UI.
      *
      * @since [*next-version*]
      *
-     * @param $endpointsConfig
-     * @return array
+     * @param ContainerInterface $endpointsConfig Configuration of endpoints to be prepared.
+     * @return array Prepared array of endpoints to use in front-end application.
      */
     protected function _prepareEndpoints($endpointsConfig)
     {
@@ -271,8 +271,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $c
-     * @param array $statuses
+     * @param ContainerInterface $c Configuration container of module.
+     * @param array $statuses List of statuses to save.
      */
     protected function _setScreenStatuses($c, $statuses)
     {
@@ -290,11 +290,12 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Return list of all statuses that is available for user by default.
+     * Return list of all statuses that will be shown for user by default.
      *
      * @since [*next-version*]
      *
-     * @return array|mixed|object
+     * @param ContainerInterface $c Configuration container of module.
+     * @return array List of statuses that user selected to show by default
      */
     protected function _getScreenStatuses($c)
     {
@@ -313,11 +314,11 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Get app state for service page
+     * Get app state for service page.
      *
      * @since [*next-version*]
      *
-     * @return array
+     * @return array Front-end application's state on service's page.
      */
     protected function _getServiceAppState()
     {
@@ -350,8 +351,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $assetsConfig Assets container config
-     * @param ContainerInterface $c Module config
+     * @param ContainerInterface $assetsConfig Assets container config.
+     * @param ContainerInterface $c Configuration container of module.
      */
     protected function _enqueueAssets(ContainerInterface $assetsUrlMap, ContainerInterface $c)
     {
@@ -397,6 +398,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
+     * @param ContainerInterface $c Configuration container of module.
      */
     protected function _adminInit($templateManager, $c)
     {
@@ -441,7 +443,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
-     * @param ContainerInterface $c
+     * @param ContainerInterface $c Configuration container of module.
      */
     protected function _adminMenu($templateManager, $c)
     {
@@ -490,7 +492,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param TemplateManager $templateManager
-     * @return mixed
+     * @return string
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
