@@ -10,7 +10,6 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
-use RebelCode\EddBookings\RestApi\Controller\ControllerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
 
@@ -170,15 +169,11 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getBookingsAppState($c)
     {
-        /* @var ControllerInterface $controller */
-        $controller = $c->get('eddbk_services_controller');
-        $services = iterator_to_array($controller->get());
-
         return [
             /*
              * All available statuses in application.
              */
-            'statuses' => $this->_trigger('eddbk_bookings_statuses', [
+            'statuses' => $this->_trigger('eddbk_bookings_translated_statuses', [
                 'statuses' => $this->_getTranslatedStatuses($c->get('booking_logic/statuses'), $c->get('wp_bookings_ui/statuses_labels'))
             ])->getParam('statuses'),
 
@@ -192,9 +187,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * List of available services.
              */
-            'services' => $this->_trigger('eddbk_bookings_services', [
-                'services' => $services
-            ])->getParam('services'),
+            'services' => $this->_getListOfServices(),
 
             'statusesEndpoint' => $c->get('wp_bookings_ui/screen_options/endpoint'),
 
@@ -226,6 +219,20 @@ class WpBookingsUiModule extends AbstractBaseModule
         }
 
         return $translatedStatuses;
+    }
+
+    /**
+     * Get list of all services.
+     *
+     * @since [*next-version*]
+     *
+     * @return mixed List of all services.
+     */
+    protected function _getListOfServices()
+    {
+        return $this->_trigger('eddbk_admin_bookings_ui_services', [
+            'services' => []
+        ])->getParam('services');
     }
 
     /**
