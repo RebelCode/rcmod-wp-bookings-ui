@@ -190,7 +190,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * List of available services.
              */
-            'services' => $this->_getListOfServices(),
+            'services' => $this->_getServices(),
 
             'statusesEndpoint' => $c->get('wp_bookings_ui/screen_options/endpoint'),
 
@@ -231,7 +231,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @return array List of all services.
      */
-    protected function _getListOfServices()
+    protected function _getServices()
     {
         return $this->_trigger('eddbk_admin_bookings_ui_services', [
             'services' => []

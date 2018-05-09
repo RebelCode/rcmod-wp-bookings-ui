@@ -144,13 +144,13 @@
 
                             <div class="exclusions-datepicker" v-if="exclusionsPickerVisible">
                                 <datepicker :inline="true"
-                                            :highlighted="excludesDatesModels"
+                                            :highlighted="excludeDatesModels"
                                             @selected="excludeDateSelected"
                                             ref="exclusions"
                                 ></datepicker>
                             </div>
 
-                            <repeater :collection="excludesDatesCollection" class="exclusions-list" v-if="model.excludesDates.length">
+                            <repeater :collection="excludeDatesCollection" class="exclusions-list" v-if="model.excludeDates.length">
                                 <div class="exclusions-list__item" slot-scope="r">
                                     <div class="exclusions-list__item-title" v-text="_getExclusionItemTitle(r.item)"></div>
                                     <a href="#removed" class="trash-can trash-can--right" @click="r.remove(r.item)">
