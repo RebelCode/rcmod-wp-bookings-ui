@@ -125,10 +125,11 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_adminMenu($templateManager, $c);
         });
 
-        $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), function () use ($c) {
+        $statusesOptionKey = $c->get('wp_bookings_ui/screen_options/key');
+        $this->_attach('wp_ajax_set_' . $statusesOptionKey, function () use ($statusesOptionKey) {
             $data = json_decode(file_get_contents('php://input'), true);
             $statuses = $data['statuses'];
-            $this->_setScreenStatuses($c, $statuses);
+            $this->_setScreenStatuses($statusesOptionKey, $statuses);
         });
     }
 
@@ -181,7 +182,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * Statuses that enabled for filtering bookings.
              */
             'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
-                'screenStatuses' => $this->_getScreenStatuses($c)
+                'screenStatuses' => $this->_getScreenStatuses($c->get('wp_bookings_ui/screen_options/key'), $c->get('booking_logic/statuses'))
             ])->getParam('screenStatuses'),
 
             /*
@@ -271,10 +272,10 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $c Configuration container of module.
-     * @param array $statuses List of statuses to save.
+     * @param string $key Key of option where statuses stored.
+     * @param string[] $statuses List of statuses to save.
      */
-    protected function _setScreenStatuses($c, $statuses)
+    protected function _setScreenStatuses($key, $statuses)
     {
         if (!($user = wp_get_current_user())) {
             wp_die('0');
@@ -282,7 +283,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         update_user_option(
             $user->ID,
-            $c->get('wp_bookings_ui/screen_options/key'),
+            $key,
             json_encode($statuses)
         );
 
@@ -294,19 +295,19 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $c Configuration container of module.
-     * @return array List of statuses that user selected to show by default
+     * @param string $key Screen statuses option key.
+     * @param string[] $defaultStatuses Array of statuses selected by default
+     *
+     * @return string[] List of statuses that user selected to show by default
      */
-    protected function _getScreenStatuses($c)
+    protected function _getScreenStatuses($key, $defaultStatuses = [])
     {
         if (!$user = wp_get_current_user())
             return [];
 
-        $screenOptions = get_user_option($c->get('wp_bookings_ui/screen_options/key'), $user->ID);
+        $screenOptions = get_user_option($key, $user->ID);
         if (!$screenOptions) {
-            return [
-                "in_cart", "draft", "pending", "approved", "rejected", "scheduled", "cancelled", "completed"
-            ];
+            return $defaultStatuses;
         }
         $screenOptions = json_decode($screenOptions);
 
