@@ -84,19 +84,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return $this->_setupContainer(
             $this->_loadPhpConfigFile(WP_BOOKINGS_UI_MODULE_CONFIG_FILE),
-            [
-                'template_manager' => function ($c) {
-                    $templateManager = new TemplateManager($this->eventManager, $this->eventFactory);
-                    $templateManager->registerTemplates($c->get('wp_bookings_ui/templates'));
-                    return $templateManager;
-                },
-                'assets_urls_map' => function ($c) {
-                    $assetsUrlsMap = require_once $c->get('wp_bookings_ui/assets_urls_map_path');
-                    return $this->_getContainerFactory()->make([
-                        ContainerFactoryInterface::K_DATA => $assetsUrlsMap
-                    ]);
-                }
-            ]);
+            $this->_loadServicesDefinitions()
+        );
     }
 
     /**
@@ -131,6 +120,17 @@ class WpBookingsUiModule extends AbstractBaseModule
             $statuses = $data['statuses'];
             $this->_setScreenStatuses($statusesOptionKey, $statuses);
         });
+    }
+
+    /**
+     * Load services definitions.
+     *
+     * @return array Services definitions.
+     */
+    protected function _loadServicesDefinitions()
+    {
+        $definitions = require_once WP_BOOKINGS_UI_MODULE_DEFINITIONS;
+        return $definitions($this->eventManager, $this->eventFactory, $this->_getContainerFactory());
     }
 
     /**
