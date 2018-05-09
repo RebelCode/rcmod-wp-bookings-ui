@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
+use \Exception as RootException;
 
 /**
  * Class WpBookingsUiModule
@@ -541,11 +542,11 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @param TemplateManager $templateManager
      * @return string
-     * @throws \Exception
+     * @throws RootException
      */
     protected function _renderSettingsPage($templateManager)
     {
-        throw new \Exception('Implement Settings page.');
+        throw new RootException('Implement Settings page.');
     }
 
     /**
@@ -555,10 +556,10 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @param TemplateManager $templateManager
      * @return string
-     * @throws \Exception
+     * @throws RootException
      */
     protected function _renderAboutPage($templateManager)
     {
-        throw new \Exception('Implement About page.');
+        throw new RootException('Implement About page.');
     }
 }
