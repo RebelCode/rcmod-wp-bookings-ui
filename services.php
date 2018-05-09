@@ -6,6 +6,12 @@ use RebelCode\Bookings\WordPress\Module\TemplateManager;
 /**
  * Function for retrieving array of services definitions.
  *
+ * @since [*next-version*]
+ *
+ * @param \Psr\EventManager\EventManagerInterface $eventManager
+ * @param \Dhii\Event\EventFactoryInterface $eventFactory
+ * @param ContainerFactoryInterface $containerFactory
+ *
  * @return array Services definitions.
  */
 return function ($eventManager, $eventFactory, $containerFactory) {
