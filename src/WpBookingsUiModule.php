@@ -179,7 +179,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * All available statuses in application.
              */
             'statuses' => $this->_trigger('eddbk_bookings_statuses', [
-                'statuses' => $this->_getTranslatedStatuses($c)
+                'statuses' => $this->_getTranslatedStatuses($c->get('booking_logic/statuses'), $c->get('wp_bookings_ui/statuses_labels'))
             ])->getParam('statuses'),
 
             /*
@@ -207,14 +207,13 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface $c Config container of module.
+     * @param mixed $statuses List of statuses
+     * @param mixed $statusesLabels Map of statuses and it's labels
+     *
      * @return array
      */
-    protected function _getTranslatedStatuses($c)
+    protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
-        $statuses = $c->get('booking_logic/statuses');
-        $statusesLabels = $c->get('wp_bookings_ui/statuses_labels');
-
         $translatedStatuses = [];
 
         foreach ($statuses as $status) {
