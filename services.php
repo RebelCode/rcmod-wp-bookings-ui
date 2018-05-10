@@ -2,15 +2,17 @@
 
 use Dhii\Data\Container\ContainerFactoryInterface;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
+use \Psr\EventManager\EventManagerInterface;
+use \Dhii\Event\EventFactoryInterface;
 
 /**
  * Function for retrieving array of services definitions.
  *
  * @since [*next-version*]
  *
- * @param \Psr\EventManager\EventManagerInterface $eventManager
- * @param \Dhii\Event\EventFactoryInterface $eventFactory
- * @param ContainerFactoryInterface $containerFactory
+ * @param EventManagerInterface $eventManager The event manager.
+ * @param EventFactoryInterface $eventFactory The event factory.
+ * @param ContainerFactoryInterface $containerFactory The container factory.
  *
  * @return array Services definitions.
  */

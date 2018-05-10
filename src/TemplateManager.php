@@ -9,6 +9,8 @@ use RebelCode\Modular\Events\EventsConsumerTrait;
 /**
  * Class TemplateManager
  *
+ * @since [*next-version*]
+ *
  * Template manager is responsible for registering templates in given
  * event manager from container.
  *
@@ -35,18 +37,20 @@ class TemplateManager
     /**
      * Template prefix
      *
-     * @var
+     * @var string
      */
     protected $prefix;
 
     /**
      * TemplateManager constructor.
      *
-     * @param EventManagerInterface $eventManager
-     * @param $eventFactory
-     * @param string $prefix
+     * @since [*next-version*]
+     *
+     * @param EventManagerInterface $eventManager The event manager.
+     * @param EventFactoryInterface $eventFactory The event factory.
+     * @param string $prefix Template's prefix.
      */
-    public function __construct(EventManagerInterface $eventManager, $eventFactory, $prefix = 'eddbk')
+    public function __construct($eventManager, $eventFactory, $prefix = 'eddbk')
     {
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -56,7 +60,9 @@ class TemplateManager
     /**
      * Register all templates in event manager.
      *
-     * @param $templates array Array of templates to be registered.
+     * @since [*next-version*]
+     *
+     * @param string[] $templates Array of templates paths to be registered.
      */
     public function registerTemplates($templates)
     {
@@ -66,8 +72,11 @@ class TemplateManager
     /**
      * Render template by given template action.
      *
-     * @param $template
-     * @return mixed
+     * @since [*next-version*]
+     *
+     * @param string $template Template path to render.
+     *
+     * @return string Rendered template.
      */
     public function render($template)
     {
@@ -77,7 +86,9 @@ class TemplateManager
     /**
      * Register given templates in event manager.
      *
-     * @param $templates
+     * @since [*next-version*]
+     *
+     * @param string[] $templates List of paths to templates to register.
      */
     protected function _register($templates)
     {
@@ -94,8 +105,10 @@ class TemplateManager
     /**
      * Render file.
      *
-     * @param $realFilePath
-     * @return string
+     * @since [*next-version*]
+     *
+     * @param string $realFilePath Path to real template.
+     * @return string Rendered file content.
      */
     protected function _renderFile($realFilePath)
     {
@@ -109,8 +122,10 @@ class TemplateManager
     /**
      * Create action in event manager according template name.
      *
-     * @param $templatePath
-     * @return string
+     * @since [*next-version*]
+     *
+     * @param string $templatePath Relative path to template.
+     * @return string Event name for rendering template.
      */
     protected function _makeTemplateActionName($templatePath)
     {

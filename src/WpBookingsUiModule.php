@@ -141,7 +141,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @return bool
+     * @return bool Is current page is a page where application should be rendered.
      */
     protected function _isOnAppPage()
     {
@@ -156,7 +156,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @return bool
+     * @return bool Is current page is a bookings list page.
      */
     protected function _isOnBookingsPage()
     {
@@ -401,7 +401,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
+     * @param TemplateManager $templateManager The template manager.
      * @param ContainerInterface $c Configuration container of module.
      */
     protected function _adminInit($templateManager, $c)
@@ -446,7 +446,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
+     * @param TemplateManager $templateManager The template manager.
      * @param ContainerInterface $c Configuration container of module.
      */
     protected function _adminMenu($templateManager, $c)
@@ -495,11 +495,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
-     * @return string
+     * @param TemplateManager $templateManager The template manager.
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return string The rendered view's string.
      */
     protected function _renderBookingsScreenOptions(TemplateManager $templateManager)
     {
@@ -511,11 +509,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
-     * @return string
+     * @param TemplateManager $templateManager The template manager.
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return string The rendered view's string.
      */
     protected function _renderMetabox($templateManager)
     {
@@ -527,8 +523,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
-     * @return mixed
+     * @param TemplateManager $templateManager The template manager.
+     *
+     * @return string The rendered view's string.
      */
     protected function _renderMainPage($templateManager)
     {
@@ -540,13 +537,17 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
-     * @return string
-     * @throws RootException
+     * @param TemplateManager $templateManager The template manager.
+     *
+     * @throws RootException When page is not implemented yet.
+     *
+     * @return string The rendered view's string.
      */
     protected function _renderSettingsPage($templateManager)
     {
-        throw new RootException('Implement Settings page.');
+        throw new RootException(
+            $this->__('Implement Settings page.')
+        );
     }
 
     /**
@@ -554,12 +555,16 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager
-     * @return string
-     * @throws RootException
+     * @param TemplateManager $templateManager The template manager.
+     *
+     * @throws RootException When page is not implemented yet.
+     *
+     * @return string The rendered view's string.
      */
     protected function _renderAboutPage($templateManager)
     {
-        throw new RootException('Implement About page.');
+        throw new RootException(
+            $this->__('Implement About page.')
+        );
     }
 }

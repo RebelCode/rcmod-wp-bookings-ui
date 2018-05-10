@@ -24,7 +24,15 @@ define('WP_BOOKINGS_UI_MODULE_CONFIG_DIR', __DIR__ . '/config');
 /** @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_CONFIG_FILE', WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/config.php');
 
-/** @since [*next-version*] */
+/**
+ * Create and configure module.
+ *
+ * @since [*next-version*]
+ *
+ * @param ContainerInterface $c The container.
+ *
+ * @return WpBookingsUiModule Configured module.
+ */
 return function (ContainerInterface $c) {
     return new WpBookingsUiModule(
         WP_BOOKINGS_UI_MODULE_KEY,
