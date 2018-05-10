@@ -430,23 +430,14 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Add screen options on bookings management page.
          */
-        add_filter('screen_settings', function ($settings, \WP_Screen $screen) {
+        $this->_attach('screen_settings', function ($event) {
             if (!$this->_isOnBookingsPage()) {
-                return $settings;
+                return $event->getParam(0);
             }
-
-            return $this->_renderTemplate('booking/screen-options');
-        }, 10, 2);
-
-        /*
-         * @todo: this is not working as expected (nothing happens).
-         */
-//        $this->_attach('screen_settings', function ($event) use ($templateManager) {
-//            if (!$this->_isOnBookingsPage())
-//                return $event->getParam(0);
-//
-//            return $this->_renderBookingsScreenOptions($templateManager);
-//        }, 10);
+            $event->setParams([
+                $this->_renderTemplate('booking/screen-options'),
+            ]);
+        });
     }
 
     /**
