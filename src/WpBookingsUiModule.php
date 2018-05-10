@@ -223,9 +223,11 @@ class WpBookingsUiModule extends AbstractBaseModule
             if ($status === 'none') {
                 continue;
             }
-            $translatedStatuses[$status] = $this->_containerHas($statusesLabels, $status)
-                ? $this->__($this->_containerGet($statusesLabels, $status))
+            $statusLabel = $this->_containerHas($statusesLabels, $status)
+                ? $this->_containerGet($statusesLabels, $status)
                 : $status;
+
+            $translatedStatuses[$status] = $this->__($statusLabel);
         }
 
         return $translatedStatuses;
