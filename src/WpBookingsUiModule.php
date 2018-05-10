@@ -36,6 +36,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     use NormalizeKeyCapableTrait;
 
     /**
+     * Helper class to render templates using events mechanism.
+     *
+     * @var TemplateManager
+     */
+    protected $templateManager;
+
+    /**
      * Registered booking's page ID.
      *
      * @var string
@@ -95,10 +102,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        $this->metaboxPageId = $c->get('wp_bookings_ui/metabox/post_type');
-
-        /** @var TemplateManager $templateManager */
-        $templateManager = $c->get('template_manager');
+        $this->metaboxPageId   = $c->get('wp_bookings_ui/metabox/post_type');
+        $this->templateManager = $c->get('template_manager');
 
         $assetsConfig = $c->get('assets_urls_map');
 
@@ -106,12 +111,12 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_enqueueAssets($assetsConfig, $c);
         }, 999);
 
-        $this->_attach('admin_init', function () use ($templateManager, $c) {
-            $this->_adminInit($templateManager, $c);
+        $this->_attach('admin_init', function () use ($c) {
+            $this->_adminInit($c);
         });
 
-        $this->_attach('admin_menu', function () use ($templateManager, $c) {
-            $this->_adminMenu($templateManager, $c);
+        $this->_attach('admin_menu', function () use ($c) {
+            $this->_adminMenu($c);
         });
 
         $statusesOptionKey = $c->get('wp_bookings_ui/screen_options/key');
@@ -404,10 +409,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager    $templateManager The template manager.
-     * @param ContainerInterface $c               Configuration container of module.
+     * @param ContainerInterface $c Configuration container of module.
      */
-    protected function _adminInit($templateManager, $c)
+    protected function _adminInit($c)
     {
         $metaboxConfig = $c->get('wp_bookings_ui/metabox');
         /*
@@ -417,8 +421,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         add_meta_box(
             $metaboxConfig->get('id'),
             $this->__($metaboxConfig->get('title')),
-            function () use ($templateManager) {
-                echo $this->_renderMetabox($templateManager);
+            function () {
+                echo $this->_renderTemplate('availability/metabox');
             },
             $metaboxConfig->get('post_type')
         );
@@ -426,12 +430,12 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Add screen options on bookings management page.
          */
-        add_filter('screen_settings', function ($settings, \WP_Screen $screen) use ($templateManager) {
+        add_filter('screen_settings', function ($settings, \WP_Screen $screen) {
             if (!$this->_isOnBookingsPage()) {
                 return $settings;
             }
 
-            return $this->_renderBookingsScreenOptions($templateManager);
+            return $this->_renderTemplate('booking/screen-options');
         }, 10, 2);
 
         /*
@@ -450,10 +454,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager    $templateManager The template manager.
-     * @param ContainerInterface $c               Configuration container of module.
+     * @param ContainerInterface $c Configuration container of module.
      */
-    protected function _adminMenu($templateManager, $c)
+    protected function _adminMenu($c)
     {
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
@@ -464,8 +467,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($rootMenuConfig->get('menu_title')),
             $rootMenuConfig->get('capability'),
             $rootMenuConfig->get('menu_slug'),
-            function () use ($templateManager) {
-                echo $this->_renderMainPage($templateManager);
+            function () {
+                echo $this->_renderTemplate('booking/bookings-page');
             },
             $rootMenuConfig->get('icon'),
             $rootMenuConfig->get('position')
@@ -477,8 +480,10 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () use ($templateManager) {
-                return $this->_renderSettingsPage($templateManager);
+            function () {
+                throw new RootException(
+                    $this->__('Implement Settings page.')
+                );
             }
         );
 
@@ -488,87 +493,25 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () use ($templateManager) {
-                return $this->_renderAboutPage($templateManager);
+            function () {
+                throw new RootException(
+                    $this->__('Implement About page.')
+                );
             }
         );
     }
 
     /**
-     * Render screen options.
+     * Render given template using template manager.
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager The template manager.
+     * @param string $templateName Relative name of template to render.
      *
-     * @return string The rendered view's string.
+     * @return string Rendered template.
      */
-    protected function _renderBookingsScreenOptions(TemplateManager $templateManager)
+    protected function _renderTemplate($templateName)
     {
-        return $templateManager->render('booking/screen-options');
-    }
-
-    /**
-     * Register metabox for service's bookings settings.
-     *
-     * @since [*next-version*]
-     *
-     * @param TemplateManager $templateManager The template manager.
-     *
-     * @return string The rendered view's string.
-     */
-    protected function _renderMetabox($templateManager)
-    {
-        return $templateManager->render('availability/metabox');
-    }
-
-    /**
-     * Render main booking view.
-     *
-     * @since [*next-version*]
-     *
-     * @param TemplateManager $templateManager The template manager.
-     *
-     * @return string The rendered view's string.
-     */
-    protected function _renderMainPage($templateManager)
-    {
-        return $templateManager->render('booking/bookings-page');
-    }
-
-    /**
-     * Render settings page.
-     *
-     * @since [*next-version*]
-     *
-     * @param TemplateManager $templateManager The template manager.
-     *
-     * @throws RootException When page is not implemented yet.
-     *
-     * @return string The rendered view's string.
-     */
-    protected function _renderSettingsPage($templateManager)
-    {
-        throw new RootException(
-            $this->__('Implement Settings page.')
-        );
-    }
-
-    /**
-     * Render about page.
-     *
-     * @since [*next-version*]
-     *
-     * @param TemplateManager $templateManager The template manager.
-     *
-     * @throws RootException When page is not implemented yet.
-     *
-     * @return string The rendered view's string.
-     */
-    protected function _renderAboutPage($templateManager)
-    {
-        throw new RootException(
-            $this->__('Implement About page.')
-        );
+        return $this->templateManager->render($templateName);
     }
 }
