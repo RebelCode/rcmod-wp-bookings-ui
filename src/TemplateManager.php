@@ -7,7 +7,7 @@ use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 
 /**
- * Class TemplateManager
+ * Class TemplateManager.
  *
  * @since [*next-version*]
  *
@@ -22,12 +22,10 @@ use RebelCode\Modular\Events\EventsConsumerTrait;
  * prefix by using `render($templateActionName)` method.
  *
  * Inside render method we will apply prefix and trigger action in event manager after this.
- *
- * @package RebelCode\Bookings\Wordpress\Module
  */
 class TemplateManager
 {
-    /**
+    /*
      * Provides all required functionality for working with events.
      *
      * @since [*next-version*]
@@ -35,7 +33,7 @@ class TemplateManager
     use EventsConsumerTrait;
 
     /**
-     * Template prefix
+     * Template prefix.
      *
      * @var string
      */
@@ -48,7 +46,7 @@ class TemplateManager
      *
      * @param EventManagerInterface $eventManager The event manager.
      * @param EventFactoryInterface $eventFactory The event factory.
-     * @param string $prefix Template's prefix.
+     * @param string                $prefix       Template's prefix.
      */
     public function __construct($eventManager, $eventFactory, $prefix = 'eddbk')
     {
@@ -94,7 +92,7 @@ class TemplateManager
     {
         foreach ($templates as $template) {
             $templateFilePath = WP_BOOKINGS_UI_MODULE_DIR . '/templates/' . $template . '.phtml';
-            $actionName = $this->_makeTemplateActionName($template);
+            $actionName       = $this->_makeTemplateActionName($template);
 
             $this->_attach($actionName, function ($event) use ($templateFilePath) {
                 $event->setParams(['rendered' => $this->_renderFile($templateFilePath)]);
@@ -108,14 +106,16 @@ class TemplateManager
      * @since [*next-version*]
      *
      * @param string $realFilePath Path to real template.
+     *
      * @return string Rendered file content.
      */
     protected function _renderFile($realFilePath)
     {
         ob_start();
-        include($realFilePath);
+        include $realFilePath;
         $content = ob_get_contents();
         ob_end_clean();
+
         return $content;
     }
 
@@ -125,6 +125,7 @@ class TemplateManager
      * @since [*next-version*]
      *
      * @param string $templatePath Relative path to template.
+     *
      * @return string Event name for rendering template.
      */
     protected function _makeTemplateActionName($templatePath)

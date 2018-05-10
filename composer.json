@@ -38,7 +38,7 @@
     },
     "scripts": {
         "test": "phpunit",
-        "csfix": "php-cs-fixer fix -vvv"
+        "csfix": "vendor/bin/php-cs-fixer fix -vvv"
     },
     "extra": {
         "branch-alias": {

@@ -4,7 +4,7 @@ return [
     'wp_bookings_ui' => [
         'screen_options' => [
             'key' => WP_BOOKINGS_UI_SCREEN_STATUSES_KEY,
-            'endpoint' => admin_url('admin-ajax.php?action=set_' . WP_BOOKINGS_UI_SCREEN_STATUSES_KEY)
+            'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_STATUSES_KEY),
         ],
         'metabox' => [
             'id' => 'service_booking_settings',
@@ -18,20 +18,20 @@ return [
                 'capability' => 'publish_posts',
                 'menu_slug' => 'eddbk-bookings',
                 'icon' => 'dashicons-calendar-alt',
-                'position' => 20
+                'position' => 20,
             ],
             'settings' => [
                 'page_title' => 'Settings',
                 'menu_title' => 'Settings',
                 'capability' => 'publish_posts',
-                'menu_slug' => 'eddbk-settings'
+                'menu_slug' => 'eddbk-settings',
             ],
             'about' => [
                 'page_title' => 'About',
                 'menu_title' => 'About',
                 'capability' => 'publish_posts',
-                'menu_slug' => 'eddbk-about'
-            ]
+                'menu_slug' => 'eddbk-about',
+            ],
         ],
         'statuses_labels' => [
             'draft' => 'Draft',
@@ -41,7 +41,7 @@ return [
             'rejected' => 'Rejected',
             'scheduled' => 'Scheduled',
             'cancelled' => 'Cancelled',
-            'completed' => 'Completed'
+            'completed' => 'Completed',
         ],
         'templates' => [
             'components',
@@ -60,7 +60,7 @@ return [
             'booking/general',
             'booking/screen-options',
         ],
-        'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/assets_urls_map.php',
+        'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR.'/assets_urls_map.php',
         'assets' => [
             'require.js' => 'require',
             'bookings' => [
@@ -70,7 +70,7 @@ return [
             'styles' => [
                 'app' => 'bookings_ui/dist/wp-booking-ui.css',
                 'fullcalendar' => 'cdn/fullcalendar.css',
-            ]
+            ],
         ],
         'endpoints_config' => [
             'bookings' => [
@@ -89,7 +89,7 @@ return [
                 'delete' => [
                     'method' => 'delete',
                     'endpoint' => '/eddbk/v1/bookings/',
-                ]
+                ],
             ],
             'clients' => [
                 'fetch' => [
@@ -99,8 +99,8 @@ return [
                 'create' => [
                     'method' => 'post',
                     'endpoint' => '/eddbk/v1/clients/',
-                ]
-            ]
-        ]
-    ]
+                ],
+            ],
+        ],
+    ],
 ];

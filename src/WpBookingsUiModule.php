@@ -12,10 +12,10 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
-use \Exception as RootException;
+use Exception as RootException;
 
 /**
- * Class WpBookingsUiModule
+ * Class WpBookingsUiModule.
  *
  * Responsible for providing UI in the dashboard.
  *
@@ -54,13 +54,13 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param string|Stringable $key The module key.
-     * @param string[]|Stringable[] $dependencies The module  dependencies.
-     * @param ContainerFactoryInterface $configFactory The config factory.
-     * @param ContainerFactoryInterface $containerFactory The container factory.
+     * @param string|Stringable         $key                  The module key.
+     * @param string[]|Stringable[]     $dependencies         The module  dependencies.
+     * @param ContainerFactoryInterface $configFactory        The config factory.
+     * @param ContainerFactoryInterface $containerFactory     The container factory.
      * @param ContainerFactoryInterface $compContainerFactory The composite container factory.
-     * @param EventManagerInterface $eventManager The event manager.
-     * @param EventFactoryInterface $eventFactory The event factory.
+     * @param EventManagerInterface     $eventManager         The event manager.
+     * @param EventFactoryInterface     $eventFactory         The event factory.
      */
     public function __construct(
         $key,
@@ -70,8 +70,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $compContainerFactory,
         $eventManager,
         $eventFactory
-    )
-    {
+    ) {
         $this->_initModule($key, $dependencies, $configFactory, $containerFactory, $compContainerFactory);
         $this->_initModuleEvents($eventManager, $eventFactory);
     }
@@ -133,6 +132,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected function _getServicesDefinitions()
     {
         $definitions = require_once WP_BOOKINGS_UI_MODULE_DEFINITIONS_PATH;
+
         return $definitions($this->eventManager, $this->eventFactory, $this->_getContainerFactory());
     }
 
@@ -169,6 +169,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param ContainerInterface $c Configuration container of module.
+     *
      * @return array Front-end application's state on bookings page.
      */
     protected function _getBookingsAppState($c)
@@ -178,14 +179,14 @@ class WpBookingsUiModule extends AbstractBaseModule
              * All available statuses in application.
              */
             'statuses' => $this->_trigger('eddbk_bookings_translated_statuses', [
-                'statuses' => $this->_getTranslatedStatuses($c->get('booking_logic/statuses'), $c->get('wp_bookings_ui/statuses_labels'))
+                'statuses' => $this->_getTranslatedStatuses($c->get('booking_logic/statuses'), $c->get('wp_bookings_ui/statuses_labels')),
             ])->getParam('statuses'),
 
             /*
              * Statuses that enabled for filtering bookings.
              */
             'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
-                'screenStatuses' => $this->_getScreenStatuses($c->get('wp_bookings_ui/screen_options/key'), $c->get('booking_logic/statuses'))
+                'screenStatuses' => $this->_getScreenStatuses($c->get('wp_bookings_ui/screen_options/key'), $c->get('booking_logic/statuses')),
             ])->getParam('screenStatuses'),
 
             /*
@@ -195,7 +196,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
             'statusesEndpoint' => $c->get('wp_bookings_ui/screen_options/endpoint'),
 
-            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config'))
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config')),
         ];
     }
 
@@ -204,7 +205,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param mixed $statuses List of statuses
+     * @param mixed $statuses       List of statuses
      * @param mixed $statusesLabels Map of statuses and it's labels
      *
      * @return array Map of statuse codes and translations.
@@ -235,7 +236,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected function _getServices()
     {
         return $this->_trigger('eddbk_admin_bookings_ui_services', [
-            'services' => []
+            'services' => [],
         ])->getParam('services');
     }
 
@@ -245,6 +246,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param ContainerInterface $endpointsConfig Configuration of endpoints to be prepared.
+     *
      * @return array Prepared array of endpoints to use in front-end application.
      */
     protected function _prepareEndpoints($endpointsConfig)
@@ -257,8 +259,8 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $endpointUrl = $endpoint->get('endpoint');
 
                 $resultingConfig[$namespace][$purpose] = [
-                    'method' => $endpoint->get('method'),
-                    'endpoint' => $endpointUrl
+                    'method'   => $endpoint->get('method'),
+                    'endpoint' => $endpointUrl,
                 ];
 
                 if ($endpointUrl[0] === '/') {
@@ -275,7 +277,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param string $key Key of option where statuses stored.
+     * @param string   $key      Key of option where statuses stored.
      * @param string[] $statuses List of statuses to save.
      */
     protected function _setScreenStatuses($key, $statuses)
@@ -298,15 +300,16 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param string $key Screen statuses option key.
+     * @param string   $key             Screen statuses option key.
      * @param string[] $defaultStatuses Array of statuses selected by default
      *
      * @return string[] List of statuses that user selected to show by default
      */
     protected function _getScreenStatuses($key, $defaultStatuses = [])
     {
-        if (!$user = wp_get_current_user())
+        if (!$user = wp_get_current_user()) {
             return [];
+        }
 
         $screenOptions = get_user_option($key, $user->ID);
         if (!$screenOptions) {
@@ -345,7 +348,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * Display options settings for current service.
              */
             'displayOptions' => [
-                'useCustomerTimezone' => false
+                'useCustomerTimezone' => false,
             ],
         ])->getParams();
     }
@@ -356,7 +359,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @since [*next-version*]
      *
      * @param ContainerInterface $assetsConfig Assets container config.
-     * @param ContainerInterface $c Configuration container of module.
+     * @param ContainerInterface $c            Configuration container of module.
      */
     protected function _enqueueAssets(ContainerInterface $assetsUrlMap, ContainerInterface $c)
     {
@@ -374,7 +377,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
             'app' => $assetsUrlMap->get(
                 $c->get('wp_bookings_ui/assets/bookings/app.min.js')
-            )
+            ),
         ]);
 
         /*
@@ -401,8 +404,8 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager The template manager.
-     * @param ContainerInterface $c Configuration container of module.
+     * @param TemplateManager    $templateManager The template manager.
+     * @param ContainerInterface $c               Configuration container of module.
      */
     protected function _adminInit($templateManager, $c)
     {
@@ -424,8 +427,9 @@ class WpBookingsUiModule extends AbstractBaseModule
          * Add screen options on bookings management page.
          */
         add_filter('screen_settings', function ($settings, \WP_Screen $screen) use ($templateManager) {
-            if (!$this->_isOnBookingsPage())
+            if (!$this->_isOnBookingsPage()) {
                 return $settings;
+            }
 
             return $this->_renderBookingsScreenOptions($templateManager);
         }, 10, 2);
@@ -446,14 +450,14 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @since [*next-version*]
      *
-     * @param TemplateManager $templateManager The template manager.
-     * @param ContainerInterface $c Configuration container of module.
+     * @param TemplateManager    $templateManager The template manager.
+     * @param ContainerInterface $c               Configuration container of module.
      */
     protected function _adminMenu($templateManager, $c)
     {
-        $rootMenuConfig = $c->get('wp_bookings_ui/menu/root');
+        $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
-        $aboutMenuConfig = $c->get('wp_bookings_ui/menu/about');
+        $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),
@@ -491,7 +495,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Render screen options
+     * Render screen options.
      *
      * @since [*next-version*]
      *
