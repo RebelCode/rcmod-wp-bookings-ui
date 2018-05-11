@@ -6,9 +6,8 @@
     <property name="node_modules_dir" value="node_modules" />
     <property name="module_build_path" value="${module_base_dir}/${module_build_dir}" />
     <property name="node_modules_path" value="${module_base_dir}/${node_modules_dir}" />
-    <property name="node_modules_list" value="booking-js" />
 
-    <available property="npm_deps_installed" value="true" type="dir" file="${node_modules_path}" />
+    <available property="js_installed" value="true" type="dir" file="${node_modules_path}" />
 
     <target name="clean">
         <echo msg="Cleaning build files" />
@@ -20,20 +19,20 @@
         <mkdir dir="${module_build_path}" />
     </target>
 
-    <target name="install_npm">
-        <echo msg="Installing NPM dependencies" />
+    <target name="install_js">
+        <echo msg="Installing JS dependencies" />
         <exec command="npm install --no-bin-links" dir="${module_base_dir}" checkreturn="true" />
     </target>
 
-    <target name="maybe_install_npm" unless="npm_deps_installed">
-        <phingcall target="install_npm" />
+    <target name="maybe_install_js" unless="js_installed">
+        <phingcall target="install_js" />
     </target>
 
-    <target name="build_css_module" depends="clean,prepare,maybe_install_npm">
-        <echo msg="Building CSS module in ${module_base_dir}" />
+    <target name="build_css" depends="clean,prepare,maybe_install_js">
+        <echo msg="Building CSS in ${module_base_dir}" />
         <exec command="npm run build" dir="${module_base_dir}" />
     </target>
 
-    <target name="build" depends="build_css_module">
+    <target name="build" depends="build_css">
     </target>
 </project>
