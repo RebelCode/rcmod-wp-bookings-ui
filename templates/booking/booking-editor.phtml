@@ -78,7 +78,8 @@
                                                  name="start"
                                                  ref="start"
                                                  @input="startChanged"
-                                                 class="form-control--wide" v-model="model.start"
+                                                 class="form-control--wide"
+                                                 v-model="model.start"
                                 ></datetime-picker>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
@@ -91,7 +92,13 @@
                         <div :class="['form-row form-row--vertical', errors.has('end') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">End*</div>
                             <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:YYYY-MM-DD HH:mm:ss|after:$start'" name="end" @input="errors.remove('end')" class="form-control--wide" v-model="model.end" :disabled-before="model.start"></datetime-picker>
+                                <datetime-picker v-validate="'required|date_format:YYYY-MM-DD HH:mm:ss|after:$start'"
+                                                 name="end"
+                                                 @input="errors.remove('end')"
+                                                 class="form-control--wide"
+                                                 v-model="model.end"
+                                                 :disabled-before="model.start"
+                                ></datetime-picker>
                                 <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.end) }}</div>

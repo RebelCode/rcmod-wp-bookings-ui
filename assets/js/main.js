@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
       bottle: 'https://cdnjs.cloudflare.com/ajax/libs/bottlejs/1.6.1/bottle.min',
 
       vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.4/vue',
-      vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex',
-      validate: 'https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate',
+      vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.min',
+      validate: 'https://cdn.jsdelivr.net/npm/vee-validate@2.0.8/dist/vee-validate.min',
 
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
       textFormatter: 'https://unpkg.com/sprintf-js@1.1.1/dist/sprintf.min',
       uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
       stdLib: 'https://unpkg.com/@rebelcode/std-lib@0.1.2/dist/std-lib',
-      calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.0/dist/vc-calender',
+      calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.2/dist/vc-calendar',
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',
       tabs: 'https://unpkg.com/@rebelcode/vc-tabs@0.1.0/dist/vc-tabs',
