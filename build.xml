@@ -8,7 +8,7 @@
     <property name="node_modules_path" value="${module_base_dir}/${node_modules_dir}" />
     <property name="node_modules_list" value="booking-js" />
 
-    <available property="js_installed" value="true" type="dir" file="${node_modules_path}" />
+    <available property="npm_deps_installed" value="true" type="dir" file="${node_modules_path}" />
 
     <target name="clean">
         <echo msg="Cleaning build files" />
@@ -20,25 +20,20 @@
         <mkdir dir="${module_build_path}" />
     </target>
 
-    <target name="install_js">
-        <echo msg="Installing JS dependencies" />
+    <target name="install_npm">
+        <echo msg="Installing NPM dependencies" />
         <exec command="npm install --no-bin-links" dir="${module_base_dir}" checkreturn="true" />
     </target>
 
-    <target name="maybe_install_js" unless="js_installed">
-        <phingcall target="install_js" />
+    <target name="maybe_install_npm" unless="npm_deps_installed">
+        <phingcall target="install_npm" />
     </target>
 
-    <target name="build_js_module">
-        <echo msg="Building JS module '${node_module_name}'" />
-        <exec command="npm run build -- --output-path='${module_build_path}/${node_module_name}'" dir="${node_modules_path}/${node_module_name}" />
+    <target name="build_css_module" depends="clean,prepare,maybe_install_npm">
+        <echo msg="Building CSS module in ${module_base_dir}" />
+        <exec command="npm run build" dir="${module_base_dir}" />
     </target>
 
-    <target name="build_js_modules" depends="clean,prepare,maybe_install_js">
-        <echo msg="Building JS modules in ${module_base_dir}" />
-        <foreach list="${node_modules_list}" param="node_module_name" target="build_js_module" />
-    </target>
-
-    <target name="build" depends="build_js_modules">
+    <target name="build" depends="build_css_module">
     </target>
 </project>
