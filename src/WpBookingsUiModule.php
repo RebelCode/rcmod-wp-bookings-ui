@@ -342,6 +342,11 @@ class WpBookingsUiModule extends AbstractBaseModule
             'id' => $pageId,
 
             /*
+             * Is bookings available for service
+             */
+            'bookingsEnabled' => false,
+
+            /*
              * List of availabilities for current service.
              */
             'availabilities' => [],
