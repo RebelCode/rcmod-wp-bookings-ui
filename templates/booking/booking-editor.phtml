@@ -83,7 +83,7 @@
                                 ></datetime-picker>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
-                                    <div>Client time: {{ format(model.start, model.clientTimezone) }}</div>
+                                    <div>Client time: {{ format(model.start, model.clientTz) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                                 <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.end) }}</div>
-                                    <div>Client time: {{ format(model.end, model.clientTimezone) }}</div>
+                                    <div>Client time: {{ format(model.end, model.clientTz) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -121,10 +121,10 @@
                     </div>
 
                     <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('clientTimezone') ? 'form-row--with-error' : '']">
+                        <div :class="['form-row form-row--vertical', errors.has('clientTz') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Client Timezone*</div>
                             <div class="form-row__input">
-                                <select class="form-control--wide" v-validate="'required'" name="clientTimezone" @change="errors.remove('clientTimezone')" v-model="model.clientTimezone">
+                                <select class="form-control--wide" v-validate="'required'" name="clientTz" @change="errors.remove('clientTz')" v-model="model.clientTz">
                                     <option value="-12">UTC-12</option>
                                     <option value="-11.5">UTC-11:30</option>
                                     <option value="-11">UTC-11</option>
@@ -188,7 +188,7 @@
                         <div class="form-row form-row--vertical">
                             <div class="form-row__label">Payment Number</div>
                             <div class="form-row__input">
-                                <input name="paymentNumber" type="text" class="form-control--wide" v-model="model.paymentNumber">
+                                <input name="payment" type="text" class="form-control--wide" v-model="model.payment">
                             </div>
                         </div>
                     </div>
@@ -214,7 +214,7 @@
                                 <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
                             </div>
                             <div class="form-row__input">
-                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.note" style="min-height: 28px"></textarea>
+                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.notes" style="min-height: 28px"></textarea>
                             </div>
                         </div>
                     </div>
@@ -235,7 +235,7 @@
                                 <div class="form-row__input">
                                     <select v-model="model.newStatus" style="width: 100%">
                                         <option value="">Don't change booking status</option>
-                                        <option value="in-cart" v-if="bookingCanBe('in-cart')">Set booking to In Cart</option>
+                                        <option value="in_cart" v-if="bookingCanBe('in_cart')">Set booking to In Cart</option>
                                         <option value="approved" v-if="bookingCanBe('approved')">Approve booking</option>
                                         <option value="draft" v-if="bookingCanBe('draft')">Set booking to Draft</option>
                                         <option value="pending" v-if="bookingCanBe('pending')">Set booking to Pending</option>

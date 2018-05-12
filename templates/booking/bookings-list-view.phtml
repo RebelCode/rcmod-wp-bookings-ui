@@ -55,7 +55,7 @@
 
             <template slot="status" slot-scope="data">
                 <a href="#" @click.prevent="$emit('edit', data.row)" style="text-transform: capitalize">
-                    {{ data.row.status }}
+                    {{ bookingHelpers.statusLabel(data.row.status) }}
                 </a>
             </template>
         </list-table>
