@@ -281,8 +281,11 @@
                         <template v-else>
                             <div class="footer-confirm">
                                 <div class="footer-confirm__message __right __alert">
-                                    <template v-if="errors.any() && !errors.any('client-editor')">There was a problem with your booking. The errors have
-                                        been highlighted above.
+                                    <template v-if="errors.any() && !errors.any('client-editor')">
+                                        There was a problem with your booking. The errors have been highlighted above.
+                                    </template>
+                                    <template v-if="errorMessage">
+                                        {{ errorMessage }}
                                     </template>
                                 </div>
                                 <div class="footer-confirm__buttons">
