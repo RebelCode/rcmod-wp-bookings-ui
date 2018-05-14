@@ -83,7 +83,7 @@
                                 ></datetime-picker>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.start) }}</div>
-                                    <div>Client time: {{ format(model.start, model.clientTz) }}</div>
+                                    <div>Client time: {{ format(model.start, model.clientTzName) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                                 <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
                                 <div class="form-row__description form-row__description--small">
                                     <div>Universal time: {{ format(model.end) }}</div>
-                                    <div>Client time: {{ format(model.end, model.clientTz) }}</div>
+                                    <div>Client time: {{ format(model.end, model.clientTzName) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -121,14 +121,14 @@
                     </div>
 
                     <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('clientTz') ? 'form-row--with-error' : '']">
+                        <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Client Timezone*</div>
                             <div class="form-row__input">
-                                <timezone-select v-model="model.clientTz" 
+                                <timezone-select v-model="model.clientTzName" 
                                                  class="form-control--wide" 
                                                  v-validate="'required'" 
-                                                 name="clientTz" 
-                                                 @change="errors.remove('clientTz')"
+                                                 name="clientTzName" 
+                                                 @change="errors.remove('clientTzName')"
                                 ></timezone-select>
                             </div>
                         </div>
