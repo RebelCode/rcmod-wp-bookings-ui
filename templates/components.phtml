@@ -1,8 +1,7 @@
-<script type="text/x-template" id="double-confirm-template">
-    <div>
-        <slot name="default" :show="show" v-if="!value"></slot>
-        <slot name="confirmation" :submit="submit" :cancel="cancel" v-else></slot>
-    </div>
+<script type="text/x-template" id="timezone-select-template">
+    <select v-model="selectValue">
+        <?php echo wp_timezone_choice( 'UTC+0', get_user_locale() ); ?>
+    </select>
 </script>
 
 <script type="text/x-template" id="bookings-filter-template">
@@ -26,7 +25,7 @@
 </script>
 
 <script type="text/x-template" id="vue-timepicker-template">
-    <span class="time-picker">
+  <span class="time-picker">
   <input class="display-time" :disabled="disabled" :id="id" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
   <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
