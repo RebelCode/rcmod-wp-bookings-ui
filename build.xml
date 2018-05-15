@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="rcmod_wp_bookings_ui" default="build">
+    <property name="verbose" value="false" />
+
     <property name="module_base_dir" value="${phing.dir.rcmod_wp_bookings_ui}" />
     <property name="module_build_dir" value="dist" />
     <property name="node_modules_dir" value="node_modules" />
@@ -21,7 +23,7 @@
 
     <target name="install_js">
         <echo msg="Installing JS dependencies" />
-        <exec command="npm install --no-bin-links" dir="${module_base_dir}" checkreturn="true" />
+        <exec command="npm install --no-bin-links" dir="${module_base_dir}" checkreturn="true" passthru="${verbose}" />
     </target>
 
     <target name="maybe_install_js" unless="js_installed">
@@ -30,7 +32,7 @@
 
     <target name="build_css" depends="clean,prepare,maybe_install_js">
         <echo msg="Building CSS in ${module_base_dir}" />
-        <exec command="npm run build" dir="${module_base_dir}" />
+        <exec command="npm run build" dir="${module_base_dir}" passthru="${verbose}" />
     </target>
 
     <target name="build" depends="build_css">
