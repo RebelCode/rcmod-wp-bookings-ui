@@ -89,6 +89,17 @@
     }
   }
 
+  &__input-with-description {
+    display: inline-block;
+    position: relative;
+    margin-bottom: .35rem;
+
+    .form-row__description {
+      padding-top: 0;
+      position: absolute
+    }
+  }
+
   &__label {
     font-weight: 600;
     flex-shrink: 0;

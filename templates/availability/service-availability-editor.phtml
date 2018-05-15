@@ -15,13 +15,20 @@
 
             <div slot="body" :class="isDoubleConfirming ? 'disabled' : ''">
                 <div class="form-row">
-                    <div class="form-row__label">Starts on</div>
+                    <div class="form-row__label">
+                        Starts on
+                    </div>
                     <div class="form-row__input">
-                        <datetime-picker class="datetime-picker--inline"
-                                         v-model="model.start"
-                                         :time-disabled="model.isAllDay"
-                                         :disabled-before="currentDay"
-                        ></datetime-picker>
+                        <div class="form-row__input-with-description">
+                            <datetime-picker class="datetime-picker--inline"
+                                            v-model="model.start"
+                                            :time-disabled="model.isAllDay"
+                                            :disabled-before="currentDay"
+                            ></datetime-picker>
+                            <div class="form-row__description form-row__description--small">
+                                {{ momentHelpers.timezoneLabel(timezone) }}
+                            </div>
+                        </div>
 
                         <label for="all-day" class="form-row__word">
                             <input type="checkbox" id="all-day" v-model="model.isAllDay"> All day
@@ -29,13 +36,18 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-row__label">Ends on</div>
+                    <div class="form-row__label">Ends on</div>                    
                     <div class="form-row__input">
-                        <datetime-picker class="datetime-picker--inline"
-                                         v-model="model.end"
-                                         :time-disabled="model.isAllDay"
-                                         :disabled-before="model.start"
-                        ></datetime-picker>
+                        <div class="form-row__input-with-description">
+                            <datetime-picker class="datetime-picker--inline"
+                                            v-model="model.end"
+                                            :time-disabled="model.isAllDay"
+                                            :disabled-before="model.start"
+                            ></datetime-picker>
+                            <div class="form-row__description form-row__description--small">
+                                {{ momentHelpers.timezoneLabel(timezone) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

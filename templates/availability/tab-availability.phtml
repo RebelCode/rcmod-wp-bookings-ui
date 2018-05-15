@@ -27,8 +27,15 @@
         There is no availability set for this service. Please add at least one available date and time in order to start accepting bookings for this service.
     </span>
 </div>
+
+<div style="margin-bottom: 12px">    
+    <label for="eddbk-timezone-select">
+        Service timezone: <timezone-select id="eddbk-timezone-select" v-model="timezone"></timezone-select>
+    </label>
+</div>
+
 <availability-calendar :availabilities="availabilities"
                        class="rc-calendar rc-calendar--availability"
                        @availability-click="openAvailabilityEditor"
                        :overlapping-availabilities.sync="overlappingAvailabilities"
-/>
+></availability-calendar>

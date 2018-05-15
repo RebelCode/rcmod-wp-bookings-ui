@@ -342,6 +342,11 @@ class WpBookingsUiModule extends AbstractBaseModule
             'id' => $pageId,
 
             /*
+             * Service timezone
+             */
+            'timezone' => $this->_getWebsiteTimezone(),
+
+            /*
              * Is bookings available for service
              */
             'bookingsEnabled' => false,
@@ -363,6 +368,66 @@ class WpBookingsUiModule extends AbstractBaseModule
                 'useCustomerTimezone' => false,
             ],
         ])->getParams();
+    }
+
+    /**
+     * Get application state with general data.
+     *
+     * @since [*next-version*]
+     * 
+     * @param array $concreteAppState Concrete state of application for page.
+     * 
+     * @return array Application state with general items.
+     */
+    protected function _getAppState(array $concreteAppState)
+    {
+        return array_merge($this->_getGeneralAppState(), $concreteAppState);
+    }
+
+    /**
+     * Get items in state available for all application parts.
+     *
+     * @since [*next-version*]
+     * 
+     * @return array General items in state, that available across all application.
+     */
+    protected function _getGeneralAppState()
+    {
+        return $this->_trigger('eddbk_general_ui_state', [
+            'websiteConfig' => [
+                'timezone' => $this->_getWebsiteTimezone()
+            ],
+        ])->getParams();
+    }
+
+    /**
+     * Get website timezone.
+     * 
+     * @since [*next-version*]
+     * 
+     * @return string Timezone in `America/Indianapolis` form.
+     */
+    protected function _getWebsiteTimezone()
+    {
+        $currentOffset = get_option('gmt_offset');
+        $tzstring      = get_option('timezone_string');
+
+        // Remove old Etc mappings. Fallback to gmt_offset.
+        if (false !== strpos($tzstring, 'Etc/GMT')) {
+            $tzstring = '';
+        }
+
+        if (empty($tzstring)) {
+            if (0 == $currentOffset) {
+                $tzstring = 'UTC+0';
+            } elseif ($currentOffset < 0) {
+                $tzstring = 'UTC' . $currentOffset;
+            } else {
+                $tzstring = 'UTC+' . $currentOffset;
+            }
+        }
+
+        return $tzstring;
     }
 
     /**
@@ -407,6 +472,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         }
 
         $state = $this->_isOnBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
+        $state = $this->_getAppState($state);
 
         wp_localize_script('rc-app', 'EDDBK_APP_STATE', $state);
     }
