@@ -359,7 +359,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * List of available sessions for current service.
              */
-            'sessions' => [],
+            'sessionLengths' => [],
 
             /*
              * Display options settings for current service.
