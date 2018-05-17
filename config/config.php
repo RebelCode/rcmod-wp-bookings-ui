@@ -43,6 +43,12 @@ return [
             'cancelled' => 'Cancelled',
             'completed' => 'Completed',
         ],
+        'hidden_statuses' => [
+            'none',
+            'in_cart',
+            'approved',
+            'rejected'
+        ],
         'templates' => [
             'components',
             'main',

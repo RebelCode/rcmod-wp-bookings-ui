@@ -123,6 +123,12 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_adminMenu($c);
         });
 
+        $this->_attach('eddbk_bookings_visible_statuses', function ($event) use ($c) {
+            $event->setParams([
+                'statuses' => $this->_getVisibleStatuses($event->getParam('statuses'), $c->get('wp_bookings_ui/hidden_statuses')),
+            ]);
+        });
+
         $statusesOptionKey = $c->get('wp_bookings_ui/screen_options/key');
         $this->_attach('wp_ajax_set_' . $statusesOptionKey, function () use ($statusesOptionKey) {
             $data = json_decode(file_get_contents('php://input'), true);
@@ -210,6 +216,26 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
+     * Get array of visible statuses for UI.
+     *
+     * @since [*next-version*]
+     *
+     * @param mixed $statuses       List of all statuses.
+     * @param mixed $hiddenStatuses List of statuses that shouldn't be shown.
+     *
+     * @return array Resulting array of statuses that should be visible in the UI.
+     */
+    protected function _getVisibleStatuses($statuses, $hiddenStatuses)
+    {
+        $statuses       = $this->_normalizeArray($statuses);
+        $hiddenStatuses = $this->_normalizeArray($hiddenStatuses);
+
+        return array_values(array_filter($statuses, function ($status) use ($hiddenStatuses) {
+            return !in_array($status, $hiddenStatuses);
+        }));
+    }
+
+    /**
      * Get all translated statuses.
      *
      * @since [*next-version*]
@@ -217,16 +243,17 @@ class WpBookingsUiModule extends AbstractBaseModule
      * @param mixed $statuses       List of statuses
      * @param mixed $statusesLabels Map of statuses and it's labels
      *
-     * @return array Map of statuse codes and translations.
+     * @return array Map of statuses codes and translations.
      */
     protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
         $translatedStatuses = [];
 
+        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
+            'statuses' => $statuses,
+        ])->getParam('statuses');
+
         foreach ($statuses as $status) {
-            if ($status === 'none') {
-                continue;
-            }
             $statusLabel = $this->_containerHas($statusesLabels, $status)
                 ? $this->_containerGet($statusesLabels, $status)
                 : $status;
@@ -328,7 +355,11 @@ class WpBookingsUiModule extends AbstractBaseModule
         }
         $screenOptions = json_decode($screenOptions);
 
-        return $screenOptions;
+        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
+            'statuses' => $screenOptions,
+        ])->getParam('statuses');
+
+        return $statuses;
     }
 
     /**
@@ -358,7 +389,9 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * List of availabilities for current service.
              */
-            'availabilities' => [],
+            'availabilities' => [
+                'rules' => [],
+            ],
 
             /*
              * List of available sessions for current service.
