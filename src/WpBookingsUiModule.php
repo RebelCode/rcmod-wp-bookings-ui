@@ -394,10 +394,27 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected function _getGeneralAppState()
     {
         return $this->_trigger('eddbk_general_ui_state', [
-            'websiteConfig' => [
-                'timezone' => $this->_getWebsiteTimezone()
+            'config' => [
+                'timezone' => $this->_getWebsiteTimezone(),
+                'formats' => $this->_getFormatsConfig()
             ],
         ])->getParams();
+    }
+
+    /**
+     * Get formats config for UI.
+     *
+     * @since [*next-version*]
+     *
+     * @return array
+     */
+    protected function _getFormatsConfig()
+    {
+        return [
+            'datetime' => [
+                'store' => 'YYYY-MM-DDTHH:mm:ssZ'
+            ]
+        ];
     }
 
     /**
