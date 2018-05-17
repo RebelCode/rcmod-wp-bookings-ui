@@ -8,6 +8,7 @@ use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
+use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
@@ -34,6 +35,9 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeArrayCapableTrait;
 
     /**
      * Helper class to render templates using events mechanism.
@@ -320,7 +324,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $screenOptions = get_user_option($key, $user->ID);
         if (!$screenOptions) {
-            return $defaultStatuses;
+            return $this->_normalizeArray($defaultStatuses);
         }
         $screenOptions = json_decode($screenOptions);
 
@@ -396,7 +400,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         return $this->_trigger('eddbk_general_ui_state', [
             'config' => [
                 'timezone' => $this->_getWebsiteTimezone(),
-                'formats' => $this->_getFormatsConfig()
+                'formats'  => $this->_getFormatsConfig(),
             ],
         ])->getParams();
     }
@@ -412,8 +416,8 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return [
             'datetime' => [
-                'store' => 'YYYY-MM-DDTHH:mm:ssZ'
-            ]
+                'store' => 'YYYY-MM-DDTHH:mm:ssZ',
+            ],
         ];
     }
 
