@@ -73,7 +73,7 @@
                         <div :class="['form-row form-row--vertical', errors.has('start') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Start*</div>
                             <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.store"
+                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree"
                                                  data-vv-name="start"
                                                  name="start"
                                                  ref="start"
@@ -92,7 +92,7 @@
                         <div :class="['form-row form-row--vertical', errors.has('end') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">End*</div>
                             <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.store + '|after:$start'"
+                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start'"
                                                  name="end"
                                                  @input="errors.remove('end')"
                                                  class="form-control--wide"
