@@ -449,6 +449,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return [
             'datetime' => [
+                'tzFree' => 'YYYY-MM-DD HH:mm:ss',
                 'store' => 'YYYY-MM-DDTHH:mm:ssZ',
             ],
         ];
