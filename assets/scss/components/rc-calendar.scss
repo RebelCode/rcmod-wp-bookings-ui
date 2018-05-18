@@ -143,11 +143,19 @@
       margin-top: 2rem;
     }
 
+    .rc-event-field {
+      &--timezone {
+        opacity: .6;
+        font-size: 9px;
+      }
+    }
+
     .fc-event {
       border: none;
       border-radius: 0;
       background: #8fdf82;
       opacity: .65;
+      padding: 3px;
 
       color: #000 !important;
 
