@@ -1,0 +1,27 @@
+<div id="eddbk-service-page">
+    <service-bookings-application inline-template>
+        <div>
+            <?=$this->render('availability/service-availability-editor');?>
+            <div>
+                <label class="selectit">
+                    <input value="1" type="checkbox" name="enable_booking" id="enable_booking" v-model="bookingsEnabled">
+                    Enable booking for this download
+                </label>
+            </div>
+            <tabs :options="tabsConfig" v-model="activeTab" v-if="bookingsEnabled">
+                <tab title="Session Length">
+                    <?=$this->render('availability/tab-session-length');?>
+                </tab>
+                <tab title="Availability">
+                    <?=$this->render('availability/tab-availability');?>
+                </tab>
+                <tab title="Display Options">
+                    <?=$this->render('availability/tab-display-options');?>
+                </tab>
+            </tabs>
+            <input type="hidden" name="eddbk[service_options]" :value="bookingOptionsFormData">
+        </div>
+    </service-bookings-application>
+</div>
+
+<?=$this->render('components');?>

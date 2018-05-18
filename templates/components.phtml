@@ -1,0 +1,127 @@
+<script type="text/x-template" id="timezone-select-template">
+    <select v-model="selectValue">
+        <?php echo wp_timezone_choice( 'UTC+0', get_user_locale() ); ?>
+    </select>
+</script>
+
+<script type="text/x-template" id="bookings-filter-template">
+    <div>
+        <selection-list :collection="items" wrap="ul" class="subsubsub" v-model="statusModel">
+            <li :class="r.item.id" slot-scope="r">
+                <a @click="r.select(r.item)" href="#" :class="[r.isItemSelected(r.item) ? 'current' : '']">{{ r.item.title }}
+                    <span class="count" v-if="r.item.count">({{ r.item.count }})</span>
+                </a>
+                <span class="list-sep">|</span>
+            </li>
+        </selection-list>
+        <p class="search-box search-box--bookings">
+            <label class="screen-reader-text" for="bookings-search-input">
+                Search Bookings:
+            </label>
+            <input type="search" id="bookings-search-input" placeholder="Start typing..." name="s" v-model="searchStringModel" @keyup.enter="submit">
+            <input type="submit" id="search-submit" class="button" value="Search Bookings" @click="submit">
+        </p>
+    </div>
+</script>
+
+<script type="text/x-template" id="vue-timepicker-template">
+  <span class="time-picker">
+  <input class="display-time" :disabled="disabled" :id="id" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
+  <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
+  <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
+  <div class="dropdown" v-show="showDropdown">
+    <div class="select-list">
+      <ul class="hours">
+        <li class="hint" v-text="hourType"></li>
+        <li v-for="(hr, hrNum) in hours"
+            v-show="disabledValues.hour.indexOf(hrNum) === -1"
+            v-text="hr" :class="{active: hour === hr}" @click.stop="select('hour', hr)"></li>
+      </ul>
+      <ul class="minutes">
+        <li class="hint" v-text="minuteType"></li>
+        <li v-for="(m, mNum) in minutes"
+            v-show="disabledValues.minute.indexOf(mNum) === -1"
+            v-text="m" :class="{active: minute === m}" @click.stop="select('minute', m)"></li>
+      </ul>
+      <ul class="seconds" v-if="secondType">
+        <li class="hint" v-text="secondType"></li>
+        <li v-for="s in seconds"
+            v-show="disabledValues.second.indexOf(s) === -1"
+            v-text="s" :class="{active: second === s}" @click.stop="select('second', s)"></li>
+      </ul>
+      <ul class="apms" v-if="apmType">
+        <li class="hint" v-text="apmType"></li>
+        <li v-for="a in apms"
+            v-show="disabledValues.apm.indexOf(a) === -1"
+            v-text="a"
+            :class="{active: apm === a}"
+            @click.stop="select('apm', a)"
+        ></li>
+      </ul>
+    </div>
+  </div>
+</span>
+</script>
+<script type="text/x-template" id="datepicker-template">
+    <div class="form-control datetime-picker-control"
+         @click.self="openDatepicker"
+    >
+        <datepicker v-model="dateValue"
+                    :format="dateFormat"
+                    ref="datepicker"
+                    ref-name="dateInput"
+                    :disabled="disabledDates"
+                    placeholder="-- / -- / ----"
+                    @opened="datepickerOpened"
+                    @selected="dateSelected"
+        />
+        <time-picker v-model="timeValue"
+                     format="HH:mm"
+                     :hide-clear-button="true"
+                     ref="timepicker"
+                     :disabled-to="disabledTime"
+                     :disabled="timeDisabled"
+        />
+    </div>
+</script>
+
+<script type="text/x-template" id="switcher-template">
+    <div class="fc-button-group">
+        <button type="button" :class="['fc-button fc-state-default fc-state-default--rc', key === value ? 'fc-state-active' : '']" v-for="(title, key) in buttons"
+            @click="buttonClick(key)"
+        >{{ title }}</button>
+    </div>
+</script>
+
+<script type="text/x-template" id="bool-switcher-template">
+    <div class="bool-switcher" @click="switcherClicked">
+        <div :class="['bool-switcher__button', key === activeButton ? 'bool-switcher__button--active' : '']" v-for="(title, key) in buttons">
+            {{ title }}
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal-transition">
+        <div class="modal" v-if="active">
+            <div :class="['modal__body', this.modalBodyClass]">
+                <div class="modal__header">
+                    <slot name="header"></slot>
+                </div>
+                <div class="modal__content">
+                    <slot name="body"></slot>
+                </div>
+                <div class="modal__footer">
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<script type="text/x-template" id="availability-calendar-template">
+    <div class="rc-calendar rc-calendar--availability">
+        <div ref="calendar"></div>
+        <div class="button-floating">+</div>
+    </div>
+</script>

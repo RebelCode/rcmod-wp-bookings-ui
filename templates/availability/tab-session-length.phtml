@@ -1,0 +1,77 @@
+<session-length inline-template>
+    <div>
+        <div class="session-length eddbk-inputs">
+            <div class="flex-row">
+                <fieldset class="session-length__options">
+                    <legend>Session Length</legend>
+                    <input type="number" step="1" min="1" max="59" placeholder="15" v-model="sessionDefault.sessionLength"
+                           ref="sessionLength"
+                           data-validation-error="Please enter a session length bigger than 0."
+                    >
+                    <select v-model="sessionTimeUnit">
+                        <option :value="unit.seconds" v-for="unit in timeUnits">{{ unit.title }}</option>
+                    </select>
+                </fieldset>
+                <fieldset class="session-length__options">
+                    <legend>Price</legend>
+                    <div class="input-with-placeholder">
+                        <span>$</span>
+                        <input type="number" step="1" min="1" placeholder="20.00" v-model="sessionDefault.price"
+                               style="width: 80px"
+                               ref="price"
+                               data-validation-error="Please enter a session price. If this session duration is free, enter 0."
+                        >
+                    </div>
+                </fieldset>
+            </div>
+            <div class="session-length__footer">
+                <div class="session-length__buttons">
+                    <input type="button"
+                           class="button button-primary"
+                           value="Add"
+                           @click="addNewSession"
+                    />
+                </div>
+                <transition name="fade-transition">
+                    <div class="session-length__validation" v-if="validationError">
+                        {{ validationError }}
+                    </div>
+                </transition>
+            </div>
+        </div>
+        <hr/>
+        <div class="session-bookable">
+            <div class="session-bookable__title">Bookable session lengths and prices.</div>
+
+            <div class="session-items" v-if="sessions.getItems().length">
+                <div class="session-items__header">
+                    <div class="session-head">
+                        <div class="session-item__length">
+                            Session length
+                        </div>
+                        <div class="session-item__price">
+                            Price
+                        </div>
+                        <div class="session-item__action"></div>
+                    </div>
+                </div>
+                <repeater :collection="sessions" class="session-items__holder">
+                    <div class="session-item" slot-scope="r">
+                        <div class="session-item__length">
+                            {{ humanize(r.item.sessionLength) }}
+                        </div>
+                        <div class="session-item__price">
+                            $ {{ r.item.price }}
+                        </div>
+                        <div class="session-item__action">
+                            <span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span>
+                        </div>
+                    </div>
+                </repeater>
+            </div>
+            <p class="description" v-else>
+                Please add a session length and corresponding price above. You can add as many as you need, or just one.
+            </p>
+        </div>
+    </div>
+</session-length>
