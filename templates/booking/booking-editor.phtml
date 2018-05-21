@@ -180,16 +180,13 @@
 
                         <div class="form-row form-row--vertical" style="margin-top: -1px;">
                             <div class="form-row__label">Actions</div>
-                            <template v-if="availableActions.length">
+                            <template v-if="model.id">
                                 <div class="form-row__input">
-                                    <select v-model="model.newStatus" style="width: 100%">
+                                    <select v-model="model.transition" style="width: 100%">
                                         <option value="">Don't change booking status</option>
-                                        <option value="in_cart" v-if="bookingCanBe('in_cart')">Set booking to In Cart</option>
-                                        <option value="approved" v-if="bookingCanBe('approved')">Approve booking</option>
-                                        <option value="draft" v-if="bookingCanBe('draft')">Set booking to Draft</option>
-                                        <option value="pending" v-if="bookingCanBe('pending')">Set booking to Pending</option>
-                                        <option value="scheduled" v-if="bookingCanBe('scheduled')">Schedule booking</option>
-                                        <option value="cancelled" v-if="bookingCanBe('cancelled')">Cancel booking</option>
+                                        <template v-for="(transitionLabel, transition) in transitionsLabels">
+                                            <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
+                                        </template>
                                     </select>
                                 </div>
                             </template>
