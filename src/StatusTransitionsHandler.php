@@ -48,8 +48,8 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable           $statusTransitions Map of transitions for changing statuses.
-     * @param Traversable           $transitionsLabels Map of transitions for changing statuses.
+     * @param Traversable $statusTransitions Map of transitions for changing statuses.
+     * @param Traversable $transitionsLabels Map of transitions for changing statuses.
      */
     public function __construct(
         Traversable $statusTransitions,
@@ -137,6 +137,7 @@ class StatusTransitionsHandler implements InvocableInterface
         foreach ($transitionsLabels as $transitionKey => $transitionLabel) {
             $translatedLabels[$transitionKey] = $this->__($transitionLabel);
         }
+
         return $translatedLabels;
     }
 }

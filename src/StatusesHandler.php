@@ -73,13 +73,13 @@ class StatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable           $statuses          List of statuses key in application.
-     * @param Traversable           $hiddenStatuses    List of hidden statuses in application.
-     * @param Traversable           $statusesLabels    Map of known statuses labels.
-     * @param string                $screenOptionsKey  Option key name to save screen statuses config.
-     * @param string                $statusesEndpoint  Endpoint for saving statuses.
-     * @param EventManagerInterface $eventManager      The event manager.
-     * @param EventFactoryInterface $eventFactory      The event factory.
+     * @param Traversable           $statuses         List of statuses key in application.
+     * @param Traversable           $hiddenStatuses   List of hidden statuses in application.
+     * @param Traversable           $statusesLabels   Map of known statuses labels.
+     * @param string                $screenOptionsKey Option key name to save screen statuses config.
+     * @param string                $statusesEndpoint Endpoint for saving statuses.
+     * @param EventManagerInterface $eventManager     The event manager.
+     * @param EventFactoryInterface $eventFactory     The event factory.
      */
     public function __construct(
         Traversable $statuses,
@@ -90,9 +90,9 @@ class StatusesHandler implements InvocableInterface
         $eventManager,
         $eventFactory
     ) {
-        $this->statuses          = $this->_normalizeArray($statuses);
-        $this->hiddenStatuses    = $this->_normalizeArray($hiddenStatuses);
-        $this->statusesLabels    = $this->_normalizeArray($statusesLabels);
+        $this->statuses       = $this->_normalizeArray($statuses);
+        $this->hiddenStatuses = $this->_normalizeArray($hiddenStatuses);
+        $this->statusesLabels = $this->_normalizeArray($statusesLabels);
 
         $this->screenOptionsKey = $screenOptionsKey;
         $this->statusesEndpoint = $statusesEndpoint;
