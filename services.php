@@ -37,6 +37,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/hidden_statuses'),
                 $c->get('wp_bookings_ui/statuses_labels'),
+                $c->get('booking_logic/status_transitions'),
                 $c->get('wp_bookings_ui/screen_options/key'),
                 $c->get('wp_bookings_ui/screen_options/endpoint'),
                 $c->get('event_manager'),

@@ -51,6 +51,15 @@ class StatusesHandler implements InvocableInterface
     protected $statusesLabels;
 
     /**
+     * Map of transitions that should be applied when changing status.
+     *
+     * @since [*next-version*]
+     *
+     * @var array
+     */
+    protected $statusTransitions;
+
+    /**
      * Option key name to save screen statuses config.
      *
      * @since [*next-version*]
@@ -73,26 +82,29 @@ class StatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable           $statuses         List of statuses key in application.
-     * @param Traversable           $hiddenStatuses   List of hidden statuses in application.
-     * @param Traversable           $statusesLabels   Map of known statuses labels.
-     * @param string                $screenOptionsKey Option key name to save screen statuses config.
-     * @param string                $statusesEndpoint Endpoint for saving statuses.
-     * @param EventManagerInterface $eventManager     The event manager.
-     * @param EventFactoryInterface $eventFactory     The event factory.
+     * @param Traversable           $statuses          List of statuses key in application.
+     * @param Traversable           $hiddenStatuses    List of hidden statuses in application.
+     * @param Traversable           $statusesLabels    Map of known statuses labels.
+     * @param Traversable           $statusTransitions Map of transitions for changing statuses.
+     * @param string                $screenOptionsKey  Option key name to save screen statuses config.
+     * @param string                $statusesEndpoint  Endpoint for saving statuses.
+     * @param EventManagerInterface $eventManager      The event manager.
+     * @param EventFactoryInterface $eventFactory      The event factory.
      */
     public function __construct(
         Traversable $statuses,
         Traversable $hiddenStatuses,
         Traversable $statusesLabels,
+        Traversable $statusTransitions,
         $screenOptionsKey,
         $statusesEndpoint,
         $eventManager,
         $eventFactory
     ) {
-        $this->statuses       = $this->_normalizeArray($statuses);
-        $this->hiddenStatuses = $this->_normalizeArray($hiddenStatuses);
-        $this->statusesLabels = $this->_normalizeArray($statusesLabels);
+        $this->statuses          = $this->_normalizeArray($statuses);
+        $this->hiddenStatuses    = $this->_normalizeArray($hiddenStatuses);
+        $this->statusesLabels    = $this->_normalizeArray($statusesLabels);
+        $this->statusTransitions = $statusTransitions;
 
         $this->screenOptionsKey = $screenOptionsKey;
         $this->statusesEndpoint = $statusesEndpoint;
@@ -170,7 +182,31 @@ class StatusesHandler implements InvocableInterface
              * Endpoint for saving statuses
              */
             'statusesEndpoint' => $this->statusesEndpoint,
+
+            /*
+             * Transitions for changing booking status
+             */
+            'statusTransitions' => $this->_prepareStatusTransitions($this->statusTransitions),
         ];
+    }
+
+    /**
+     * Get map of status transitions.
+     *
+     * @since [*next-version*]
+     *
+     * @param Traversable $statusTransitions Map of status transitions.
+     *
+     * @return array Prepared status transitions to be rendered in UI.
+     */
+    protected function _prepareStatusTransitions($statusTransitions)
+    {
+        $resultingTransitions = [];
+        foreach ($statusTransitions as $status => $transitionsMap) {
+            $resultingTransitions[$status] = $this->_normalizeArray($transitionsMap);
+        }
+
+        return $resultingTransitions;
     }
 
     /**
