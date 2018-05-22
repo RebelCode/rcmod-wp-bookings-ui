@@ -11,8 +11,13 @@ return [
             'post_type' => 'download',
             'title' => 'Booking Options',
         ],
-        'formats' => [
-
+        'config' => [
+            'formats' => [
+                'datetime' => [
+                    'tzFree' => 'YYYY-MM-DD HH:mm:ss',
+                    'store'  => 'YYYY-MM-DDTHH:mm:ssZ',
+                ]
+            ]
         ],
         'menu' => [
             'root' => [

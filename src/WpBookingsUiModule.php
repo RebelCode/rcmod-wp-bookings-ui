@@ -125,6 +125,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $this->_attach('eddbk_bookings_visible_statuses', $c->get('eddbk_bookings_visible_statuses_handler'));
 
+        $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_ui_state_handler'));
+
         $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_statuses_handler'));
     }
 
@@ -253,7 +255,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * Service timezone
              */
-            'timezone' => $this->_getWebsiteTimezone(),
+            'timezone' => null,
 
             /*
              * Is bookings available for service
@@ -304,59 +306,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getGeneralAppState()
     {
-        return $this->_trigger('eddbk_general_ui_state', [
-            'config' => [
-                'timezone' => $this->_getWebsiteTimezone(),
-                'formats'  => $this->_getFormatsConfig(),
-            ],
-        ])->getParams();
-    }
-
-    /**
-     * Get formats config for UI.
-     *
-     * @since [*next-version*]
-     *
-     * @return array
-     */
-    protected function _getFormatsConfig()
-    {
-        return [
-            'datetime' => [
-                'tzFree' => 'YYYY-MM-DD HH:mm:ss',
-                'store'  => 'YYYY-MM-DDTHH:mm:ssZ',
-            ],
-        ];
-    }
-
-    /**
-     * Get website timezone.
-     * 
-     * @since [*next-version*]
-     * 
-     * @return string Timezone in `America/Indianapolis` form.
-     */
-    protected function _getWebsiteTimezone()
-    {
-        $currentOffset = get_option('gmt_offset');
-        $tzstring      = get_option('timezone_string');
-
-        // Remove old Etc mappings. Fallback to gmt_offset.
-        if (false !== strpos($tzstring, 'Etc/GMT')) {
-            $tzstring = '';
-        }
-
-        if (empty($tzstring)) {
-            if (0 == $currentOffset) {
-                $tzstring = 'UTC+0';
-            } elseif ($currentOffset < 0) {
-                $tzstring = 'UTC' . $currentOffset;
-            } else {
-                $tzstring = 'UTC+' . $currentOffset;
-            }
-        }
-
-        return $tzstring;
+        return $this->_trigger('eddbk_general_ui_state')->getParams();
     }
 
     /**

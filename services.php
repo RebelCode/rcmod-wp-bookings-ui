@@ -1,6 +1,7 @@
 <?php
 
 use Dhii\Data\Container\ContainerFactoryInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsHandler;
@@ -60,6 +61,11 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_save_screen_statuses_handler' => function ($c) {
             return new SaveScreenStatusesHandler(
                 $c->get('wp_bookings_ui/screen_options/key')
+            );
+        },
+        'eddbk_general_ui_state_handler' => function ($c) {
+            return new GeneralUiStateHandler(
+                $c->get('wp_bookings_ui/config/formats')
             );
         }
     ];
