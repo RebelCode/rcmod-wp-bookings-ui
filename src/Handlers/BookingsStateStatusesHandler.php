@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module;
+namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
@@ -8,14 +8,17 @@ use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use Psr\EventManager\EventInterface;
 use Dhii\Event\EventFactoryInterface;
+use stdClass;
 use Traversable;
 
 /**
- * Handler for providing the status related state and functionality.
+ * Handler for adding statuses information to state on bookings page.
+ * It will add list of available statuses, list of visible booking statuses to filter bookings
+ * and endpoint for saving list of visible booking statuses.
  *
  * @since [*next-version*]
  */
-class StatusesHandler implements InvocableInterface
+class BookingsStateStatusesHandler implements InvocableInterface
 {
     /* @since [*next-version*] */
     use EventsConsumerTrait;
@@ -28,25 +31,16 @@ class StatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array
+     * @var array|Traversable|stdClass
      */
     protected $statuses;
-
-    /**
-     * List of statuses keys that are not visible in the UI.
-     *
-     * @since [*next-version*]
-     *
-     * @var array
-     */
-    protected $hiddenStatuses;
 
     /**
      * Map of known statuses keys translations.
      *
      * @since [*next-version*]
      *
-     * @var array
+     * @var array|Traversable|stdClass
      */
     protected $statusesLabels;
 
@@ -73,26 +67,23 @@ class StatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable           $statuses         List of statuses key in application.
-     * @param Traversable           $hiddenStatuses   List of hidden statuses in application.
-     * @param Traversable           $statusesLabels   Map of known statuses labels.
-     * @param string                $screenOptionsKey Option key name to save screen statuses config.
-     * @param string                $statusesEndpoint Endpoint for saving statuses.
-     * @param EventManagerInterface $eventManager     The event manager.
-     * @param EventFactoryInterface $eventFactory     The event factory.
+     * @param array|Traversable|stdClass $statuses         List of statuses key in application.
+     * @param array|Traversable|stdClass $statusesLabels   Map of known statuses labels.
+     * @param string                     $screenOptionsKey Option key name to save screen statuses config.
+     * @param string                     $statusesEndpoint Endpoint for saving statuses.
+     * @param EventManagerInterface      $eventManager     The event manager.
+     * @param EventFactoryInterface      $eventFactory     The event factory.
      */
     public function __construct(
-        Traversable $statuses,
-        Traversable $hiddenStatuses,
-        Traversable $statusesLabels,
+        $statuses,
+        $statusesLabels,
         $screenOptionsKey,
         $statusesEndpoint,
         $eventManager,
         $eventFactory
     ) {
-        $this->statuses       = $this->_normalizeArray($statuses);
-        $this->hiddenStatuses = $this->_normalizeArray($hiddenStatuses);
-        $this->statusesLabels = $this->_normalizeArray($statusesLabels);
+        $this->statuses       = $statuses;
+        $this->statusesLabels = $statusesLabels;
 
         $this->screenOptionsKey = $screenOptionsKey;
         $this->statusesEndpoint = $statusesEndpoint;
@@ -124,29 +115,6 @@ class StatusesHandler implements InvocableInterface
     }
 
     /**
-     * Attach events for status handling.
-     *
-     * @since [*next-version*]
-     */
-    public function run()
-    {
-        $this->_attach('eddbk_bookings_visible_statuses', function ($event) {
-            $event->setParams([
-                'statuses' => $this->_getVisibleStatuses($this->statuses, $this->hiddenStatuses),
-            ]);
-        });
-
-        /*
-         * Attach status endpoint.
-         */
-        $this->_attach('wp_ajax_set_' . $this->screenOptionsKey, function () {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $statuses = $data['statuses'];
-            $this->_setScreenStatuses($this->screenOptionsKey, $statuses);
-        });
-    }
-
-    /**
      * Get status related parameters to attach on event.
      *
      * @since [*next-version*]
@@ -157,37 +125,20 @@ class StatusesHandler implements InvocableInterface
     {
         return [
             /*
-             * All available statuses in application.
+             * All available booking statuses in application.
              */
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
             /*
-             * Statuses that enabled for filtering bookings.
+             * List of booking statuses in screen options section that is checked for filtering bookings.
              */
             'screenStatuses' => $this->_getScreenStatuses($this->screenOptionsKey, $this->statuses),
 
             /*
-             * Endpoint for saving statuses
+             * Endpoint for saving booking statuses that will be selected as default for filtering bookings.
              */
             'statusesEndpoint' => $this->statusesEndpoint,
         ];
-    }
-
-    /**
-     * Get array of visible statuses for UI.
-     *
-     * @since [*next-version*]
-     *
-     * @param array $statuses       List of all statuses.
-     * @param array $hiddenStatuses List of statuses that shouldn't be shown.
-     *
-     * @return array Resulting array of statuses that should be visible in the UI.
-     */
-    protected function _getVisibleStatuses($statuses, $hiddenStatuses)
-    {
-        return array_values(array_filter($statuses, function ($status) use ($hiddenStatuses) {
-            return !in_array($status, $hiddenStatuses);
-        }));
     }
 
     /**
@@ -195,13 +146,16 @@ class StatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array $statuses       List of statuses
-     * @param array $statusesLabels Map of statuses and it's labels
+     * @param array|Traversable|stdClass $statuses       List of statuses
+     * @param array|Traversable|stdClass $statusesLabels Map of statuses and it's labels
      *
      * @return array Map of statuses codes and translations.
      */
     protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
+        $statuses       = $this->_normalizeArray($statuses);
+        $statusesLabels = $this->_normalizeArray($statusesLabels);
+
         $translatedStatuses = [];
 
         $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
@@ -217,35 +171,12 @@ class StatusesHandler implements InvocableInterface
     }
 
     /**
-     * Save visible screen statuses in per-user options.
-     *
-     * @since [*next-version*]
-     *
-     * @param string   $key      Key of option where statuses stored.
-     * @param string[] $statuses List of statuses to save.
-     */
-    protected function _setScreenStatuses($key, $statuses)
-    {
-        if (!($user = wp_get_current_user())) {
-            wp_die('0');
-        }
-
-        update_user_option(
-            $user->ID,
-            $key,
-            json_encode($statuses)
-        );
-
-        wp_die('1');
-    }
-
-    /**
      * Return list of all statuses that will be shown for user by default.
      *
      * @since [*next-version*]
      *
-     * @param string   $key             Screen statuses option key.
-     * @param string[] $defaultStatuses Array of statuses selected by default
+     * @param string                     $key             Screen statuses option key.
+     * @param array|Traversable|stdClass $defaultStatuses List of booking statuses selected by default
      *
      * @return string[] List of statuses that user selected to show by default
      */
@@ -257,7 +188,7 @@ class StatusesHandler implements InvocableInterface
 
         $screenOptions = get_user_option($key, $user->ID);
         if (!$screenOptions) {
-            return $defaultStatuses;
+            return $this->_normalizeArray($defaultStatuses);
         }
         $screenOptions = json_decode($screenOptions);
 

@@ -1,20 +1,22 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module;
+namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Psr\EventManager\EventInterface;
+use stdClass;
 use Traversable;
 
 /**
- * Handler for providing the status related state and functionality.
+ * Handler for adding transitions information to state on bookings page.
+ * It will add map of available statuses transitions and transitions translations.
  *
  * @since [*next-version*]
  */
-class StatusTransitionsHandler implements InvocableInterface
+class BookingsStateStatusTransitionsHandler implements InvocableInterface
 {
     /* @since [*next-version*] */
     use NormalizeArrayCapableTrait;
@@ -30,7 +32,7 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array
+     * @var array|Traversable|stdClass
      */
     protected $statusTransitions;
 
@@ -39,7 +41,7 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array
+     * @var array|Traversable|stdClass
      */
     protected $transitionsLabels;
 
@@ -48,12 +50,12 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable $statusTransitions Map of transitions for changing statuses.
-     * @param Traversable $transitionsLabels Map of transitions for changing statuses.
+     * @param array|Traversable|stdClass $statusTransitions Map of transitions for changing statuses.
+     * @param array|Traversable|stdClass $transitionsLabels Map of transitions for changing statuses.
      */
     public function __construct(
-        Traversable $statusTransitions,
-        Traversable $transitionsLabels
+        $statusTransitions,
+        $transitionsLabels
     ) {
         $this->statusTransitions = $statusTransitions;
         $this->transitionsLabels = $transitionsLabels;
@@ -97,7 +99,7 @@ class StatusTransitionsHandler implements InvocableInterface
             'statusTransitions' => $this->_prepareStatusTransitions($this->statusTransitions),
 
             /*
-             * Map of transitions labels
+             * Map of transitions keys to transition labels
              */
             'transitionsLabels' => $this->_prepareTransitionsLabels($this->transitionsLabels),
         ];
@@ -108,7 +110,7 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable $statusTransitions Map of status transitions.
+     * @param array|Traversable|stdClass $statusTransitions Map of status transitions.
      *
      * @return array Prepared status transitions to be rendered in UI.
      */
@@ -127,7 +129,7 @@ class StatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param Traversable $transitionsLabels Labels of available transitions.
+     * @param array|Traversable|stdClass $transitionsLabels Labels of available transitions.
      *
      * @return array Map of translated labels for transitions.
      */

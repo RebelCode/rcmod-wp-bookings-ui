@@ -24,7 +24,6 @@
         "dhii/container-helper-base": "^0.1-alpha7",
         "dhii/psr-14": "^0.1",
         "dhii/stringable-interface": "^0.1",
-        "rebelcode/rcmod-eddbk-booking-logic": "0.1-alpha1",
         "psr/container": "^1.0"
     },
     "autoload": {

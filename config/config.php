@@ -1,8 +1,5 @@
 <?php
 
-use RebelCode\EddBookings\Logic\Module\BookingTransitionInterface as T;
-use RebelCode\EddBookings\Logic\Module\BookingStatusInterface as S;
-
 return [
     'wp_bookings_ui' => [
         'screen_options' => [
@@ -13,6 +10,9 @@ return [
             'id' => 'service_booking_settings',
             'post_type' => 'download',
             'title' => 'Booking Options',
+        ],
+        'formats' => [
+
         ],
         'menu' => [
             'root' => [
@@ -37,30 +37,30 @@ return [
             ],
         ],
         'statuses_labels' => [
-            S::STATUS_DRAFT => 'Draft',
-            S::STATUS_IN_CART => 'Cart',
-            S::STATUS_PENDING => 'Pending',
-            S::STATUS_APPROVED => 'Approved',
-            S::STATUS_REJECTED => 'Rejected',
-            S::STATUS_SCHEDULED => 'Scheduled',
-            S::STATUS_CANCELLED => 'Cancelled',
-            S::STATUS_COMPLETED => 'Completed',
+            'draft' => 'Draft',
+            'in_cart' => 'Cart',
+            'pending' => 'Pending',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'scheduled' => 'Scheduled',
+            'cancelled' => 'Cancelled',
+            'completed' => 'Completed',
         ],
         'hidden_statuses' => [
-            S::STATUS_NONE,
-            S::STATUS_IN_CART,
-            S::STATUS_APPROVED,
-            S::STATUS_REJECTED
+            'none',
+            'in_cart',
+            'approved',
+            'rejected'
         ],
         'transitions_labels' => [
-            T::TRANSITION_CART => 'Set booking to In Cart',
-            T::TRANSITION_DRAFT => 'Set booking to Draft',
-            T::TRANSITION_SUBMIT => 'Set booking to Pending',
-            T::TRANSITION_COMPLETE => 'Set booking to Completed',
-            T::TRANSITION_APPROVE => 'Approve booking',
-            T::TRANSITION_REJECT => 'Reject booking',
-            T::TRANSITION_SCHEDULE => 'Schedule booking',
-            T::TRANSITION_CANCEL => 'Cancel booking',
+            'cart' => 'Set booking to In Cart',
+            'draft' => 'Set booking to Draft',
+            'submit' => 'Set booking to Pending',
+            'complete' => 'Set booking to Completed',
+            'approve' => 'Approve booking',
+            'reject' => 'Reject booking',
+            'schedule' => 'Schedule booking',
+            'cancel' => 'Cancel booking',
         ],
         'templates' => [
             'components',

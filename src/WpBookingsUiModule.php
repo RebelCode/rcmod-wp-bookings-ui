@@ -123,7 +123,9 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $this->_attach('eddbk_bookings_ui_state', $c->get('eddbk_bookings_ui_status_transitions_handler'));
 
-        $c->get('eddbk_bookings_ui_statuses_handler')->run();
+        $this->_attach('eddbk_bookings_visible_statuses', $c->get('eddbk_bookings_visible_statuses_handler'));
+
+        $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_statuses_handler'));
     }
 
     /**
