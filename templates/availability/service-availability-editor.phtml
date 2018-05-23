@@ -14,16 +14,20 @@
             </div>
 
             <div slot="body" :class="isDoubleConfirming ? 'disabled' : ''">
-                <div class="form-row">
+                <div :class="['form-row', errors.has('start') ? 'form-row--with-error' : '']">
                     <div class="form-row__label">
                         Starts on
                     </div>
                     <div class="form-row__input">
                         <div class="form-row__input-with-description">
-                            <datetime-picker class="datetime-picker--inline"
-                                            v-model="model.start"
-                                            :time-disabled="model.isAllDay"
-                                            :disabled-before="currentDay"
+                            <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree"
+                                             data-vv-name="start"
+                                             name="start"
+                                             ref="start"
+                                             @input="startChanged"
+                                             v-model="model.start"
+                                             :time-disabled="model.isAllDay"
+                                             :disabled-before="currentDay"
                             ></datetime-picker>
                             <div class="form-row__description form-row__description--small">
                                 {{ momentHelpers.timezoneLabel(timezone) }}
@@ -35,14 +39,20 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-row__label">Ends on</div>                    
+                <div :class="['form-row', errors.has('end') ? 'form-row--with-error' : '']">
+                    <div class="form-row__label">
+                        Ends on
+                        <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
+                    </div>
                     <div class="form-row__input">
                         <div class="form-row__input-with-description">
                             <datetime-picker class="datetime-picker--inline"
-                                            v-model="model.end"
-                                            :time-disabled="model.isAllDay"
-                                            :disabled-before="model.start"
+                                             v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start'"
+                                             name="end"
+                                             @input="errors.remove('end')"
+                                             v-model="model.end"
+                                             :time-disabled="model.isAllDay"
+                                             :disabled-before="model.start"
                             ></datetime-picker>
                             <div class="form-row__description form-row__description--small">
                                 {{ momentHelpers.timezoneLabel(timezone) }}
@@ -65,13 +75,18 @@
 
                 <template v-if="model.repeat">
 <!--                    <hr>-->
-                    <div class="form-row">
-                        <div class="form-row__label">Repeats after</div>
+                    <div :class="['form-row', errors.has('repeats_after') ? 'form-row--with-error' : '']">
+                        <div class="form-row__label">
+                            Repeats after
+                            <div class="form-row__description form-row__error" v-if="errors.has('repeats_after')">{{ errors.first('repeats_after').replace('_', ' ') }}</div>
+                        </div>
                         <div class="form-row__input">
                             <input type="number" style="width: 90px;vertical-align: middle;"
+                                   v-validate="'min_value:' + minimalRepeatPeriod + '|max_value:' + repeatingDuration"
+                                   name="repeats_after"
+                                   @input="errors.remove('repeats_after')"
                                    :min="minimalRepeatPeriod"
                                    :max="repeatingDuration"
-                                   @blur="normalizeRepeatPeriod"
                                    v-model="model.repeatPeriod"
                             />
 
@@ -180,7 +195,7 @@
                     <template v-if="model.id && entityCanBeModified()">
                         <input type="button" class="button button-alert" value="Delete" style="float: left" @click="removeConfirming = true">
                     </template>
-                    <input type="button" class="button button-primary" v-if="!model.id || entityCanBeModified()" value="Save" @click="saveItem()">
+                    <input type="button" class="button button-primary" v-if="!model.id || entityCanBeModified()" value="Save" @click="saveAvailability()">
                 </div>
                 <div class="footer-confirm" v-else-if="removeConfirming">
                     <div class="footer-confirm__message __alert __right">
