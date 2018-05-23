@@ -24,7 +24,10 @@
                             <div class="form-row__label">Service*</div>
                             <div class="form-row__input">
                                 <vueselect :options="services" v-validate="'required'" name="service" @input="errors.remove('service')" v-model="model.service" label="name"></vueselect>
-                                <a href="#" v-if="model.service">Click here to view service details in new tab</a>
+                                <a :href="formatter(config.links.service, model.service.id)"
+                                   target="_blank"
+                                   v-if="model.service"
+                                >Click here to view service details in new tab</a>
                             </div>
                         </div>
                     </div>

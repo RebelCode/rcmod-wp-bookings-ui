@@ -38,15 +38,26 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $formatsConfig;
 
     /**
+     *  List of links to booking related entities (clients, services).
+     *
+     * @since [*next-version*]
+     *
+     * @var array|Traversable|stdClass
+     */
+    protected $linksConfig;
+
+    /**
      * GeneralUiStateHandler constructor.
      *
      * @since [*next-version*]
      *
      * @param array|Traversable|stdClass $formatsConfig List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig   List of links to booking related entities (clients, services).
      */
-    public function __construct($formatsConfig)
+    public function __construct($formatsConfig, $linksConfig)
     {
         $this->formatsConfig = $formatsConfig;
+        $this->linksConfig   = $linksConfig;
     }
 
     /**
@@ -66,7 +77,7 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         $event->setParams([
-            'config' => $this->_getUiConfig($this->formatsConfig),
+            'config' => $this->_getUiConfig($this->formatsConfig, $this->linksConfig),
         ]);
     }
 
@@ -74,14 +85,16 @@ class GeneralUiStateHandler implements InvocableInterface
      * Get config for UI application.
      *
      * @param array|Traversable|stdClass $formatsConfig List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig   List of links to booking related entities (clients, services).
      *
      * @return array UI configuration.
      */
-    protected function _getUiConfig($formatsConfig)
+    protected function _getUiConfig($formatsConfig, $linksConfig)
     {
         return [
             'timezone' => $this->_getWebsiteTimezone(),
             'formats'  => $this->_prepareFormatsConfig($formatsConfig),
+            'links'    => $this->_prepareLinksConfig($linksConfig),
         ];
     }
 
@@ -132,5 +145,24 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         return $preparedFormatsConfig;
+    }
+
+    /**
+     * Prepare list of links to booking related entities for using in the UI.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|Traversable|stdClass $linksConfig List of links to booking related entities (clients, services).
+     *
+     * @return array Prepared links list.
+     */
+    protected function _prepareLinksConfig($linksConfig)
+    {
+        $preparedLinksConfig = [];
+        foreach ($linksConfig as $key => $link) {
+            $preparedLinksConfig[$key] = admin_url($link);
+        }
+
+        return $preparedLinksConfig;
     }
 }
