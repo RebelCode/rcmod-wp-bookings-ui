@@ -127,10 +127,10 @@
                         <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
                             <div class="form-row__label">Client Timezone*</div>
                             <div class="form-row__input">
-                                <timezone-select v-model="model.clientTzName" 
-                                                 class="form-control--wide" 
-                                                 v-validate="'required'" 
-                                                 name="clientTzName" 
+                                <timezone-select v-model="model.clientTzName"
+                                                 class="form-control--wide"
+                                                 v-validate="'required'"
+                                                 name="clientTzName"
                                                  @change="errors.remove('clientTzName')"
                                 ></timezone-select>
                             </div>
@@ -239,9 +239,9 @@
                                 </div>
                                 <div class="footer-confirm__buttons">
                                     <input type="button" class="button" value="Save Draft"
-                                           @click="saveNewBooking('draft')">
+                                           @click="saveNewBooking()">
                                     <input type="button" class="button button-primary" value="Schedule Booking"
-                                           @click="saveNewBooking('cart')">
+                                           @click="saveNewBooking('submit')">
                                 </div>
                             </div>
                         </template>
