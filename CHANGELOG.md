@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
 
+## [0.1-alpha3] - 2018-05-24
+### Fixed
+- Scheduling of bookings now uses `submit` transition.
+
 ## [0.1-alpha2] - 2018-05-24
 ### Changed
 - Availability UI no longer permits repetition periods shorter than duration.
