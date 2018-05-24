@@ -12,6 +12,7 @@ use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use Psr\EventManager\EventInterface;
@@ -69,7 +70,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var MapInterface
+     * @var array|stdClass|MapInterface
      */
     protected $statusesLabels;
 
@@ -97,7 +98,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @since [*next-version*]
      *
      * @param array|Traversable|stdClass $statuses         List of statuses key in application.
-     * @param MapInterface               $statusesLabels   Map of known status keys to statuses labels.
+     * @param array|stdClass|MapInterface $statusesLabels   Map of known status keys to statuses labels.
      * @param string                     $screenOptionsKey Option key name to save screen statuses config.
      * @param string                     $statusesEndpoint Endpoint for saving statuses.
      * @param EventManagerInterface      $eventManager     The event manager.
@@ -175,8 +176,8 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $statuses       List of statuses
-     * @param MapInterface               $statusesLabels Map of statuses keys to status labels
+     * @param array|Traversable|stdClass $statuses List of statuses
+     * @param array|ContainerInterface|stdClass $statusesLabels Map of statuses keys to status labels
      *
      * @return array Map of statuses codes and translations.
      */
@@ -191,7 +192,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         ])->getParam('statuses');
 
         foreach ($statuses as $status) {
-            $statusLabel                 = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
+            $statusLabel = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
             $translatedStatuses[$status] = $this->__($statusLabel);
         }
 

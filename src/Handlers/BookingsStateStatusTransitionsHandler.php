@@ -33,7 +33,7 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var MapInterface
+     * @var array|stdClass|MapInterface
      */
     protected $statusTransitions;
 
@@ -42,7 +42,7 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var MapInterface
+     * @var array|stdClass|MapInterface
      */
     protected $transitionsLabels;
 
@@ -51,8 +51,8 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param MapInterface $statusTransitions Map of transitions for changing statuses.
-     * @param MapInterface $transitionsLabels Map of transition keys to labels for transitions.
+     * @param array|stdClass|MapInterface $statusTransitions Map of transitions for changing statuses.
+     * @param array|stdClass|MapInterface $transitionsLabels Map of transition keys to labels for transitions.
      */
     public function __construct(
         $statusTransitions,
