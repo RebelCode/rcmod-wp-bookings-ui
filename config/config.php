@@ -17,6 +17,10 @@ return [
                     'tzFree' => 'YYYY-MM-DD HH:mm:ss',
                     'store'  => 'YYYY-MM-DDTHH:mm:ssZ',
                 ]
+            ],
+            'links' => [
+                'service' => '/post.php?post=%d&action=edit',
+                'client' => '/edit.php?post_type=download&page=edd-customers&view=overview&id=%d'
             ]
         ],
         'menu' => [

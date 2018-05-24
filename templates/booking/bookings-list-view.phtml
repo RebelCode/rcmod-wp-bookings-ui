@@ -42,13 +42,13 @@
             </template>
 
             <template slot="client" slot-scope="data">
-                <a href="#">
+                <a :href="formatter(config.links.client, data.row.client ? data.row.client.id : null)" target="_blank">
                     {{ data.row.client ? data.row.client.name : null }}
                 </a>
             </template>
 
             <template slot="service" slot-scope="data">
-                <a href="#">
+                <a :href="formatter(config.links.service, data.row.service.id)" target="_blank">
                     {{ data.row.service.name }}
                 </a>
             </template>

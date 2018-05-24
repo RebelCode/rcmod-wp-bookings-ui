@@ -65,7 +65,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
-                $c->get('wp_bookings_ui/config/formats')
+                $c->get('wp_bookings_ui/config/formats'),
+                $c->get('wp_bookings_ui/config/links')
             );
         }
     ];
