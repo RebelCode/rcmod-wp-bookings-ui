@@ -2,8 +2,16 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Collection\MapInterface;
+use Dhii\Data\Container\ContainerGetCapableTrait;
+use Dhii\Data\Container\ContainerHasCapableTrait;
+use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
+use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
+use Dhii\Data\Container\NormalizeKeyCapableTrait;
+use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use Psr\EventManager\EventInterface;
@@ -26,6 +34,27 @@ class BookingsStateStatusesHandler implements InvocableInterface
     /* @since [*next-version*] */
     use NormalizeArrayCapableTrait;
 
+    /* @since [*next-version*] */
+    use ContainerHasCapableTrait;
+
+    /* @since [*next-version*] */
+    use ContainerGetCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateContainerExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateNotFoundExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateOutOfRangeExceptionCapableTrait;
+
     /**
      * List of statuses keys available in application.
      *
@@ -40,7 +69,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array|Traversable|stdClass
+     * @var MapInterface
      */
     protected $statusesLabels;
 
@@ -68,7 +97,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @since [*next-version*]
      *
      * @param array|Traversable|stdClass $statuses         List of statuses key in application.
-     * @param array|Traversable|stdClass $statusesLabels   Map of known statuses labels.
+     * @param MapInterface               $statusesLabels   Map of known status keys to statuses labels.
      * @param string                     $screenOptionsKey Option key name to save screen statuses config.
      * @param string                     $statusesEndpoint Endpoint for saving statuses.
      * @param EventManagerInterface      $eventManager     The event manager.
@@ -147,14 +176,13 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @since [*next-version*]
      *
      * @param array|Traversable|stdClass $statuses       List of statuses
-     * @param array|Traversable|stdClass $statusesLabels Map of statuses and it's labels
+     * @param MapInterface               $statusesLabels Map of statuses keys to status labels
      *
      * @return array Map of statuses codes and translations.
      */
     protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
-        $statuses       = $this->_normalizeArray($statuses);
-        $statusesLabels = $this->_normalizeArray($statusesLabels);
+        $statuses = $this->_normalizeArray($statuses);
 
         $translatedStatuses = [];
 
@@ -163,7 +191,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         ])->getParam('statuses');
 
         foreach ($statuses as $status) {
-            $statusLabel                 = array_key_exists($status, $statusesLabels) ? $statusesLabels[$status] : $status;
+            $statusLabel                 = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
             $translatedStatuses[$status] = $this->__($statusLabel);
         }
 

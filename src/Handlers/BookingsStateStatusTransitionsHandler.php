@@ -2,6 +2,7 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Collection\MapInterface;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
@@ -32,16 +33,16 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array|Traversable|stdClass
+     * @var MapInterface
      */
     protected $statusTransitions;
 
     /**
-     * List of labels for transitions.
+     * Map of transition keys to labels for transitions.
      *
      * @since [*next-version*]
      *
-     * @var array|Traversable|stdClass
+     * @var MapInterface
      */
     protected $transitionsLabels;
 
@@ -50,8 +51,8 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $statusTransitions Map of transitions for changing statuses.
-     * @param array|Traversable|stdClass $transitionsLabels Map of transitions for changing statuses.
+     * @param MapInterface $statusTransitions Map of transitions for changing statuses.
+     * @param MapInterface $transitionsLabels Map of transition keys to labels for transitions.
      */
     public function __construct(
         $statusTransitions,
