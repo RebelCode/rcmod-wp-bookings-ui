@@ -11,6 +11,14 @@ return [
             'post_type' => 'download',
             'title' => 'Booking Options',
         ],
+        'config' => [
+            'formats' => [
+                'datetime' => [
+                    'tzFree' => 'YYYY-MM-DD HH:mm:ss',
+                    'store'  => 'YYYY-MM-DDTHH:mm:ssZ',
+                ]
+            ]
+        ],
         'menu' => [
             'root' => [
                 'page_title' => 'Bookings',
@@ -48,6 +56,16 @@ return [
             'in_cart',
             'approved',
             'rejected'
+        ],
+        'transitions_labels' => [
+            'cart' => 'Set booking to In Cart',
+            'draft' => 'Set booking to Draft',
+            'submit' => 'Set booking to Pending',
+            'complete' => 'Set booking to Completed',
+            'approve' => 'Approve booking',
+            'reject' => 'Reject booking',
+            'schedule' => 'Schedule booking',
+            'cancel' => 'Cancel booking',
         ],
         'templates' => [
             'components',

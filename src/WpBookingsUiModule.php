@@ -8,7 +8,6 @@ use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
-use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
@@ -35,9 +34,6 @@ class WpBookingsUiModule extends AbstractBaseModule
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
-
-    /* @since [*next-version*] */
-    use NormalizeArrayCapableTrait;
 
     /**
      * Helper class to render templates using events mechanism.
@@ -123,18 +119,15 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->_adminMenu($c);
         });
 
-        $this->_attach('eddbk_bookings_visible_statuses', function ($event) use ($c) {
-            $event->setParams([
-                'statuses' => $this->_getVisibleStatuses($event->getParam('statuses'), $c->get('wp_bookings_ui/hidden_statuses')),
-            ]);
-        });
+        $this->_attach('eddbk_bookings_ui_state', $c->get('eddbk_bookings_ui_statuses_handler'));
 
-        $statusesOptionKey = $c->get('wp_bookings_ui/screen_options/key');
-        $this->_attach('wp_ajax_set_' . $statusesOptionKey, function () use ($statusesOptionKey) {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $statuses = $data['statuses'];
-            $this->_setScreenStatuses($statusesOptionKey, $statuses);
-        });
+        $this->_attach('eddbk_bookings_ui_state', $c->get('eddbk_bookings_ui_status_transitions_handler'));
+
+        $this->_attach('eddbk_bookings_visible_statuses', $c->get('eddbk_bookings_visible_statuses_handler'));
+
+        $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_ui_state_handler'));
+
+        $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_statuses_handler'));
     }
 
     /**
@@ -189,79 +182,14 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getBookingsAppState($c)
     {
-        return [
-            /*
-             * All available statuses in application.
-             */
-            'statuses' => $this->_trigger('eddbk_bookings_translated_statuses', [
-                'statuses' => $this->_getTranslatedStatuses($c->get('booking_logic/statuses'), $c->get('wp_bookings_ui/statuses_labels')),
-            ])->getParam('statuses'),
-
-            /*
-             * Statuses that enabled for filtering bookings.
-             */
-            'screenStatuses' => $this->_trigger('eddbk_bookings_screen_statuses', [
-                'screenStatuses' => $this->_getScreenStatuses($c->get('wp_bookings_ui/screen_options/key'), $c->get('booking_logic/statuses')),
-            ])->getParam('screenStatuses'),
-
+        return $this->_trigger('eddbk_bookings_ui_state', [
             /*
              * List of available services.
              */
             'services' => $this->_getServices(),
 
-            'statusesEndpoint' => $c->get('wp_bookings_ui/screen_options/endpoint'),
-
             'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config')),
-        ];
-    }
-
-    /**
-     * Get array of visible statuses for UI.
-     *
-     * @since [*next-version*]
-     *
-     * @param mixed $statuses       List of all statuses.
-     * @param mixed $hiddenStatuses List of statuses that shouldn't be shown.
-     *
-     * @return array Resulting array of statuses that should be visible in the UI.
-     */
-    protected function _getVisibleStatuses($statuses, $hiddenStatuses)
-    {
-        $statuses       = $this->_normalizeArray($statuses);
-        $hiddenStatuses = $this->_normalizeArray($hiddenStatuses);
-
-        return array_values(array_filter($statuses, function ($status) use ($hiddenStatuses) {
-            return !in_array($status, $hiddenStatuses);
-        }));
-    }
-
-    /**
-     * Get all translated statuses.
-     *
-     * @since [*next-version*]
-     *
-     * @param mixed $statuses       List of statuses
-     * @param mixed $statusesLabels Map of statuses and it's labels
-     *
-     * @return array Map of statuses codes and translations.
-     */
-    protected function _getTranslatedStatuses($statuses, $statusesLabels)
-    {
-        $translatedStatuses = [];
-
-        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
-            'statuses' => $statuses,
-        ])->getParam('statuses');
-
-        foreach ($statuses as $status) {
-            $statusLabel = $this->_containerHas($statusesLabels, $status)
-                ? $this->_containerGet($statusesLabels, $status)
-                : $status;
-
-            $translatedStatuses[$status] = $this->__($statusLabel);
-        }
-
-        return $translatedStatuses;
+        ])->getParams();
     }
 
     /**
@@ -311,58 +239,6 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Save visible screen statuses in per-user options.
-     *
-     * @since [*next-version*]
-     *
-     * @param string   $key      Key of option where statuses stored.
-     * @param string[] $statuses List of statuses to save.
-     */
-    protected function _setScreenStatuses($key, $statuses)
-    {
-        if (!($user = wp_get_current_user())) {
-            wp_die('0');
-        }
-
-        update_user_option(
-            $user->ID,
-            $key,
-            json_encode($statuses)
-        );
-
-        wp_die('1');
-    }
-
-    /**
-     * Return list of all statuses that will be shown for user by default.
-     *
-     * @since [*next-version*]
-     *
-     * @param string   $key             Screen statuses option key.
-     * @param string[] $defaultStatuses Array of statuses selected by default
-     *
-     * @return string[] List of statuses that user selected to show by default
-     */
-    protected function _getScreenStatuses($key, $defaultStatuses = [])
-    {
-        if (!$user = wp_get_current_user()) {
-            return [];
-        }
-
-        $screenOptions = get_user_option($key, $user->ID);
-        if (!$screenOptions) {
-            return $this->_normalizeArray($defaultStatuses);
-        }
-        $screenOptions = json_decode($screenOptions);
-
-        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
-            'statuses' => $screenOptions,
-        ])->getParam('statuses');
-
-        return $statuses;
-    }
-
-    /**
      * Get app state for service page.
      *
      * @since [*next-version*]
@@ -379,7 +255,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * Service timezone
              */
-            'timezone' => $this->_getWebsiteTimezone(),
+            'timezone' => null,
 
             /*
              * Is bookings available for service
@@ -430,59 +306,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _getGeneralAppState()
     {
-        return $this->_trigger('eddbk_general_ui_state', [
-            'config' => [
-                'timezone' => $this->_getWebsiteTimezone(),
-                'formats'  => $this->_getFormatsConfig(),
-            ],
-        ])->getParams();
-    }
-
-    /**
-     * Get formats config for UI.
-     *
-     * @since [*next-version*]
-     *
-     * @return array
-     */
-    protected function _getFormatsConfig()
-    {
-        return [
-            'datetime' => [
-                'tzFree' => 'YYYY-MM-DD HH:mm:ss',
-                'store' => 'YYYY-MM-DDTHH:mm:ssZ',
-            ],
-        ];
-    }
-
-    /**
-     * Get website timezone.
-     * 
-     * @since [*next-version*]
-     * 
-     * @return string Timezone in `America/Indianapolis` form.
-     */
-    protected function _getWebsiteTimezone()
-    {
-        $currentOffset = get_option('gmt_offset');
-        $tzstring      = get_option('timezone_string');
-
-        // Remove old Etc mappings. Fallback to gmt_offset.
-        if (false !== strpos($tzstring, 'Etc/GMT')) {
-            $tzstring = '';
-        }
-
-        if (empty($tzstring)) {
-            if (0 == $currentOffset) {
-                $tzstring = 'UTC+0';
-            } elseif ($currentOffset < 0) {
-                $tzstring = 'UTC' . $currentOffset;
-            } else {
-                $tzstring = 'UTC+' . $currentOffset;
-            }
-        }
-
-        return $tzstring;
+        return $this->_trigger('eddbk_general_ui_state')->getParams();
     }
 
     /**

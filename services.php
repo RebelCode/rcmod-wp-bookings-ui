@@ -1,6 +1,11 @@
 <?php
 
 use Dhii\Data\Container\ContainerFactoryInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
@@ -31,5 +36,37 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 ContainerFactoryInterface::K_DATA => $assetsUrlsMap,
             ]);
         },
+        'eddbk_bookings_ui_statuses_handler' => function ($c) {
+            return new BookingsStateStatusesHandler(
+                $c->get('booking_logic/statuses'),
+                $c->get('wp_bookings_ui/statuses_labels'),
+                $c->get('wp_bookings_ui/screen_options/key'),
+                $c->get('wp_bookings_ui/screen_options/endpoint'),
+                $c->get('event_manager'),
+                $c->get('event_factory')
+            );
+        },
+        'eddbk_bookings_ui_status_transitions_handler' => function ($c) {
+            return new BookingsStateStatusTransitionsHandler(
+                $c->get('booking_logic/status_transitions'),
+                $c->get('wp_bookings_ui/transitions_labels')
+            );
+        },
+        'eddbk_bookings_visible_statuses_handler' => function ($c) {
+            return new VisibleStatusesHandler(
+                $c->get('booking_logic/statuses'),
+                $c->get('wp_bookings_ui/hidden_statuses')
+            );
+        },
+        'eddbk_bookings_save_screen_statuses_handler' => function ($c) {
+            return new SaveScreenStatusesHandler(
+                $c->get('wp_bookings_ui/screen_options/key')
+            );
+        },
+        'eddbk_general_ui_state_handler' => function ($c) {
+            return new GeneralUiStateHandler(
+                $c->get('wp_bookings_ui/config/formats')
+            );
+        }
     ];
 };
