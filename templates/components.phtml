@@ -1,3 +1,72 @@
+<script type="text/x-template" id="service-session-selector-template">
+    <div>
+        <div class="form-row" v-if="!selectedDay">
+            <div class="form-row__label form-row__label--smaller">
+                Month
+                <span class="loading-inline" v-if="isSessionsLoading"></span>
+            </div>
+            <div class="form-row__input exclusions-datepicker">
+                <datepicker v-model="selectedDay"
+                            :inline="true"
+                            @changedMonth="onMonthChange"
+                            :disabled="{ customPredictor: isDateDisabled }"
+                            :open-date="selectedMonth"
+                            :class="['sessions-datepicker', isSessionsLoading ? 'disabled' : '']"
+                ></datepicker>
+            </div>
+        </div>
+        <session-picker v-model="session"
+                        :selected-day.sync="selectedDay"
+                        :service="service"
+                        :sessions="selectedDaySessions"
+                        :prev-available-day="prevAvailableDay"
+                        :next-available-day="nextAvailableDay"
+                        v-else
+        ></session-picker>
+    </div>
+</script>
+
+<script type="text/x-template" id="session-picker-template">
+    <div>
+        <div class="form-row">
+            <div class="form-row__label form-row__label--smaller">Date</div>
+            <div class="form-row__input" style="padding-top: 3px">
+                {{ selectedDayLabel }}  <a href="#" @click="unselectDay">Change</a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-row__label form-row__label--smaller">Duration</div>
+            <div class="form-row__input">
+                <select v-model="selectedSessionLength" style="width: 100%">
+                    <option :value="sessionLength" v-for="sessionLength in service.sessionLengths">
+                        {{ sessionLengthLabel(sessionLength) }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-row__label form-row__label--smaller">Session</div>
+            <div class="form-row__input">
+                <div class="session-picker">
+                    <div class="session-picker-header">
+                        <span :class="['dashicons dashicons-arrow-left', prevAvailableDay ? '' : 'disabled']" @click="goToPrevDay"></span>
+                        <span>{{ selectedDaySessionsLabel }}</span>
+                        <span :class="['dashicons dashicons-arrow-right', nextAvailableDay ? '' : 'disabled']" @click="goToNextDay"></span>
+                    </div>
+                    <div class="session-picker-buttons">
+                        <div v-for="session in visibleSessions"
+                             @click="select(session)"
+                             :class="['session-picker-button', isSelected(session) ? 'session-picker-button--selected' : '']"
+                        >
+                            {{ sessionLabel(session) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/x-template" id="timezone-select-template">
     <select v-model="selectValue">
         <?php echo wp_timezone_choice( 'UTC+0', get_user_locale() ); ?>

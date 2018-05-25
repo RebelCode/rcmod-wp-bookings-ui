@@ -72,129 +72,72 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('start') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Start*</div>
-                            <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree"
-                                                 data-vv-name="start"
-                                                 name="start"
-                                                 ref="start"
-                                                 @input="startChanged"
-                                                 class="form-control--wide"
-                                                 v-model="model.start"
-                                ></datetime-picker>
-                                <div class="form-row__description form-row__description--small">
-                                    <div>Universal time: {{ format(model.start) }}</div>
-                                    <div>Client time: {{ format(model.start, model.clientTzName) }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('end') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">End*</div>
-                            <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start'"
-                                                 name="end"
-                                                 @input="errors.remove('end')"
-                                                 class="form-control--wide"
-                                                 v-model="model.end"
-                                                 :disabled-before="model.start"
-                                ></datetime-picker>
-                                <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
-                                <div class="form-row__description form-row__description--small">
-                                    <div>Universal time: {{ format(model.end) }}</div>
-                                    <div>Client time: {{ format(model.end, model.clientTzName) }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--inline mobile-only mb-3/2">
-                            <div class="form-row__label form-row__label--no-top">Duration</div>
-                            <div class="form-row__input">
-                                <template v-if="duration">
-                                    {{ duration }}
-                                </template>
-                                <div class="form-row__description form-row__description--inline" v-else>
-                                    Please set start and end time to automatically calculate the duration
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Client Timezone*</div>
-                            <div class="form-row__input">
-                                <timezone-select v-model="model.clientTzName" 
-                                                 class="form-control--wide" 
-                                                 v-validate="'required'" 
-                                                 name="clientTzName" 
-                                                 @change="errors.remove('clientTzName')"
-                                ></timezone-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Payment Number</div>
-                            <div class="form-row__input">
-                                <input name="payment" type="text" class="form-control--wide" v-model="model.payment">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6 columns">
-                        <div class="form-row form-row--inline mobile-collapsed">
-                            <div class="form-row__label form-row__label--no-top">Duration</div>
-                            <div class="form-row__input">
-                                <template v-if="duration">
-                                    {{ duration }}
-                                </template>
-                                <div class="form-row__description form-row__description--inline" v-else>
-                                    Please set start and end time to automatically calculate the duration
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">
-                                Add Notes
-                                <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
-                            </div>
-                            <div class="form-row__input">
-                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.notes" style="min-height: 28px"></textarea>
-                            </div>
-                        </div>
+                        <service-session-selector :service="model.service"
+                                                  v-if="model.service"
+                                                  v-model="model.session"
+                        ></service-session-selector>
                     </div>
 
                     <div class="col-6 columns">
-                        <div class="form-row form-row--inline mobile-collapsed" v-if="model.id">
-                            <div class="form-row__label form-row__label--no-top">Status</div>
-                            <div class="form-row__input">
+                        <div class="row">
+                            <div class="col-6 columns">
+                                <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
+                                    <div class="form-row__label">Client Timezone*</div>
+                                    <div class="form-row__input">
+                                        <timezone-select v-model="model.clientTzName"
+                                                         class="form-control--wide"
+                                                         v-validate="'required'"
+                                                         name="clientTzName"
+                                                         @change="errors.remove('clientTzName')"
+                                        ></timezone-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 columns">
+                                <div class="form-row form-row--vertical">
+                                    <div class="form-row__label">Payment Number</div>
+                                    <div class="form-row__input">
+                                        <input name="payment" type="text" class="form-control--wide" v-model="model.payment">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 columns">
+                                <div class="form-row form-row--vertical">
+                                    <div class="form-row__label">
+                                        Add Notes
+                                        <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
+                                    </div>
+                                    <div class="form-row__input">
+                                        <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.notes" style="min-height: 28px"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-row form-row--inline mobile-collapsed" v-if="model.id">
+                                    <div class="form-row__label form-row__label--no-top">Status</div>
+                                    <div class="form-row__input">
                                 <span class="booking-status" :style="statusStyle">
                                     <span>{{ statusTitle }}</span>
                                 </span>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--vertical" style="margin-top: -1px;">
-                            <div class="form-row__label">Actions</div>
-                            <template v-if="model.id">
-                                <div class="form-row__input">
-                                    <select v-model="model.transition" style="width: 100%">
-                                        <option value="">Don't change booking status</option>
-                                        <template v-for="(transitionLabel, transition) in transitionsLabels">
-                                            <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
-                                        </template>
-                                    </select>
+                                    </div>
                                 </div>
-                            </template>
-                            <div class="form-row__description" v-else>
-                                These are no actions to take at this time
+                                <div class="form-row form-row--vertical" style="margin-top: -1px;">
+                                    <div class="form-row__label">Actions</div>
+                                    <template v-if="model.id">
+                                        <div class="form-row__input">
+                                            <select v-model="model.transition" style="width: 100%">
+                                                <option value="">Don't change booking status</option>
+                                                <template v-for="(transitionLabel, transition) in transitionsLabels">
+                                                    <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </template>
+                                    <div class="form-row__description" v-else>
+                                        These are no actions to take at this time
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

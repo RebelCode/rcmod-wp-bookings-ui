@@ -109,6 +109,10 @@
     &--no-top {
       padding-top: 0;
     }
+
+    &--smaller {
+      width: 80px;
+    }
   }
 
   &__description {
