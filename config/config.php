@@ -19,6 +19,8 @@ return [
                     'sessionTime' => 'h:mm a',
                     'dayFull' => 'dddd Do MMMM YYYY',
                     'dayShort' => 'D MMMM YYYY',
+                    'monthKey' => 'YYYY-MM',
+                    'dayKey' => 'YYYY-MM-DD'
                 ]
             ],
             'links' => [

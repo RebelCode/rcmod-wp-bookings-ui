@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
       lodash: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min',
       moment: 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min',
       momentWithTimezone: 'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.17/moment-timezone-with-data.min',
+      momentRange: 'https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.1/moment-range',
       fastDeepEqual: 'https://cdn.jsdelivr.net/npm/fast-deep-equal@1.1.0/index.min',
       pluralize: 'https://cdnjs.cloudflare.com/ajax/libs/pluralize/7.0.0/pluralize.min',
 
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'lodash',
     'moment',
     'momentWithTimezone',
+    'cjs!momentRange',
     'cjs!fastDeepEqual',
     'cjs!wpListTable',
     'textFormatter',
