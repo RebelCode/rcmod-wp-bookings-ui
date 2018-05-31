@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',
       tabs: 'https://unpkg.com/@rebelcode/vc-tabs@0.1.0/dist/vc-tabs',
       datetimePicker: 'https://unpkg.com/@rebelcode/vc-datetime-picker@0.1.0/dist/vc-datetime-picker',
+      sha1: 'https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min',
 
       datepicker: 'https://cdn.jsdelivr.net/npm/vuejs-datepicker@0.9.26/dist/build.min',
       timepicker: 'https://cdn.jsdelivr.net/npm/vue2-timepicker@0.1.4/dist/vue2-timepicker.min',
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'vueselect',
     'datetimePicker',
     'tabs',
+    'sha1',
     'cjs!datepicker',
     'timepicker',
     'repeater',
