@@ -1,28 +1,34 @@
 <script type="text/x-template" id="service-session-selector-template">
     <div>
-        <div class="form-row" v-if="!selectedDay">
-            <div class="form-row__label form-row__label--smaller">
-                Month
-                <span class="loading-inline" v-if="isSessionsLoading"></span>
+        <template v-if="!service">
+            <div class="description">Please select service to choose available session for booking.</div>
+        </template>
+        <template v-else>
+            <div class="form-row" v-if="!selectedDay">
+                <div class="form-row__label form-row__label--smaller">
+                    Month
+                    <span class="loading-inline" v-if="isSessionsLoading"></span>
+                </div>
+                <div class="form-row__input exclusions-datepicker">
+                    <datepicker v-model="selectedDay"
+                                :inline="true"
+                                @changedMonth="onMonthChange"
+                                :disabled="{ customPredictor: isDateDisabled, to: currentDay }"
+                                :open-date="selectedMonth"
+                                :class="['sessions-datepicker', isSessionsLoading ? 'disabled' : '']"
+                                maximum-view="day"
+                    ></datepicker>
+                </div>
             </div>
-            <div class="form-row__input exclusions-datepicker">
-                <datepicker v-model="selectedDay"
-                            :inline="true"
-                            @changedMonth="onMonthChange"
-                            :disabled="{ customPredictor: isDateDisabled }"
-                            :open-date="selectedMonth"
-                            :class="['sessions-datepicker', isSessionsLoading ? 'disabled' : '']"
-                ></datepicker>
-            </div>
-        </div>
-        <session-picker v-model="session"
-                        :selected-day.sync="selectedDay"
-                        :service="service"
-                        :sessions="selectedDaySessions"
-                        :prev-available-day="prevAvailableDay"
-                        :next-available-day="nextAvailableDay"
-                        v-else
-        ></session-picker>
+            <session-picker v-model="session"
+                            :selected-day.sync="selectedDay"
+                            :service="service"
+                            :sessions="selectedDaySessions"
+                            :prev-available-day="prevAvailableDay"
+                            :next-available-day="nextAvailableDay"
+                            v-else
+            ></session-picker>
+        </template>
     </div>
 </script>
 

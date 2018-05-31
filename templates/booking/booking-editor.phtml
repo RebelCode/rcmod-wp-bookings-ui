@@ -30,56 +30,53 @@
                                 >Click here to view service details in new tab</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('client') || errors.any('client-editor') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Client*</div>
-                            <div class="form-row__input">
-                                <form class="form-row__form" data-vv-scope="client-editor" v-show="isCreatingClient">
-                                    <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
-                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
 
-                                    <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
-                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
-
-                                    <div class="text-right mt-4">
-                                        <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
-                                        <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
-                                    </div>
-                                </form>
-                                <div v-show="!isCreatingClient">
-                                    <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
-                                        <template slot="spinner" slot-scope="options">
-                                            <div class="loading-inline" v-if="isClientsLoading"></div>
-                                        </template>
-                                    </vueselect>
-                                    <div class="text-right mt-4">
-                                        <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--inline mobile-only mb-3/2" v-if="model.id">
-                            <div class="form-row__label form-row__label--no-top">Status</div>
-                            <div class="form-row__input">
-                                <span class="booking-status" :style="statusStyle">
-                                    <span>{{ statusTitle }}</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6 columns">
                         <service-session-selector :service="model.service"
-                                                  v-if="model.service"
                                                   v-model="model.session"
                         ></service-session-selector>
                     </div>
 
                     <div class="col-6 columns">
+                        <div class="row">
+                            <div class="col-12 columns">
+                                <div :class="['form-row form-row--vertical', errors.has('client') || errors.any('client-editor') ? 'form-row--with-error' : '']">
+                                    <div class="form-row__label">Client*</div>
+                                    <div class="form-row__input">
+                                        <form class="form-row__form" data-vv-scope="client-editor" v-show="isCreatingClient">
+                                            <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
+                                            <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
+
+                                            <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
+                                            <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
+
+                                            <div class="text-right mt-4">
+                                                <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
+                                                <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
+                                            </div>
+                                        </form>
+                                        <div v-show="!isCreatingClient">
+                                            <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
+                                                <template slot="spinner" slot-scope="options">
+                                                    <div class="loading-inline" v-if="isClientsLoading"></div>
+                                                </template>
+                                            </vueselect>
+                                            <div class="text-right mt-4">
+                                                <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-row--inline mobile-only mb-3/2" v-if="model.id">
+                                    <div class="form-row__label form-row__label--no-top">Status</div>
+                                    <div class="form-row__input">
+                                <span class="booking-status" :style="statusStyle">
+                                    <span>{{ statusTitle }}</span>
+                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-6 columns">
                                 <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
