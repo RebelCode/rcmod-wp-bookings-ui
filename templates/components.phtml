@@ -1,9 +1,20 @@
 <script type="text/x-template" id="service-session-selector-template">
     <div>
-        <template v-if="!service">
+        <div class="form-row" v-if="isEditing">
+            <div class="form-row__label form-row__label--smaller">
+                Session
+                <span class="loading-inline" v-if="isSessionsLoading"></span>
+            </div>
+            <div :class="['form-row__input', isSessionsLoading ? 'disabled' : '']" style="padding-top: 4px">
+                {{ selectedSessionLabel }}
+                <a href="#" @click="editSession">Change</a>
+            </div>
+        </div>
+
+        <template v-if="!service && !isEditing">
             <div class="description">Please select service to choose available session for booking.</div>
         </template>
-        <template v-else>
+        <template v-if="service && !isEditing">
             <div class="form-row" v-if="!selectedDay">
                 <div class="form-row__label form-row__label--smaller">
                     Month
