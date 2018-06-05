@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       textFormatter: 'https://unpkg.com/sprintf-js@1.1.1/dist/sprintf.min',
       uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
-      stdLib: 'https://unpkg.com/@rebelcode/std-lib@0.1.3/dist/std-lib',
+      stdLib: 'https://unpkg.com/@rebelcode/std-lib@0.1.4/dist/std-lib.umd',
 
       bookingWizardComponents: 'https://unpkg.com/@rebelcode/booking-wizard-components@0.1.0/dist/lib.min',
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.2/dist/vc-calendar',
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'vuex',
     'validate',
     'stdLib',
+    'bookingWizardComponents',
     'axios',
     'calendar',
     'pluralize',
