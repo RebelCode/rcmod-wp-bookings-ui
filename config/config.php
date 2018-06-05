@@ -16,6 +16,11 @@ return [
                 'datetime' => [
                     'tzFree' => 'YYYY-MM-DD HH:mm:ss',
                     'store'  => 'YYYY-MM-DDTHH:mm:ssZ',
+                    'sessionTime' => 'h:mm a',
+                    'dayFull' => 'dddd Do MMMM YYYY',
+                    'dayShort' => 'D MMMM YYYY',
+                    'monthKey' => 'YYYY-MM',
+                    'dayKey' => 'YYYY-MM-DD'
                 ]
             ],
             'links' => [
@@ -127,6 +132,12 @@ return [
                 'create' => [
                     'method' => 'post',
                     'endpoint' => '/eddbk/v1/clients/',
+                ],
+            ],
+            'sessions' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/sessions/',
                 ],
             ],
         ],

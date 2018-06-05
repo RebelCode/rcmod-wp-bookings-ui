@@ -1,0 +1,42 @@
+.sessions-datepicker {
+  margin-top: -1rem;
+}
+
+.session-picker {
+  padding: .35rem;
+  border: 1px solid $light-gray;
+  border-radius: 4px;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+
+    .dashicons {
+      cursor: pointer;
+    }
+  }
+  &-buttons {
+    padding-top: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  &-button {
+    color: $black;
+    font-weight: normal;
+    background-color: white;
+    border: 1px solid $light-gray;
+    padding: .5rem;
+    width: 21.5%;
+    border-radius: 4px;
+    margin: 4px 0;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+
+    &--selected {
+      background-color: $primary-color;
+      color: #fff;
+      border-color: $primary-color;
+    }
+  }
+}

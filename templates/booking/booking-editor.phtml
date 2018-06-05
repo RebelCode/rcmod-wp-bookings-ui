@@ -30,171 +30,111 @@
                                 >Click here to view service details in new tab</a>
                             </div>
                         </div>
+
+                        <service-session-selector :service="model.service"
+                                                  v-model="model.session"
+                        ></service-session-selector>
                     </div>
+
                     <div class="col-6 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('client') || errors.any('client-editor') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Client*</div>
-                            <div class="form-row__input">
-                                <form class="form-row__form" data-vv-scope="client-editor" v-show="isCreatingClient">
-                                    <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
-                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
+                        <div class="row">
+                            <div class="col-12 columns">
+                                <div :class="['form-row form-row--vertical', errors.has('client') || errors.any('client-editor') ? 'form-row--with-error' : '']">
+                                    <div class="form-row__label">Client*</div>
+                                    <div class="form-row__input">
+                                        <form class="form-row__form" data-vv-scope="client-editor" v-show="isCreatingClient">
+                                            <input v-validate="'required'" name="name" type="text" @input="errors.remove('name', 'client-editor')" placeholder="Enter full name" v-model="newClient.name" class="form-control--wide"/>
+                                            <div class="form-row__description form-row__error" v-if="errors.first('client-editor.name')">{{ errors.first('client-editor.name') }}</div>
 
-                                    <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
-                                    <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
+                                            <input v-validate="'required|email'" name="email" type="email" @input="errors.remove('email', 'client-editor')" placeholder="Enter client email" v-model="newClient.email" class="form-control--wide" @keyup.enter="saveNewClient"/>
+                                            <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
 
-                                    <div class="text-right mt-4">
-                                        <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
-                                        <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
-                                    </div>
-                                </form>
-                                <div v-show="!isCreatingClient">
-                                    <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
-                                        <template slot="spinner" slot-scope="options">
-                                            <div class="loading-inline" v-if="isClientsLoading"></div>
-                                        </template>
-                                    </vueselect>
-                                    <div class="text-right mt-4">
-                                        <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
+                                            <div class="text-right mt-4">
+                                                <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
+                                                <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
+                                            </div>
+                                        </form>
+                                        <div v-show="!isCreatingClient">
+                                            <vueselect :options="foundClients" v-validate="'required'" name="client" @input="errors.remove('client')" v-model="model.client" label="name" :on-search="onClientSearch">
+                                                <template slot="spinner" slot-scope="options">
+                                                    <div class="loading-inline" v-if="isClientsLoading"></div>
+                                                </template>
+                                            </vueselect>
+                                            <div class="text-right mt-4">
+                                                <div class="button button-outline" @click="createClient">{{ model.id ? 'Replace with new client' : 'Create new client' }}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="form-row form-row--inline mobile-only mb-3/2" v-if="model.id">
-                            <div class="form-row__label form-row__label--no-top">Status</div>
-                            <div class="form-row__input">
+                                <div class="form-row form-row--inline mobile-only mb-3/2" v-if="model.id">
+                                    <div class="form-row__label form-row__label--no-top">Status</div>
+                                    <div class="form-row__input">
                                 <span class="booking-status" :style="statusStyle">
                                     <span>{{ statusTitle }}</span>
                                 </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('start') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Start*</div>
-                            <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree"
-                                                 data-vv-name="start"
-                                                 name="start"
-                                                 ref="start"
-                                                 @input="startChanged"
-                                                 class="form-control--wide"
-                                                 v-model="model.start"
-                                ></datetime-picker>
-                                <div class="form-row__description form-row__description--small">
-                                    <div>Universal time: {{ format(model.start) }}</div>
-                                    <div>Client time: {{ format(model.start, model.clientTzName) }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('end') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">End*</div>
-                            <div class="form-row__input">
-                                <datetime-picker v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start'"
-                                                 name="end"
-                                                 @input="errors.remove('end')"
-                                                 class="form-control--wide"
-                                                 v-model="model.end"
-                                                 :disabled-before="model.start"
-                                ></datetime-picker>
-                                <div class="form-row__description form-row__error" v-if="errors.firstByRule('end', 'after')">{{ errors.firstByRule('end', 'after').replace('$', '') }}</div>
-                                <div class="form-row__description form-row__description--small">
-                                    <div>Universal time: {{ format(model.end) }}</div>
-                                    <div>Client time: {{ format(model.end, model.clientTzName) }}</div>
+                        <div class="row">
+                            <div class="col-6 columns">
+                                <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
+                                    <div class="form-row__label">Client Timezone*</div>
+                                    <div class="form-row__input">
+                                        <timezone-select v-model="model.clientTzName"
+                                                         class="form-control--wide"
+                                                         v-validate="'required'"
+                                                         name="clientTzName"
+                                                         @change="errors.remove('clientTzName')"
+                                        ></timezone-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 columns">
+                                <div class="form-row form-row--vertical">
+                                    <div class="form-row__label">Payment Number</div>
+                                    <div class="form-row__input">
+                                        <input name="payment" type="text" class="form-control--wide" v-model="model.payment">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-row form-row--inline mobile-only mb-3/2">
-                            <div class="form-row__label form-row__label--no-top">Duration</div>
-                            <div class="form-row__input">
-                                <template v-if="duration">
-                                    {{ duration }}
-                                </template>
-                                <div class="form-row__description form-row__description--inline" v-else>
-                                    Please set start and end time to automatically calculate the duration
+                        <div class="row">
+                            <div class="col-12 columns">
+                                <div class="form-row form-row--vertical">
+                                    <div class="form-row__label">
+                                        Add Notes
+                                        <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
+                                    </div>
+                                    <div class="form-row__input">
+                                        <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.notes" style="min-height: 28px"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-3 columns">
-                        <div :class="['form-row form-row--vertical', errors.has('clientTzName') ? 'form-row--with-error' : '']">
-                            <div class="form-row__label">Client Timezone*</div>
-                            <div class="form-row__input">
-                                <timezone-select v-model="model.clientTzName"
-                                                 class="form-control--wide"
-                                                 v-validate="'required'"
-                                                 name="clientTzName"
-                                                 @change="errors.remove('clientTzName')"
-                                ></timezone-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3 columns">
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">Payment Number</div>
-                            <div class="form-row__input">
-                                <input name="payment" type="text" class="form-control--wide" v-model="model.payment">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6 columns">
-                        <div class="form-row form-row--inline mobile-collapsed">
-                            <div class="form-row__label form-row__label--no-top">Duration</div>
-                            <div class="form-row__input">
-                                <template v-if="duration">
-                                    {{ duration }}
-                                </template>
-                                <div class="form-row__description form-row__description--inline" v-else>
-                                    Please set start and end time to automatically calculate the duration
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--vertical">
-                            <div class="form-row__label">
-                                Add Notes
-                                <div class="form-row__description form-row__description--inline">These notes are for admin purposes only</div>
-                            </div>
-                            <div class="form-row__input">
-                                <textarea name="" id="" cols="30" rows="3" class="form-control--wide" v-model="model.notes" style="min-height: 28px"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 columns">
-                        <div class="form-row form-row--inline mobile-collapsed" v-if="model.id">
-                            <div class="form-row__label form-row__label--no-top">Status</div>
-                            <div class="form-row__input">
+                                <div class="form-row form-row--inline mobile-collapsed" v-if="model.id">
+                                    <div class="form-row__label form-row__label--no-top">Status</div>
+                                    <div class="form-row__input">
                                 <span class="booking-status" :style="statusStyle">
                                     <span>{{ statusTitle }}</span>
                                 </span>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-row--vertical" style="margin-top: -1px;">
-                            <div class="form-row__label">Actions</div>
-                            <template v-if="model.id">
-                                <div class="form-row__input">
-                                    <select v-model="model.transition" style="width: 100%">
-                                        <option value="">Don't change booking status</option>
-                                        <template v-for="(transitionLabel, transition) in transitionsLabels">
-                                            <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
-                                        </template>
-                                    </select>
+                                    </div>
                                 </div>
-                            </template>
-                            <div class="form-row__description" v-else>
-                                These are no actions to take at this time
+                                <div class="form-row form-row--vertical" style="margin-top: -1px;">
+                                    <div class="form-row__label">Actions</div>
+                                    <template v-if="model.id">
+                                        <div class="form-row__input">
+                                            <select v-model="model.transition" style="width: 100%">
+                                                <option value="">Don't change booking status</option>
+                                                <template v-for="(transitionLabel, transition) in transitionsLabels">
+                                                    <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </template>
+                                    <div class="form-row__description" v-else>
+                                        These are no actions to take at this time
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
