@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Changed
+- Now using version `0.1.16` of `bookings-js`.
+- Now using version `0.1.1` of `bookings-wizard-components`.
+- Refactored names of events and methods in booking application and views.
+
+### Fixed
+- Labels in booking editor during saving.
+- Session picker in booking editor will now allow to select passed sessions.
+- Bookings are not disappearing from list and calendar after clearing search.
 
 ## [0.1-alpha5] - 2018-06-06
 ### Changed
