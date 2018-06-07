@@ -1,20 +1,21 @@
-<bookings-calendar-view :statuses="screenStatuses"
-                        @edit="editBooking"
-                        @create="createBooking"
-                        @ready="clearBookings"
-                        :is-loading="isLoading"
-                        @update-filter="fetch"
-                        inline-template
+<bookings-calendar-view 
+    :statuses="screenStatuses"
+    @edit="editBooking"
+    @create="createBooking"
+    @ready="clearBookings"
+    :is-loading="isLoading"
+    @apply-filter="update"
+    inline-template
 >
     <div :class="isLoading ? 'loading-container' : ''">
-        <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
+        <bookings-filter @submit="applyFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <div class="tablenav top tablenav--eddbk-calendar">
             <div class="alignleft actions">
                 <switcher v-model="calendarView" :buttons="calendarViews"></switcher>
                 <button class="fc-button fc-state-default--rc fc-state-default" @click="goToToday">Today</button>
             </div>
             <div class="alignright actions actions--wide" style="padding-right: 0;padding-bottom: .5rem">
-                <select v-model="service" @change="updateFilter">
+                <select v-model="service" @change="applyFilter">
                     <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.name }}</option>
                 </select>

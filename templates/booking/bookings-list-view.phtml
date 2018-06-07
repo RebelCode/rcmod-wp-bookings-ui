@@ -1,11 +1,13 @@
-<bookings-list-view @edit="editBooking"
-                    @delete="deleteBooking"
-                    @update-filter="fetch"
-                    @ready="clearBookings"
-                    :is-loading="isLoading"
-                    inline-template>
+<bookings-list-view 
+    @edit="editBooking"
+    @delete="deleteBooking"
+    @apply-filter="update"
+    @ready="clearBookings"
+    :is-loading="isLoading"
+    inline-template
+>
     <div :class="isLoading ? 'loading-container' : ''">
-        <bookings-filter @submit="updateFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
+        <bookings-filter @submit="applyFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <list-table
             class="table-eddbk-bookings"
             :columns="columns"
@@ -16,21 +18,21 @@
             :total-pages="pagesCount"
             :total-items="bookingsCount"
             :per-page="10"
-            :current-page="params.page"
+            :current-page="page"
             action-column="date"
             @pagination="goToPage"
             @action:click="onActionClick"
         >
             <template slot="filters">
                 <select v-model="month">
-                    <option selected :value="false">All months</option>
+                    <option selected :value="null">All months</option>
                     <option :value="number" v-for="number in 12">{{ _month(number) }}</option>
                 </select>
                 <select v-model="service">
                     <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.name }}</option>
                 </select>
-                <button class="button" @click="updateFilter">Filter</button>
+                <button class="button" @click="applyFilter">Filter</button>
             </template>
 
             <template slot="date" slot-scope="data">
