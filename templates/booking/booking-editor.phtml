@@ -155,12 +155,12 @@
                         <template v-if="isCreateConfirming">
                             <div class="footer-confirm">
                                 <div class="footer-confirm__message __right">
-                                    Are you sure you want to {{ model.newStatus === 'draft' ? 'save this booking as a draft' : 'schedule this booking' }}?
+                                    Are you sure you want to {{ !createTransition ? 'save this booking as a draft' : 'schedule this booking' }}?
                                 </div>
                                 <div class="footer-confirm__buttons">
                                     <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
                                             @click="confirmBookingCreation"
-                                    >{{ model.newStatus === 'draft' ? 'Save Draft' : 'Schedule' }}
+                                    >{{ !createTransition ? 'Save Draft' : 'Schedule' }}
                                     </button>
                                     <input type="button" class="button" value="No, continue editing"
                                            @click="isCreateConfirming = false">
