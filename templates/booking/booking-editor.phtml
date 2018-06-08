@@ -1,5 +1,5 @@
 <booking-editor
-        @updated="fetch"
+        @updated="refresh"
         @delete="deleteBooking"
         inline-template
 >
@@ -33,6 +33,9 @@
 
                         <service-session-selector :service="model.service"
                                                   v-model="model.session"
+                                                  v-validate="'required'"
+                                                  name="session"
+                                                  @input="errors.remove('session')"
                         ></service-session-selector>
                     </div>
 
@@ -50,6 +53,7 @@
                                             <div class="form-row__description form-row__error" v-if="errors.first('client-editor.email')">{{ errors.first('client-editor.email') }}</div>
 
                                             <div class="text-right mt-4">
+                                                <div class="eddbk-error-message eddbk-error-message--client" v-if="clientErrorMessage">{{ clientErrorMessage }}</div>
                                                 <div class="button button-outline" @click="cancelClientCreation">Existing client</div>
                                                 <div :class="['button button-primary', isSavingClient ? 'loading-button' : '']" @click="saveNewClient">Create client</div>
                                             </div>
@@ -142,47 +146,44 @@
             </div>
 
             <div slot="footer">
-                <div v-if="!removeConfirming" :class="isDoubleConfirming || isCreatingClient ? 'disabled' : ''">
-                    <template v-if="model.id">
-                        <input type="button" class="button button-alert" value="Delete" style="float: left"
+                <div class="footer-confirm" v-if="!removeConfirming" :class="isDoubleConfirming || isCreatingClient ? 'disabled' : ''">
+                    <div class="footer-confirm__buttons footer-confirm__buttons--left" v-if="model.id">
+                        <input type="button" class="button button-alert" value="Delete"
                                @click="confirmBookingDeletion">
-
+                    </div>
+                    <div class="footer-confirm__message __right __alert" v-if="!isDoubleConfirming && !isCreateConfirming">
+                        <template v-if="errors.any() && !errors.any('client-editor')">
+                            There was a problem with your booking. The errors have been highlighted above.
+                        </template>
+                        <template v-if="errorMessage">
+                            {{ errorMessage }}
+                        </template>
+                    </div>
+                    <div class="footer-confirm__buttons" v-if="model.id">
                         <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
                                 @click="saveBooking">Save Changes
                         </button>
-                    </template>
+                    </div>
                     <template v-else>
                         <template v-if="isCreateConfirming">
-                            <div class="footer-confirm">
-                                <div class="footer-confirm__message __right">
-                                    Are you sure you want to {{ !createTransition ? 'save this booking as a draft' : 'schedule this booking' }}?
-                                </div>
-                                <div class="footer-confirm__buttons">
-                                    <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
-                                            @click="confirmBookingCreation"
-                                    >{{ !createTransition ? 'Save Draft' : 'Schedule' }}
-                                    </button>
-                                    <input type="button" class="button" value="No, continue editing"
-                                           @click="isCreateConfirming = false">
-                                </div>
+                            <div class="footer-confirm__message __right">
+                                Are you sure you want to {{ !createTransition ? 'save this booking as a draft' : 'schedule this booking' }}?
+                            </div>
+                            <div class="footer-confirm__buttons">
+                                <button :class="['button button-primary', isBookingSaving ? 'loading-button' : '']"
+                                        @click="confirmBookingCreation"
+                                >{{ !createTransition ? 'Save Draft' : 'Schedule' }}
+                                </button>
+                                <input type="button" class="button" value="No, continue editing"
+                                       @click="isCreateConfirming = false">
                             </div>
                         </template>
                         <template v-else>
-                            <div class="footer-confirm">
-                                <div class="footer-confirm__message __right __alert">
-                                    <template v-if="errors.any() && !errors.any('client-editor')">
-                                        There was a problem with your booking. The errors have been highlighted above.
-                                    </template>
-                                    <template v-if="errorMessage">
-                                        {{ errorMessage }}
-                                    </template>
-                                </div>
-                                <div class="footer-confirm__buttons">
-                                    <input type="button" class="button" value="Save Draft"
-                                           @click="saveNewBooking()">
-                                    <input type="button" class="button button-primary" value="Schedule Booking"
-                                           @click="saveNewBooking('submit')">
-                                </div>
+                            <div class="footer-confirm__buttons">
+                                <input type="button" class="button" value="Save Draft"
+                                       @click="saveNewBooking()">
+                                <input type="button" class="button button-primary" value="Schedule Booking"
+                                       @click="saveNewBooking('submit')">
                             </div>
                         </template>
                     </template>
