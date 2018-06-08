@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.4/vue',
       vuex: 'https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.min',
       validate: 'https://cdn.jsdelivr.net/npm/vee-validate@2.0.8/dist/vee-validate.min',
+      toasted: 'https://unpkg.com/vue-toasted@1.1.24/dist/vue-toasted.min',
 
       jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min',
       axios: 'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min',
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'vue',
     'vuex',
     'validate',
+    'toasted',
     'stdLib',
     'bookingWizardComponents',
     'axios',

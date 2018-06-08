@@ -101,6 +101,12 @@
 
       &__buttons {
         flex-shrink: 0;
+
+        &--left {
+          margin-right: auto;
+          flex-grow: 1;
+          text-align: left;
+        }
       }
 
       &__message {
@@ -115,6 +121,14 @@
         }
       }
     }
+  }
+}
+
+.eddbk-error-message {
+  color: $alert-color;
+  &--client {
+    width: 40%;
+    float: left;
   }
 }
 
