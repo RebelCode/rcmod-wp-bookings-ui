@@ -1,6 +1,7 @@
-<div id="eddbk-service-page">
+<div id="eddbk-service-page" v-cloak>
+    <div class="vcloak--visible loading-container loading-container--white"></div>
     <service-bookings-application inline-template>
-        <div>
+        <div class="vcloak--hidden">
             <?=$this->render('availability/service-availability-editor');?>
             <div>
                 <label class="selectit">
