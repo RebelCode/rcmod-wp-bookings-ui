@@ -9,8 +9,8 @@
 }
 
 .horizontal-tabs {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
 
   margin: 12px -12px 0 -12px;
   display: flex;
@@ -23,7 +23,7 @@
 }
 
 .horizontal-tabs__item {
-  border-right: 1px solid #eee;
+  border-right: 1px solid #e5e5e5;
   padding: 8px 22px;
   cursor: pointer;
 
@@ -33,7 +33,7 @@
 }
 .horizontal-tabs__item._active {
   font-weight: bold;
-  background-color: #eee;
+  background-color: #f1f1f1;
   cursor: default;
 }
 

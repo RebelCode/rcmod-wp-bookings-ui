@@ -2,7 +2,6 @@
   border-radius: 4px;
   padding: 10px 9px;
   margin-bottom: 1rem;
-  font-weight: 500;
   display: flex;
 
   & > span {
@@ -10,8 +9,8 @@
   }
 
   &-warning {
-    color: #8f5100;
-    background-color: #ffe2b3;
+    color: #1d2428;
+    background-color: #fddc0d;
 
     a {
       color: inherit !important;

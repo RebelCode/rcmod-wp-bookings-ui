@@ -19,6 +19,7 @@
 
   .fc-past {
     opacity: .6;
+    background-color: #f9f9f9 !important;
   }
 
   .fc-event {
@@ -153,9 +154,10 @@
     .fc-event {
       border: none;
       border-radius: 0;
-      background: #8fdf82;
+      background: #65afff;
       opacity: .65;
       padding: 3px;
+      margin: 1px;
 
       color: #000 !important;
 
