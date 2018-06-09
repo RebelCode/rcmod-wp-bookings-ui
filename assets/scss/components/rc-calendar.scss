@@ -60,9 +60,11 @@
 
     .fc-event {
       padding: 1px 4px;
+    }
 
-      .fc-bg {
-        // background-color: transparent !important;
+    .fc-today {
+      .fc-day-number {
+        font-size: 14px;
       }
     }
 
@@ -98,6 +100,12 @@
           opacity: .5;
         }
       }
+
+      .fc-unthemed {
+        td.fc-today {
+          background-color: #B2D7FF;
+        }
+      }
     }
 
     .fc-month-view, .fc-short {
@@ -114,6 +122,8 @@
 
         &--title {
           width: calc(100% - 32px);
+          padding-left: 4px;
+          font-weight: 600;
         }
 
         &--month-collapse {
