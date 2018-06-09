@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
       stdLib: 'https://unpkg.com/@rebelcode/std-lib@0.1.4/dist/std-lib.umd',
 
-      bookingWizardComponents: 'https://unpkg.com/@rebelcode/booking-wizard-components@0.1.1/dist/lib.min',
+      bookingWizardComponents: 'https://unpkg.com/@rebelcode/booking-wizard-components@0.1.2/dist/lib.min',
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.2/dist/vc-calendar',
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',
