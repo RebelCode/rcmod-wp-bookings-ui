@@ -1,6 +1,7 @@
-<div id="eddbk-bookings-page">
+<div id="eddbk-bookings-page" v-cloak>
+    <div class="vcloak--visible loading-container"></div>
     <bookings-application inline-template>
-        <div class="wrap">
+        <div class="wrap vcloak--hidden">
             <?=$this->render('booking/booking-editor');?>
 
             <h1 class="wp-heading-inline">Bookings</h1>
