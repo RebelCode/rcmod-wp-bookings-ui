@@ -19,10 +19,6 @@
                     <option :value="null">All Services</option>
                     <option :value="service.id" v-for="service in services">{{ service.name }}</option>
                 </select>
-                <select v-model="colorScheme">
-                    <option value="status">Booking Status Color Scheme</option>
-                    <option value="service">Services Color Scheme</option>
-                </select>
             </div>
             <br class="clear">
         </div>
