@@ -403,7 +403,11 @@ class WpBookingsUiModule extends AbstractBaseModule
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
-        $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+
+        $comingSoonContext = [
+            'beta_guidelines_link' => $c->get('wp_bookings_ui/links/beta_guidelines'),
+            'beta_docs_link'       => $c->get('wp_bookings_ui/links/beta_docs'),
+        ];
 
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),
@@ -423,8 +427,9 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () use ($comingSoonTemplate) {
-                echo $comingSoonTemplate->render();
+            function () use ($c, $comingSoonContext) {
+                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+                echo $comingSoonTemplate->render($comingSoonContext);
             }
         );
 
@@ -434,8 +439,9 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () use ($comingSoonTemplate) {
-                echo $comingSoonTemplate->render();
+            function () use ($c, $comingSoonContext) {
+                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+                echo $comingSoonTemplate->render($comingSoonContext);
             }
         );
     }

@@ -101,6 +101,10 @@ return [
             'token_end'     => '}',
             'token_default' => '',
         ],
+        'links' => [
+            'beta_guidelines' => 'https://eddbookings.com/beta-download/beta-testing/',
+            'beta_docs' => 'https://docs.eddbookings.com/',
+        ],
         'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR.'/assets_urls_map.php',
         'assets' => [
             'require.js' => 'require',
