@@ -405,8 +405,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
         $comingSoonContext = [
-            'beta_guidelines_link' => $c->get('wp_bookings_ui/links/beta_guidelines'),
-            'beta_docs_link'       => $c->get('wp_bookings_ui/links/beta_docs'),
+            'beta_guidelines_url' => $c->get('wp_bookings_ui/urls/beta_guidelines'),
+            'beta_docs_url'       => $c->get('wp_bookings_ui/urls/beta_docs'),
         ];
 
         $this->bookingsPageId = add_menu_page(

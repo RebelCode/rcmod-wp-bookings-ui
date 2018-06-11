@@ -101,7 +101,7 @@ return [
             'token_end'     => '}',
             'token_default' => '',
         ],
-        'links' => [
+        'urls' => [
             'beta_guidelines' => 'https://eddbookings.com/beta-download/beta-testing/',
             'beta_docs' => 'https://docs.eddbookings.com/',
         ],
