@@ -93,6 +93,18 @@ return [
             'booking/general',
             'booking/screen-options',
         ],
+        /*
+         * Configuration for placeholder templates.
+         */
+        'templates_config' => [
+            'token_start'   => '${',
+            'token_end'     => '}',
+            'token_default' => '',
+        ],
+        'urls' => [
+            'beta_guidelines' => 'https://eddbookings.com/beta-download/beta-testing/',
+            'beta_docs' => 'https://docs.eddbookings.com/',
+        ],
         'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR.'/assets_urls_map.php',
         'assets' => [
             'require.js' => 'require',

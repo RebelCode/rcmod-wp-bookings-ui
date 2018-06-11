@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
-use Exception as RootException;
 
 /**
  * Class WpBookingsUiModule.
@@ -405,6 +404,11 @@ class WpBookingsUiModule extends AbstractBaseModule
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
+        $comingSoonContext = [
+            'beta_guidelines_url' => $c->get('wp_bookings_ui/urls/beta_guidelines'),
+            'beta_docs_url'       => $c->get('wp_bookings_ui/urls/beta_docs'),
+        ];
+
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),
             $this->__($rootMenuConfig->get('menu_title')),
@@ -423,10 +427,9 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () {
-                throw new RootException(
-                    $this->__('Implement Settings page.')
-                );
+            function () use ($c, $comingSoonContext) {
+                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+                echo $comingSoonTemplate->render($comingSoonContext);
             }
         );
 
@@ -436,10 +439,9 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () {
-                throw new RootException(
-                    $this->__('Implement About page.')
-                );
+            function () use ($c, $comingSoonContext) {
+                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+                echo $comingSoonTemplate->render($comingSoonContext);
             }
         );
     }
