@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
-use Exception as RootException;
 
 /**
  * Class WpBookingsUiModule.
@@ -404,6 +403,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
+        $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
 
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),
@@ -423,10 +423,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () {
-                throw new RootException(
-                    $this->__('Implement Settings page.')
-                );
+            function () use ($comingSoonTemplate) {
+                echo $comingSoonTemplate->render();
             }
         );
 
@@ -436,10 +434,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () {
-                throw new RootException(
-                    $this->__('Implement About page.')
-                );
+            function () use ($comingSoonTemplate) {
+                echo $comingSoonTemplate->render();
             }
         );
     }

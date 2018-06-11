@@ -1,6 +1,9 @@
 <?php
 
 use Dhii\Data\Container\ContainerFactoryInterface;
+use Dhii\Output\PlaceholderTemplateFactory;
+use Dhii\Output\TemplateFactoryInterface;
+use Psr\Container\ContainerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
@@ -68,6 +71,32 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/config/formats'),
                 $c->get('wp_bookings_ui/config/links')
             );
-        }
+        },
+        /*
+         * The factory used to create templates used in this module.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_template_factory' => function (ContainerInterface $c) {
+            return new PlaceholderTemplateFactory(
+                'Dhii\Output\PlaceholderTemplate',
+                $c->get('wp_bookings_ui/templates_config/token_start'),
+                $c->get('wp_bookings_ui/templates_config/token_end'),
+                $c->get('wp_bookings_ui/templates_config/token_default')
+            );
+        },
+        /*
+         * The placeholder template for about and settings.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_coming_soon_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/about-settings-coming-soon.html';
+            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
+            $template = file_get_contents($templatePath);
+            return $c->get('eddbk_ui_template_factory')->make([
+                TemplateFactoryInterface::K_TEMPLATE => $template
+            ]);
+        },
     ];
 };
