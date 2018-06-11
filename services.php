@@ -52,7 +52,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_ui_status_transitions_handler' => function ($c) {
             return new BookingsStateStatusTransitionsHandler(
                 $c->get('booking_logic/status_transitions'),
-                $c->get('wp_bookings_ui/transitions_labels')
+                $c->get('wp_bookings_ui/transitions_labels'),
+                $c->get('wp_bookings_ui/hidden_transitions')
             );
         },
         'eddbk_bookings_visible_statuses_handler' => function ($c) {

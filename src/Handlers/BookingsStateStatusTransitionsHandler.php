@@ -38,28 +38,40 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
     protected $statusTransitions;
 
     /**
-     * Map of transition keys to labels for transitions.
+     * Map of status key to map of transition keys to labels for transitions.
      *
      * @since [*next-version*]
      *
      * @var array|stdClass|MapInterface
      */
-    protected $transitionsLabels;
+    protected $statusesTransitionsLabels;
+
+    /**
+     * Map of status key to list of hidden transition keys for given status.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|stdClass|MapInterface
+     */
+    protected $hiddenStatusesTransitions;
 
     /**
      * StatusesHandler constructor.
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|MapInterface $statusTransitions Map of transitions for changing statuses.
-     * @param array|stdClass|MapInterface $transitionsLabels Map of transition keys to labels for transitions.
+     * @param array|stdClass|MapInterface $statusTransitions         Map of transitions for changing statuses.
+     * @param array|stdClass|MapInterface $statusesTransitionsLabels Map of status key to map of transition keys to labels for transitions.
+     * @param array|stdClass|MapInterface $hiddenStatusesTransitions Map of status key to list of hidden transition keys for given status.
      */
     public function __construct(
         $statusTransitions,
-        $transitionsLabels
+        $statusesTransitionsLabels,
+        $hiddenStatusesTransitions
     ) {
-        $this->statusTransitions = $statusTransitions;
-        $this->transitionsLabels = $transitionsLabels;
+        $this->statusTransitions         = $statusTransitions;
+        $this->statusesTransitionsLabels = $statusesTransitionsLabels;
+        $this->hiddenStatusesTransitions = $hiddenStatusesTransitions;
     }
 
     /**
@@ -102,7 +114,12 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
             /*
              * Map of transitions keys to transition labels
              */
-            'transitionsLabels' => $this->_prepareTransitionsLabels($this->transitionsLabels),
+            'statusesTransitionsLabels' => $this->_prepareTransitionsLabels($this->statusesTransitionsLabels),
+
+            /*
+             * Map of status keys to list of hidden transitions keys
+             */
+            'hiddenStatusesTransitions' => $this->_prepareHiddenTransitions($this->hiddenStatusesTransitions),
         ];
     }
 
@@ -132,15 +149,37 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @param array|Traversable|stdClass $transitionsLabels Labels of available transitions.
      *
-     * @return array Map of translated labels for transitions.
+     * @return array Map of status keys to map of translated labels for transitions.
      */
     protected function _prepareTransitionsLabels($transitionsLabels)
     {
         $translatedLabels = [];
-        foreach ($transitionsLabels as $transitionKey => $transitionLabel) {
-            $translatedLabels[$transitionKey] = $this->__($transitionLabel);
+        foreach ($transitionsLabels as $statusKey => $transitionsLabelsMap) {
+            $translatedLabels[$statusKey] = [];
+            foreach ($transitionsLabelsMap as $transitionKey => $transitionLabel) {
+                $translatedLabels[$statusKey][$transitionKey] = $this->__($transitionLabel);
+            }
         }
 
         return $translatedLabels;
+    }
+
+    /**
+     * Transform map of statuses to list of hidden transitions into array.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|stdClass|Traversable $hiddenStatusesTransitions Map of status key to list of hidden transition keys for given status.
+     *
+     * @return array Map of statuses keys to list of hidden transitions.
+     */
+    protected function _prepareHiddenTransitions($hiddenStatusesTransitions)
+    {
+        $hiddenTransitions = [];
+        foreach ($hiddenStatusesTransitions as $statusKey => $hiddenTransitionsKey) {
+            $hiddenTransitions[$statusKey] = $this->_normalizeArray($hiddenTransitionsKey);
+        }
+
+        return $hiddenTransitions;
     }
 }

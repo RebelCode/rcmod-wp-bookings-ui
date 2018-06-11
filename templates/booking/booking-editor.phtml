@@ -128,9 +128,8 @@
                                     <template v-if="model.id">
                                         <div class="form-row__input">
                                             <select v-model="model.transition" style="width: 100%">
-                                                <option value="">Don't change booking status</option>
-                                                <template v-for="(transitionLabel, transition) in transitionsLabels">
-                                                    <option :value="transition" v-if="canDoTransition(transition)">{{ transitionLabel }}</option>
+                                                <template v-for="(transitionLabel, transition) in availableTransitions">
+                                                    <option :value="transition">{{ transitionLabel }}</option>
                                                 </template>
                                             </select>
                                         </div>
