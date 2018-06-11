@@ -74,7 +74,7 @@ return [
                 'complete' => 'Set booking to Completed',
                 'approve' => 'Approve booking',
                 'reject' => 'Reject booking',
-                'schedule' => 'Schedule booking',
+                'schedule' => 'Set to Scheduled',
                 'cancel' => 'Cancel booking',
             ],
             'draft' => [
