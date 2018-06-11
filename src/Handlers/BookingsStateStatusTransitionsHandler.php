@@ -149,7 +149,7 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @param array|Traversable|stdClass $transitionsLabels Labels of available transitions.
      *
-     * @return array Map of translated labels for transitions.
+     * @return array Map of status keys to map of translated labels for transitions.
      */
     protected function _prepareTransitionsLabels($transitionsLabels)
     {
@@ -165,7 +165,7 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
     }
 
     /**
-     * Transform map of statuses to list of hidden transitions to array.
+     * Transform map of statuses to list of hidden transitions into array.
      *
      * @since [*next-version*]
      *
