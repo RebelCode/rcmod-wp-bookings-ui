@@ -169,7 +169,7 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|MapInterface $hiddenStatusesTransitions Map of status key to list of hidden transition keys for given status.
+     * @param array|stdClass|Traversable $hiddenStatusesTransitions Map of status key to list of hidden transition keys for given status.
      *
      * @return array Map of statuses keys to list of hidden transitions.
      */
