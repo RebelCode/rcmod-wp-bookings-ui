@@ -67,14 +67,30 @@ return [
             'rejected'
         ],
         'transitions_labels' => [
-            'cart' => 'Set booking to In Cart',
-            'draft' => 'Set booking to Draft',
-            'submit' => 'Set booking to Pending',
-            'complete' => 'Set booking to Completed',
-            'approve' => 'Approve booking',
-            'reject' => 'Reject booking',
-            'schedule' => 'Schedule booking',
-            'cancel' => 'Cancel booking',
+            'all' => [
+                'cart' => 'Set booking to In Cart',
+                'draft' => 'Set booking to Draft',
+                'submit' => 'Set booking to Pending',
+                'complete' => 'Set booking to Completed',
+                'approve' => 'Approve booking',
+                'reject' => 'Reject booking',
+                'schedule' => 'Schedule booking',
+                'cancel' => 'Cancel booking',
+            ],
+            'draft' => [
+                'submit' => 'Set to Scheduled'
+            ]
+        ],
+        'hidden_transitions' => [
+            'all' => [
+                'submit',
+                'approve',
+                'reject'
+            ],
+            'draft' => [
+                'approve',
+                'reject'
+            ]
         ],
         'templates' => [
             'components',

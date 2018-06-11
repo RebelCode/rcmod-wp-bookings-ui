@@ -127,6 +127,7 @@
                                     <div class="form-row__label">Actions</div>
                                     <template v-if="model.id">
                                         <div class="form-row__input">
+                                            {{ availableTransitions }}
                                             <select v-model="model.transition" style="width: 100%">
                                                 <option value="">Don't change booking status</option>
                                                 <template v-for="(transitionLabel, transition) in transitionsLabels">
