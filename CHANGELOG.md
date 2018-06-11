@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
 ### Changed
-- Now using version `0.1.17` of `bookings-js`.
+- Now using version `0.1.18` of `bookings-js`.
 - Now using version `0.1.2` of `bookings-wizard-components`.
 
 ## [0.1-alpha6] - 2018-06-07
