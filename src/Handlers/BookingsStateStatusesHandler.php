@@ -183,13 +183,9 @@ class BookingsStateStatusesHandler implements InvocableInterface
      */
     protected function _getTranslatedStatuses($statuses, $statusesLabels)
     {
-        $statuses = $this->_normalizeArray($statuses);
-
         $translatedStatuses = [];
 
-        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
-            'statuses' => $statuses,
-        ])->getParam('statuses');
+        $statuses = $this->_getVisibleStatuses($statuses);
 
         foreach ($statuses as $status) {
             $statusLabel                 = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
@@ -217,14 +213,28 @@ class BookingsStateStatusesHandler implements InvocableInterface
 
         $screenOptions = get_user_option($key, $user->ID);
         if (!$screenOptions) {
-            return $this->_normalizeArray($defaultStatuses);
+            return $this->_getVisibleStatuses($defaultStatuses);
         }
-        $screenOptions = json_decode($screenOptions);
 
-        $statuses = $this->_trigger('eddbk_bookings_visible_statuses', [
-            'statuses' => $screenOptions,
-        ])->getParam('statuses');
+        $screenOptions = json_decode($screenOptions);
+        $statuses      = $this->_getVisibleStatuses($screenOptions);
 
         return $statuses;
+    }
+
+    /**
+     * Get list of statuses keys that should be visible in UI.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|stdClass|Traversable $statuses List of statuses key to filter.
+     *
+     * @return array List of statuses keys without hidden ones.
+     */
+    protected function _getVisibleStatuses($statuses)
+    {
+        return $this->_trigger('eddbk_bookings_visible_statuses', [
+            'statuses' => $statuses,
+        ])->getParam('statuses');
     }
 }

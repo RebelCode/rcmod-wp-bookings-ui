@@ -28,15 +28,6 @@ class VisibleStatusesHandler implements InvocableInterface
     use CreateInvalidArgumentExceptionCapableTrait;
 
     /**
-     * List of statuses keys available in application.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|Traversable|stdClass
-     */
-    protected $statuses;
-
-    /**
      * List of statuses keys that are not visible in the UI.
      *
      * @since [*next-version*]
@@ -50,12 +41,10 @@ class VisibleStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $statuses       List of known bookings statuses
      * @param array|Traversable|stdClass $hiddenStatuses List of bookings statuses that should be hidden in UI
      */
-    public function __construct($statuses, $hiddenStatuses)
+    public function __construct($hiddenStatuses)
     {
-        $this->statuses       = $statuses;
         $this->hiddenStatuses = $hiddenStatuses;
     }
 
@@ -75,8 +64,16 @@ class VisibleStatusesHandler implements InvocableInterface
             );
         }
 
+        $statuses = $event->getParam('statuses');
+
+        if (!$statuses) {
+            throw $this->_createInvalidArgumentException(
+                $this->__('Statuses parameter is required for filtering'), null, null, $event
+            );
+        }
+
         $event->setParams([
-            'statuses' => $this->_getVisibleStatuses($this->statuses, $this->hiddenStatuses),
+            'statuses' => $this->_getVisibleStatuses($statuses, $this->hiddenStatuses),
         ]);
     }
 
