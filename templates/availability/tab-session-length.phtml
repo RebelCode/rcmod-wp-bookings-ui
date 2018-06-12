@@ -1,5 +1,11 @@
 <session-length inline-template>
     <div>
+        <div class="alert alert-warning" style="margin-bottom: 0; margin-top: .5rem">
+            <span class="dashicons dashicons-info"></span>
+            <span>
+                The "day" and "week" durations for session lengths are coming soon.
+            </span>
+        </div>
         <div class="session-length eddbk-inputs">
             <div class="flex-row">
                 <fieldset class="session-length__options">
@@ -9,7 +15,7 @@
                            data-validation-error="Please enter a session length bigger than 0."
                     >
                     <select v-model="sessionTimeUnit">
-                        <option :value="unit.seconds" v-for="unit in timeUnits">{{ unit.title }}</option>
+                        <option :value="unit.seconds" v-for="unit in timeUnits" :disabled="unit.disabled">{{ unit.title }}</option>
                     </select>
                 </fieldset>
                 <fieldset class="session-length__options">
