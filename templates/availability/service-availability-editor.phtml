@@ -47,7 +47,7 @@
                     <div class="form-row__input">
                         <div class="form-row__input-with-description">
                             <datetime-picker class="datetime-picker--inline"
-                                             v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start'"
+                                             v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start' + (model.isAllDay ? ',true' : '')"
                                              name="end"
                                              @input="errors.remove('end')"
                                              v-model="model.end"
