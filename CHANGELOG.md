@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Added
+- Text explanation of known limitations on download page.
+- Text explanation of which timezone is used on bookings page.
+
+### Changed
+- Now using version `0.1.20` of `bookings-js`.
+
+### Fixed
+- Only visible status keys are sent to client.
 
 ## [0.1-alpha8] - 2018-06-11
 ### Changed
