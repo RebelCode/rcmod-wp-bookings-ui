@@ -138,9 +138,13 @@ class BookingsStateStatusesHandler implements InvocableInterface
             );
         }
 
+        if (!$user = wp_get_current_user()) {
+            return;
+        }
+
         $event->setParams(array_merge(
             $event->getParams(),
-            $this->_getStatusesParams()
+            $this->_getStatusesParams($user->ID)
         ));
     }
 
@@ -149,9 +153,11 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
+     * @param int $userId User identifier.
+     *
      * @return array
      */
-    protected function _getStatusesParams()
+    protected function _getStatusesParams($userId)
     {
         return [
             /*
@@ -162,7 +168,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
             /*
              * List of booking statuses in screen options section that is checked for filtering bookings.
              */
-            'screenStatuses' => $this->_getScreenStatuses($this->screenOptionsKey, $this->statuses),
+            'screenStatuses' => $this->_getScreenStatuses($userId, $this->statuses),
 
             /*
              * Endpoint for saving booking statuses that will be selected as default for filtering bookings.
@@ -200,26 +206,35 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param string                     $key             Screen statuses option key.
+     * @param int                        $userId          User identifier.
      * @param array|Traversable|stdClass $defaultStatuses List of booking statuses selected by default
      *
      * @return string[] List of statuses that user selected to show by default
      */
-    protected function _getScreenStatuses($key, $defaultStatuses = [])
+    protected function _getScreenStatuses($userId, $defaultStatuses = [])
     {
-        if (!$user = wp_get_current_user()) {
-            return [];
-        }
+        $screenOptions = $this->_getScreenOptions($userId) ?: $defaultStatuses;
 
-        $screenOptions = get_user_option($key, $user->ID);
+        return $this->_getVisibleStatuses($screenOptions);
+    }
+
+    /**
+     * Get screen options for given user.
+     *
+     * @since [*next-version*]
+     *
+     * @param int $userId User identifier.
+     *
+     * @return array|stdClass|null
+     */
+    protected function _getScreenOptions($userId)
+    {
+        $screenOptions = get_user_option($this->screenOptionsKey, $userId);
         if (!$screenOptions) {
-            return $this->_getVisibleStatuses($defaultStatuses);
+            return;
         }
 
-        $screenOptions = json_decode($screenOptions);
-        $statuses      = $this->_getVisibleStatuses($screenOptions);
-
-        return $statuses;
+        return json_decode($screenOptions);
     }
 
     /**
@@ -229,7 +244,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @param array|stdClass|Traversable $statuses List of statuses key to filter.
      *
-     * @return array List of statuses keys without hidden ones.
+     * @return string[] List of statuses keys without hidden ones.
      */
     protected function _getVisibleStatuses($statuses)
     {
