@@ -58,7 +58,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
         'eddbk_bookings_visible_statuses_handler' => function ($c) {
             return new VisibleStatusesHandler(
-                $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/hidden_statuses')
             );
         },
