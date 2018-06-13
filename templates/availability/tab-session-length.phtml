@@ -1,4 +1,5 @@
-<session-length inline-template>
+<?php // Session length limit is one day, minus one second. So for hours max session length is 23 hours, less then day ?>
+<session-length :session-length-limit="86399" inline-template>
     <div>
         <div class="alert alert-warning" style="margin-bottom: 0; margin-top: .5rem">
             <span class="dashicons dashicons-info"></span>
