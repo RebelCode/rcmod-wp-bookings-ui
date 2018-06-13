@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [[*next-version*]] - YYYY-MM-DD
 ### Changed
 - Now using version `0.1.21` of `bookings-js`.
+- Bookings info message style changes make the message more noticeable.
+- Session length is limited to 86399 seconds.
 
 ## [0.1-alpha9] - 2018-06-12
 ### Added
