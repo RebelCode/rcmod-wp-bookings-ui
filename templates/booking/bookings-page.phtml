@@ -6,9 +6,6 @@
 
             <h1 class="wp-heading-inline">Bookings</h1>
             <button class="page-title-action" @click="createBooking">Add New</button>
-            <span class="page-title-description page-title-description--bookings">
-                {{ _('Your bookings are being displayed in your local (browser) timezone.') }}
-            </span>
             <hr class="wp-header-end">
 
             <tabs v-model="activeView" :options="tabsConfig">
