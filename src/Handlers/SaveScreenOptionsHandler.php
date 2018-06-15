@@ -3,10 +3,13 @@
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Cache\SimpleCacheInterface;
+use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
+use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Psr\EventManager\EventInterface;
 use stdClass;
 use Traversable;
@@ -26,6 +29,15 @@ class SaveScreenOptionsHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use CreateInvalidArgumentExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateOutOfRangeExceptionCapableTrait;
 
     /**
      * Option key name to save screen statuses config.
@@ -122,6 +134,7 @@ class SaveScreenOptionsHandler implements InvocableInterface
      */
     protected function _setScreenOptions($userId, $options)
     {
+        $userIdKey = $this->_normalizeKey($userId);
         $key = $this->screenOptionsKey;
 
         update_user_option(
@@ -130,7 +143,9 @@ class SaveScreenOptionsHandler implements InvocableInterface
             json_encode($options)
         );
 
-        $this->screenOptionsCache->clear();
+        if ($this->screenOptionsCache->has($userIdKey)) {
+            $this->screenOptionsCache->delete($userIdKey);
+        }
 
         wp_die('1');
     }
