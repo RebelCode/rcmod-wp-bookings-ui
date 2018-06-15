@@ -1,5 +1,6 @@
 <?php
 
+use Dhii\Cache\MemoryMemoizer;
 use Dhii\Data\Container\ContainerFactoryInterface;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
@@ -46,6 +47,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/screen_options/key'),
                 $c->get('wp_bookings_ui/screen_options/fields'),
                 $c->get('wp_bookings_ui/screen_options/endpoint'),
+                $c->get('eddbk_screen_options_cache'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );
@@ -65,8 +67,12 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_save_screen_options_handler' => function ($c) {
             return new SaveScreenOptionsHandler(
                 $c->get('wp_bookings_ui/screen_options/key'),
-                $c->get('wp_bookings_ui/screen_options/fields')
+                $c->get('wp_bookings_ui/screen_options/fields'),
+                $c->get('eddbk_screen_options_cache')
             );
+        },
+        'eddbk_screen_options_cache' => function ($c) {
+            return new MemoryMemoizer();
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(

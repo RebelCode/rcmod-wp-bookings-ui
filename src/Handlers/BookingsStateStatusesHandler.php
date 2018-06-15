@@ -2,6 +2,7 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Cache\SimpleCacheInterface;
 use Dhii\Collection\MapInterface;
 use Dhii\Data\Container\ContainerGetCapableTrait;
 use Dhii\Data\Container\ContainerHasCapableTrait;
@@ -102,6 +103,15 @@ class BookingsStateStatusesHandler implements InvocableInterface
     protected $screenOptionsEndpoint;
 
     /**
+     * The screen options cache.
+     *
+     * @since [*next-version*]
+     *
+     * @var SimpleCacheInterface
+     */
+    protected $screenOptionsCache;
+
+    /**
      * StatusesHandler constructor.
      *
      * @since [*next-version*]
@@ -111,6 +121,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @param string                      $screenOptionsKey      Option key name to save screen statuses config.
      * @param array|stdClass|MapInterface $screenOptionsFields   Available fields for screen options.
      * @param string                      $screenOptionsEndpoint Endpoint for saving screen options.
+     * @param SimpleCacheInterface        $screenOptionsCache    The screen options cache.
      * @param EventManagerInterface       $eventManager          The event manager.
      * @param EventFactoryInterface       $eventFactory          The event factory.
      */
@@ -120,6 +131,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         $screenOptionsKey,
         $screenOptionsFields,
         $screenOptionsEndpoint,
+        $screenOptionsCache,
         $eventManager,
         $eventFactory
     ) {
@@ -129,6 +141,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         $this->screenOptionsKey      = $screenOptionsKey;
         $this->screenOptionsFields   = $screenOptionsFields;
         $this->screenOptionsEndpoint = $screenOptionsEndpoint;
+        $this->screenOptionsCache    = $screenOptionsCache;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -231,9 +244,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
     protected function _getScreenStatuses($userId, $defaultStatuses = [])
     {
         $statusesKey = $this->_containerGet($this->screenOptionsFields, 'statuses');
-
-        $screenOptions = $this->_getScreenOptions($userId);
-        $statuses      = $this->_getScreenOption($screenOptions, $statusesKey, $defaultStatuses);
+        $statuses    = $this->_getScreenOption($userId, $statusesKey, $defaultStatuses);
 
         return $this->_getVisibleStatuses($statuses);
     }
@@ -250,9 +261,8 @@ class BookingsStateStatusesHandler implements InvocableInterface
     protected function _getBookingsTimezone($userId)
     {
         $bookingsTimezoneKey = $this->_containerGet($this->screenOptionsFields, 'bookingsTimezone');
-        $screenOptions       = $this->_getScreenOptions($userId);
 
-        return $this->_getScreenOption($screenOptions, $bookingsTimezoneKey);
+        return $this->_getScreenOption($userId, $bookingsTimezoneKey);
     }
 
     /**
@@ -260,14 +270,16 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|null $screenOptions Screen options to get key from.
-     * @param string              $key           Key to get from screen options.
-     * @param mixed               $defaultValue  Value to return if key not found in screen options.
+     * @param int    $userId       User identifier.
+     * @param string $key          Key to get from screen options.
+     * @param mixed  $defaultValue Value to return if key not found in screen options.
      *
      * @return mixed
      */
-    protected function _getScreenOption($screenOptions, $key, $defaultValue = null)
+    protected function _getScreenOption($userId, $key, $defaultValue = null)
     {
+        $screenOptions = $this->_getScreenOptions($userId);
+
         $value = $defaultValue;
         if ($screenOptions && $this->_containerHas($screenOptions, $key)) {
             $value = $this->_containerGet($screenOptions, $key);
@@ -287,12 +299,16 @@ class BookingsStateStatusesHandler implements InvocableInterface
      */
     protected function _getScreenOptions($userId)
     {
-        $screenOptions = get_user_option($this->screenOptionsKey, $userId);
-        if (!$screenOptions) {
-            return;
-        }
+        $userIdKey = $this->_normalizeKey($userId);
 
-        return json_decode($screenOptions);
+        return $this->screenOptionsCache->get($userIdKey, function () use ($userId) {
+            $screenOptions = get_user_option($this->screenOptionsKey, $userId);
+            if (!$screenOptions) {
+                return;
+            }
+
+            return json_decode($screenOptions);
+        });
     }
 
     /**

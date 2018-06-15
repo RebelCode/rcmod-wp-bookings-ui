@@ -2,6 +2,7 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Cache\SimpleCacheInterface;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
@@ -45,17 +46,28 @@ class SaveScreenOptionsHandler implements InvocableInterface
     protected $screenOptionsFields;
 
     /**
+     * The screen options cache.
+     *
+     * @since [*next-version*]
+     *
+     * @var SimpleCacheInterface
+     */
+    protected $screenOptionsCache;
+
+    /**
      * SaveScreenStatusesHandler constructor.
      *
      * @since [*next-version*]
      *
      * @param string                     $screenOptionsKey    Option key name to save screen statuses config.
      * @param array|stdClass|Traversable $screenOptionsFields List of fields in screen options.
+     * @param SimpleCacheInterface       $screenOptionsCache  The screen options cache.
      */
-    public function __construct($screenOptionsKey, $screenOptionsFields)
+    public function __construct($screenOptionsKey, $screenOptionsFields, $screenOptionsCache)
     {
         $this->screenOptionsKey    = $screenOptionsKey;
         $this->screenOptionsFields = $screenOptionsFields;
+        $this->screenOptionsCache  = $screenOptionsCache;
     }
 
     /**
@@ -117,6 +129,8 @@ class SaveScreenOptionsHandler implements InvocableInterface
             $key,
             json_encode($options)
         );
+
+        $this->screenOptionsCache->clear();
 
         wp_die('1');
     }
