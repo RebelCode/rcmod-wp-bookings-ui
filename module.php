@@ -7,7 +7,7 @@ use RebelCode\Bookings\WordPress\Module\WpBookingsUiModule;
 define('WP_BOOKINGS_UI_MODULE_KEY', 'wp_bookings_ui');
 
 /* @since [*next-version*] */
-define('WP_BOOKINGS_UI_SCREEN_STATUSES_KEY', 'eddbk_screen_options');
+define('WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY', 'eddbk_screen_options');
 
 /* @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);

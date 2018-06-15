@@ -3,8 +3,12 @@
 return [
     'wp_bookings_ui' => [
         'screen_options' => [
-            'key' => WP_BOOKINGS_UI_SCREEN_STATUSES_KEY,
-            'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_STATUSES_KEY),
+            'key' => WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY,
+            'fields' => [
+                'statuses' => 'statuses',
+                'bookingsTimezone' => 'bookingsTimezone'
+            ],
+            'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY),
         ],
         'metabox' => [
             'id' => 'service_booking_settings',

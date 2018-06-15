@@ -18,7 +18,7 @@
                 <timezone-select v-model="timezone"></timezone-select>
             </fieldset>
             <p style="margin-top: 1em; padding: 0;">
-                <div :class="['button button-primary', isStatusesSaving ? 'loading-button' : '']" @click="setScreenStatuses(selectedStatuses)">Apply</div>
+                <div :class="['button button-primary', isStatusesSaving ? 'loading-button' : '']" @click="saveScreenOptions(selectedStatuses, timezone)">Apply</div>
             </p>
         </div>
     </bookings-application>
