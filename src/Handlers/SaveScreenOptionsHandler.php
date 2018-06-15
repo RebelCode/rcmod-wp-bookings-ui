@@ -146,7 +146,5 @@ class SaveScreenOptionsHandler implements InvocableInterface
         if ($this->screenOptionsCache->has($userIdKey)) {
             $this->screenOptionsCache->delete($userIdKey);
         }
-
-        wp_die('1');
     }
 }
