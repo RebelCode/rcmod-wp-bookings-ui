@@ -93,6 +93,7 @@ class GeneralUiStateHandler implements InvocableInterface
     {
         return [
             'timezone' => $this->_getWebsiteTimezone(),
+            'currency' => $this->_getWebsiteCurrency(),
             'formats'  => $this->_prepareFormatsConfig($formatsConfig),
             'links'    => $this->_prepareLinksConfig($linksConfig),
         ];
@@ -126,6 +127,21 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         return $tzstring;
+    }
+
+    /**
+     * Get currency for website.
+     *
+     * @since [*next-version*]
+     *
+     * @return array Website currency information.
+     */
+    protected function _getWebsiteCurrency()
+    {
+        return [
+            'name'   => edd_get_currency(),
+            'symbol' => edd_currency_symbol(),
+        ];
     }
 
     /**
