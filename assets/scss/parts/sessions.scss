@@ -1,6 +1,10 @@
 .session-length {
   padding: 16px 0;
 
+  &__input {
+    width: 75px;
+  }
+
   &__options {
     padding-right: 36px;
 
