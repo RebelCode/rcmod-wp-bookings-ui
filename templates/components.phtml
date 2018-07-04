@@ -212,3 +212,15 @@
         <div class="button-floating">+</div>
     </div>
 </script>
+
+<script type="text/x-template" id="rc-booking-calendar-event">
+    <div class="rc-event-field rc-event-field--title">${ title }</div>
+    <div class="rc-event-field rc-event-field--time">${ start } - ${ end }</div>
+    <div class="rc-event-field rc-event-field--month-collapse">${ clientName }</div>
+    <div class="rc-event-field rc-event-field--month-collapse rc-event-field--click">${ action }</div>
+</script>
+
+<script type="text/x-template" id="rc-availability-calendar-event">
+    <div class="rc-event-field rc-event-field--time">${ start } - ${ end }</div>
+    <div class="rc-event-field rc-event-field--timezone">${ timezone }</div>
+</script>
