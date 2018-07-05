@@ -3,6 +3,10 @@
 
   &__input {
     width: 75px;
+
+    &--wide {
+      width: 100px;
+    }
   }
 
   &__options {
