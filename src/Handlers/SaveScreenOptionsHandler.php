@@ -114,7 +114,7 @@ class SaveScreenOptionsHandler implements InvocableInterface
      */
     protected function _handle($userId)
     {
-        $data    = json_decode(file_get_contents('php://input'), true);
+        $data    = $this->_getRequestData();
         $options = [];
         foreach ($this->screenOptionsFields as $key) {
             if (array_key_exists($key, $data)) {
@@ -135,16 +135,40 @@ class SaveScreenOptionsHandler implements InvocableInterface
     protected function _setScreenOptions($userId, $options)
     {
         $userIdKey = $this->_normalizeKey($userId);
-        $key = $this->screenOptionsKey;
+        $key       = $this->screenOptionsKey;
 
-        update_user_option(
-            $userId,
-            $key,
-            json_encode($options)
-        );
+        $this->_updateUserOption($userId, $key, json_encode($options));
 
         if ($this->screenOptionsCache->has($userIdKey)) {
             $this->screenOptionsCache->delete($userIdKey);
         }
+    }
+
+    /**
+     * Get data from request.
+     *
+     * @since [*next-version*]
+     *
+     * @return array|mixed|object Request data.
+     */
+    protected function _getRequestData()
+    {
+        return json_decode(file_get_contents('php://input'), true);
+    }
+
+    /**
+     * Update user option.
+     *
+     * @since [*next-version*]
+     *
+     * @param int    $userId User ID.
+     * @param string $key    User option key.
+     * @param mixed  $value  User option value.
+     *
+     * @return bool|int User meta ID if the option didn't exist, true on successful update, false on failure.
+     */
+    protected function _updateUserOption($userId, $key, $value)
+    {
+        return update_user_option($userId, $key, $value);
     }
 }

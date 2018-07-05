@@ -302,7 +302,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         $userIdKey = $this->_normalizeKey($userId);
 
         return $this->screenOptionsCache->get($userIdKey, function () use ($userId) {
-            $screenOptions = get_user_option($this->screenOptionsKey, $userId);
+            $screenOptions = $this->_getUserOption($userId, $this->screenOptionsKey);
             if (!$screenOptions) {
                 return;
             }
@@ -325,5 +325,20 @@ class BookingsStateStatusesHandler implements InvocableInterface
         return $this->_trigger('eddbk_bookings_visible_statuses', [
             'statuses' => $statuses,
         ])->getParam('statuses');
+    }
+
+    /**
+     * Retrieve user option.
+     *
+     * @since [*next-version*]
+     *
+     * @param int    $userId User ID.
+     * @param string $key    User option key.
+     *
+     * @return mixed User option value on success, false on failure.
+     */
+    protected function _getUserOption($userId, $key)
+    {
+        return get_user_option($key, $userId);
     }
 }
