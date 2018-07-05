@@ -1,10 +1,10 @@
 <div class="wide-form">
     <div class="wide-form__header">
-        Calendar and timezone options
+        {{ _('Calendar and timezone options') }}
     </div>
     <div class="wide-form__row">
         <div class="wide-form__label" style="width: 100%;max-width: 600px">
-            Show dates and times on the site using the customer's timezone
+            {{ _("Show dates and times on the site using the customer's timezone") }}
         </div>
         <div class="wide-form__input">
             <bool-switcher v-model="useCustomerTimezone"></bool-switcher>
@@ -14,6 +14,6 @@
 
 <div class="wide-form">
     <div class="wide-form__header">
-        More options coming soon
+        {{ _('More options coming soon') }}
     </div>
 </div>
