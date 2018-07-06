@@ -12,7 +12,9 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
@@ -53,6 +55,9 @@ class BookingsStateStatusesHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIntCapableTrait;
 
     /* @since [*next-version*] */
     use CreateOutOfRangeExceptionCapableTrait;
@@ -332,13 +337,16 @@ class BookingsStateStatusesHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param int    $userId User ID.
-     * @param string $key    User option key.
+     * @param int|float|string|Stringable $userId User ID.
+     * @param string|Stringable           $key    User option key.
      *
      * @return mixed User option value on success, false on failure.
      */
     protected function _getUserOption($userId, $key)
     {
+        $userId = $this->_normalizeInt($userId);
+        $key    = $this->_normalizeString($key);
+
         return get_user_option($key, $userId);
     }
 }

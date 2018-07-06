@@ -9,8 +9,10 @@ use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Psr\EventManager\EventInterface;
+use Dhii\Util\String\StringableInterface as Stringable;
 use stdClass;
 use Traversable;
 
@@ -35,6 +37,9 @@ class SaveScreenOptionsHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIntCapableTrait;
 
     /* @since [*next-version*] */
     use CreateOutOfRangeExceptionCapableTrait;
@@ -161,14 +166,17 @@ class SaveScreenOptionsHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param int    $userId User ID.
-     * @param string $key    User option key.
-     * @param mixed  $value  User option value.
+     * @param int|float|string|Stringable $userId User ID.
+     * @param string|Stringable           $key    User option key.
+     * @param mixed                       $value  User option value.
      *
      * @return bool|int User meta ID if the option didn't exist, true on successful update, false on failure.
      */
     protected function _updateUserOption($userId, $key, $value)
     {
+        $userId = $this->_normalizeInt($userId);
+        $key    = $this->_normalizeString($key);
+
         return update_user_option($userId, $key, $value);
     }
 }
