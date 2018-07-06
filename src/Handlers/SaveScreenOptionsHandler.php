@@ -6,6 +6,8 @@ use Dhii\Cache\SimpleCacheInterface;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
+use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
+use Dhii\Exception\RuntimeException;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
@@ -43,6 +45,9 @@ class SaveScreenOptionsHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use CreateOutOfRangeExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateRuntimeExceptionCapableTrait;
 
     /**
      * Option key name to save screen statuses config.
@@ -170,13 +175,23 @@ class SaveScreenOptionsHandler implements InvocableInterface
      * @param string|Stringable           $key    User option key.
      * @param mixed                       $value  User option value.
      *
-     * @return bool|int User meta ID if the option didn't exist, true on successful update, false on failure.
+     * @throws RuntimeException If options is not updated for user.
+     *
+     * @return bool True on successful update.
      */
     protected function _updateUserOption($userId, $key, $value)
     {
         $userId = $this->_normalizeInt($userId);
         $key    = $this->_normalizeString($key);
 
-        return update_user_option($userId, $key, $value);
+        $updateResult = update_user_option($userId, $key, $value);
+
+        if ($updateResult !== true) {
+            throw $this->_createRuntimeException(
+                $this->__('Option is not updated for user')
+            );
+        }
+
+        return true;
     }
 }
