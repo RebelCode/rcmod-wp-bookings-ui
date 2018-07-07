@@ -176,8 +176,6 @@ class SaveScreenOptionsHandler implements InvocableInterface
      * @param mixed                       $value  User option value.
      *
      * @throws RuntimeException If options is not updated for user.
-     *
-     * @return bool True on successful update.
      */
     protected function _updateUserOption($userId, $key, $value)
     {
@@ -186,12 +184,10 @@ class SaveScreenOptionsHandler implements InvocableInterface
 
         $updateResult = update_user_option($userId, $key, $value);
 
-        if ($updateResult) {
+        if ($updateResult === false) {
             throw $this->_createRuntimeException(
                 $this->__('Could not update option "%1$s" for user "%2$s"', [$key, $userId])
             );
         }
-
-        return true;
     }
 }
