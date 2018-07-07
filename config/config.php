@@ -30,6 +30,10 @@ return [
             'links' => [
                 'service' => '/post.php?post=%d&action=edit',
                 'client' => '/edit.php?post_type=download&page=edd-customers&view=overview&id=%d'
+            ],
+            'currency' => [
+                'name'   => edd_get_currency(),
+                'symbol' => edd_currency_symbol(),
             ]
         ],
         'menu' => [

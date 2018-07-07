@@ -1,12 +1,5 @@
-<?php // Session length limit is one day, minus one second. So for hours max session length is 23 hours, less then day ?>
-<session-length :session-length-limit="86399" inline-template>
+<session-length inline-template>
     <div>
-        <div class="alert alert-warning" style="margin-bottom: 0; margin-top: .5rem">
-            <span class="dashicons dashicons-info"></span>
-            <span>
-                The "day" and "week" durations for session lengths are coming soon.
-            </span>
-        </div>
         <div class="session-length eddbk-inputs">
             <div class="flex-row">
                 <fieldset class="session-length__options">
@@ -14,6 +7,7 @@
                     <input type="number" step="1" min="1" max="59" placeholder="15" v-model="sessionDefault.sessionLength"
                            ref="sessionLength"
                            data-validation-error="Please enter a session length bigger than 0."
+                           @keydown.enter="addNewSession"
                     >
                     <select v-model="sessionTimeUnit">
                         <option :value="unit.seconds" v-for="unit in timeUnits" :disabled="unit.disabled">{{ unit.title }}</option>
@@ -22,10 +16,11 @@
                 <fieldset class="session-length__options">
                     <legend>Price</legend>
                     <div class="input-with-placeholder">
-                        <span>$</span>
+                        <span v-html="config.currency.symbol"></span>
                         <input type="number" step="1" min="1" placeholder="20.00" v-model="sessionDefault.price"
                                style="width: 80px"
                                ref="price"
+                               @keydown.enter="addNewSession"
                                data-validation-error="Please enter a session price. If this session duration is free, enter 0."
                         >
                     </div>
@@ -68,7 +63,7 @@
                             {{ humanize(r.item.sessionLength) }}
                         </div>
                         <div class="session-item__price">
-                            $ {{ r.item.price }}
+                            <span v-html="config.currency.symbol"></span> {{ r.item.price }}
                         </div>
                         <div class="session-item__action">
                             <span class="dashicons dashicons-trash" @click="r.remove(r.item)"></span>
