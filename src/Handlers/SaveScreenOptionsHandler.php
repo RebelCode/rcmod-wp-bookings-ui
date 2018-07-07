@@ -188,7 +188,7 @@ class SaveScreenOptionsHandler implements InvocableInterface
 
         if ($updateResult) {
             throw $this->_createRuntimeException(
-                $this->__("Could not update option \"{$key}\" for user \"{$userId}\"")
+                $this->__("Could not update option \"%s\" for user \"%s\"", [$key, $userId])
             );
         }
 
