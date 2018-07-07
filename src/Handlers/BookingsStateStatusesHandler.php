@@ -2,6 +2,7 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Cache\SimpleCacheInterface;
 use Dhii\Collection\MapInterface;
 use Dhii\Data\Container\ContainerGetCapableTrait;
 use Dhii\Data\Container\ContainerHasCapableTrait;
@@ -11,7 +12,9 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
@@ -54,6 +57,9 @@ class BookingsStateStatusesHandler implements InvocableInterface
     use NormalizeStringCapableTrait;
 
     /* @since [*next-version*] */
+    use NormalizeIntCapableTrait;
+
+    /* @since [*next-version*] */
     use CreateOutOfRangeExceptionCapableTrait;
 
     /**
@@ -84,39 +90,63 @@ class BookingsStateStatusesHandler implements InvocableInterface
     protected $screenOptionsKey;
 
     /**
-     * Endpoint for saving statuses.
+     * Available fields for screen options.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|stdClass|MapInterface
+     */
+    protected $screenOptionsFields;
+
+    /**
+     * Endpoint for saving screen options.
      *
      * @since [*next-version*]
      *
      * @var string
      */
-    protected $statusesEndpoint;
+    protected $screenOptionsEndpoint;
+
+    /**
+     * The screen options cache.
+     *
+     * @since [*next-version*]
+     *
+     * @var SimpleCacheInterface
+     */
+    protected $screenOptionsCache;
 
     /**
      * StatusesHandler constructor.
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass  $statuses         List of statuses key in application.
-     * @param array|stdClass|MapInterface $statusesLabels   Map of known status keys to statuses labels.
-     * @param string                      $screenOptionsKey Option key name to save screen statuses config.
-     * @param string                      $statusesEndpoint Endpoint for saving statuses.
-     * @param EventManagerInterface       $eventManager     The event manager.
-     * @param EventFactoryInterface       $eventFactory     The event factory.
+     * @param array|Traversable|stdClass  $statuses              List of statuses key in application.
+     * @param array|stdClass|MapInterface $statusesLabels        Map of known status keys to statuses labels.
+     * @param string                      $screenOptionsKey      Option key name to save screen statuses config.
+     * @param array|stdClass|MapInterface $screenOptionsFields   Available fields for screen options.
+     * @param string                      $screenOptionsEndpoint Endpoint for saving screen options.
+     * @param SimpleCacheInterface        $screenOptionsCache    The screen options cache.
+     * @param EventManagerInterface       $eventManager          The event manager.
+     * @param EventFactoryInterface       $eventFactory          The event factory.
      */
     public function __construct(
         $statuses,
         $statusesLabels,
         $screenOptionsKey,
-        $statusesEndpoint,
+        $screenOptionsFields,
+        $screenOptionsEndpoint,
+        $screenOptionsCache,
         $eventManager,
         $eventFactory
     ) {
         $this->statuses       = $statuses;
         $this->statusesLabels = $statusesLabels;
 
-        $this->screenOptionsKey = $screenOptionsKey;
-        $this->statusesEndpoint = $statusesEndpoint;
+        $this->screenOptionsKey      = $screenOptionsKey;
+        $this->screenOptionsFields   = $screenOptionsFields;
+        $this->screenOptionsEndpoint = $screenOptionsEndpoint;
+        $this->screenOptionsCache    = $screenOptionsCache;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -171,9 +201,14 @@ class BookingsStateStatusesHandler implements InvocableInterface
             'screenStatuses' => $this->_getScreenStatuses($userId, $this->statuses),
 
             /*
-             * Endpoint for saving booking statuses that will be selected as default for filtering bookings.
+             * Endpoint for saving screen options.
              */
-            'statusesEndpoint' => $this->statusesEndpoint,
+            'screenOptionsEndpoint' => $this->screenOptionsEndpoint,
+
+            /*
+             * Timezone name for bookings page.
+             */
+            'bookingsTimezone' => $this->_getBookingsTimezone($userId),
         ];
     }
 
@@ -213,9 +248,49 @@ class BookingsStateStatusesHandler implements InvocableInterface
      */
     protected function _getScreenStatuses($userId, $defaultStatuses = [])
     {
-        $screenOptions = $this->_getScreenOptions($userId) ?: $defaultStatuses;
+        $statusesKey = $this->_containerGet($this->screenOptionsFields, 'statuses');
+        $statuses    = $this->_getScreenOption($userId, $statusesKey, $defaultStatuses);
 
-        return $this->_getVisibleStatuses($screenOptions);
+        return $this->_getVisibleStatuses($statuses);
+    }
+
+    /**
+     * Get timezone for bookings page for current user.
+     *
+     * @since [*next-version*]
+     *
+     * @param int $userId User identifier.
+     *
+     * @return string|null Timezone identifier for bookings page for current user.
+     */
+    protected function _getBookingsTimezone($userId)
+    {
+        $bookingsTimezoneKey = $this->_containerGet($this->screenOptionsFields, 'bookingsTimezone');
+
+        return $this->_getScreenOption($userId, $bookingsTimezoneKey);
+    }
+
+    /**
+     * Get value from screen options by key.
+     *
+     * @since [*next-version*]
+     *
+     * @param int    $userId       User identifier.
+     * @param string $key          Key to get from screen options.
+     * @param mixed  $defaultValue Value to return if key not found in screen options.
+     *
+     * @return mixed
+     */
+    protected function _getScreenOption($userId, $key, $defaultValue = null)
+    {
+        $screenOptions = $this->_getScreenOptions($userId);
+
+        $value = $defaultValue;
+        if ($screenOptions && $this->_containerHas($screenOptions, $key)) {
+            $value = $this->_containerGet($screenOptions, $key);
+        }
+
+        return $value;
     }
 
     /**
@@ -229,12 +304,16 @@ class BookingsStateStatusesHandler implements InvocableInterface
      */
     protected function _getScreenOptions($userId)
     {
-        $screenOptions = get_user_option($this->screenOptionsKey, $userId);
-        if (!$screenOptions) {
-            return;
-        }
+        $userIdKey = $this->_normalizeKey($userId);
 
-        return json_decode($screenOptions);
+        return $this->screenOptionsCache->get($userIdKey, function () use ($userId) {
+            $screenOptions = $this->_getUserOption($userId, $this->screenOptionsKey);
+            if (!$screenOptions) {
+                return;
+            }
+
+            return json_decode($screenOptions);
+        });
     }
 
     /**
@@ -251,5 +330,23 @@ class BookingsStateStatusesHandler implements InvocableInterface
         return $this->_trigger('eddbk_bookings_visible_statuses', [
             'statuses' => $statuses,
         ])->getParam('statuses');
+    }
+
+    /**
+     * Retrieve user option.
+     *
+     * @since [*next-version*]
+     *
+     * @param int|float|string|Stringable $userId User ID.
+     * @param string|Stringable           $key    User option key.
+     *
+     * @return mixed User option value on success, false on failure.
+     */
+    protected function _getUserOption($userId, $key)
+    {
+        $userId = $this->_normalizeInt($userId);
+        $key    = $this->_normalizeString($key);
+
+        return get_user_option($key, $userId);
     }
 }
