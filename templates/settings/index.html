@@ -1,0 +1,22 @@
+<div id="eddbk-settings-page" v-cloak>
+    <div class="vcloak--visible loading-container"></div>
+    <bookings-settings inline-template>
+        <div class="wrap vcloak--hidden">
+            <h1 class="wp-heading-inline">
+                {{ _('EDD Bookings Settings') }}
+            </h1>
+            <hr class="wp-header-end">
+
+            <tabs v-model="activeTab" :options="tabsConfig">
+                <tab :title="_('General')">
+                    ${generalSettingsTab}
+                </tab>
+                <tab :title="_('Advanced')">
+                    ${advancedSettingsTab}
+                </tab>
+            </tabs>
+        </div>
+    </bookings-settings>
+</div>
+
+${components}

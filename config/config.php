@@ -3,8 +3,12 @@
 return [
     'wp_bookings_ui' => [
         'screen_options' => [
-            'key' => WP_BOOKINGS_UI_SCREEN_STATUSES_KEY,
-            'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_STATUSES_KEY),
+            'key' => WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY,
+            'fields' => [
+                'statuses' => 'statuses',
+                'bookingsTimezone' => 'bookingsTimezone'
+            ],
+            'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY),
         ],
         'metabox' => [
             'id' => 'service_booking_settings',
@@ -26,6 +30,10 @@ return [
             'links' => [
                 'service' => '/post.php?post=%d&action=edit',
                 'client' => '/edit.php?post_type=download&page=edd-customers&view=overview&id=%d'
+            ],
+            'currency' => [
+                'name'   => edd_get_currency(),
+                'symbol' => edd_currency_symbol(),
             ]
         ],
         'menu' => [

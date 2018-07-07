@@ -62,8 +62,6 @@
                     </div>
                 </div>
 
-<!--                <hr>-->
-
                 <div class="form-row">
                     <div class="form-row__label">Repeats</div>
                     <div class="form-row__input">
@@ -75,7 +73,6 @@
 
 
                 <template v-if="model.repeat">
-<!--                    <hr>-->
                     <div :class="['form-row', errors.has('repeats_after') ? 'form-row--with-error' : '']">
                         <div class="form-row__label">
                             Repeats after
@@ -131,24 +128,36 @@
                         </div>
                     </template>
 
-                    <div class="form-row">
-                        <div class="form-row__label">Ends</div>
+                    <div :class="['form-row', errors.has('ends_after') ? 'form-row--with-error' : '']">
+                        <div class="form-row__label">
+                            Ends
+                            <div class="form-row__description form-row__error" v-if="errors.has('ends_after')">{{ errors.first('ends_after').replace('_', ' ') }}</div>
+                        </div>
                         <div class="form-row__input">
                             <div>
                                 <label for="ends-after" style="width: 90px; display: inline-block">
-                                    <input type="radio" id="ends-after" value="period" v-model="model.repeatUntil"> After
+                                    <input type="radio" @change="errors.remove('ends_after')" id="ends-after" value="period" v-model="model.repeatUntil"> After
                                 </label>
-                                <input type="number" min="1" placeholder="4" style="width: 90px" v-model="model.repeatUntilPeriod"> {{ repeatsUntilPeriodTitle }}
+                                <input type="number"
+                                       min="1"
+                                       name="ends_after"
+                                       @input="errors.remove('ends_after')"
+                                       v-validate="model.repeatUntil === 'period' ? { min_value: 1 } : {}"
+                                       placeholder="4"
+                                       style="width: 90px"
+                                       v-model="model.repeatUntilPeriod"
+                                > {{ repeatsUntilPeriodTitle }}
                             </div>
 
                             <div style="margin-top: 4px" class="inline-datepicker">
                                 <label for="ends-on" style="width: 90px; display: inline-block">
-                                    <input type="radio" id="ends-on" value="date" v-model="model.repeatUntil"> On
+                                    <input type="radio" @change="errors.remove('ends_after')" id="ends-on" value="date" v-model="model.repeatUntil"> On
                                 </label>
                                 <datepicker name="repeatsEndsDate"
                                             v-model="repeatUntilDateModel"
                                             placeholder="-- / -- / ----"
                                             format="dd/MM/yyyy"
+                                            @input="errors.remove('ends_after')"
                                             style="width: 90px"
                                             :disabled="{to: availabilityStart}"
                                 ></datepicker>

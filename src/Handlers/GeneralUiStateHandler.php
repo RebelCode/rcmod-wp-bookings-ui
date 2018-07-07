@@ -28,6 +28,15 @@ class GeneralUiStateHandler implements InvocableInterface
     use CreateInvalidArgumentExceptionCapableTrait;
 
     /**
+     * Currency config of application.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|Traversable|stdClass
+     */
+    protected $currencyConfig;
+
+    /**
      * Configuration of application formats to format some data.
      * For example, datetime formats.
      *
@@ -38,7 +47,7 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $formatsConfig;
 
     /**
-     *  List of links to booking related entities (clients, services).
+     * List of links to booking related entities (clients, services).
      *
      * @since [*next-version*]
      *
@@ -51,13 +60,15 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $formatsConfig List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig   List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass $currencyConfig Currency config of application.
+     * @param array|Traversable|stdClass $formatsConfig  List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig    List of links to booking related entities (clients, services).
      */
-    public function __construct($formatsConfig, $linksConfig)
+    public function __construct($currencyConfig, $formatsConfig, $linksConfig)
     {
-        $this->formatsConfig = $formatsConfig;
-        $this->linksConfig   = $linksConfig;
+        $this->currencyConfig = $currencyConfig;
+        $this->formatsConfig  = $formatsConfig;
+        $this->linksConfig    = $linksConfig;
     }
 
     /**
@@ -77,22 +88,26 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         $event->setParams([
-            'config' => $this->_getUiConfig($this->formatsConfig, $this->linksConfig),
+            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig),
         ]);
     }
 
     /**
      * Get config for UI application.
      *
-     * @param array|Traversable|stdClass $formatsConfig List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig   List of links to booking related entities (clients, services).
+     * @since [*next-version*]
+     *
+     * @param array|Traversable|stdClass $currencyConfig Currency config of application.
+     * @param array|Traversable|stdClass $formatsConfig  List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig    List of links to booking related entities (clients, services).
      *
      * @return array UI configuration.
      */
-    protected function _getUiConfig($formatsConfig, $linksConfig)
+    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig)
     {
         return [
             'timezone' => $this->_getWebsiteTimezone(),
+            'currency' => $this->_prepareCurrencyConfig($currencyConfig),
             'formats'  => $this->_prepareFormatsConfig($formatsConfig),
             'links'    => $this->_prepareLinksConfig($linksConfig),
         ];
@@ -126,6 +141,20 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         return $tzstring;
+    }
+
+    /**
+     * Prepare application's currency configuration for state.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|Traversable|stdClass $currencyConfig Currency config of application.
+     *
+     * @return array Application currency config.
+     */
+    protected function _prepareCurrencyConfig($currencyConfig)
+    {
+        return $this->_normalizeArray($currencyConfig);
     }
 
     /**

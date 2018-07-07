@@ -1,11 +1,12 @@
 <?php
 
+use Dhii\Cache\MemoryMemoizer;
 use Dhii\Data\Container\ContainerFactoryInterface;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
 use Psr\Container\ContainerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
-use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
@@ -39,12 +40,14 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 ContainerFactoryInterface::K_DATA => $assetsUrlsMap,
             ]);
         },
-        'eddbk_bookings_ui_statuses_handler' => function ($c) {
+        'eddbk_bookings_ui_state_handler' => function ($c) {
             return new BookingsStateStatusesHandler(
                 $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/screen_options/key'),
+                $c->get('wp_bookings_ui/screen_options/fields'),
                 $c->get('wp_bookings_ui/screen_options/endpoint'),
+                $c->get('eddbk_screen_options_cache'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );
@@ -61,13 +64,19 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/hidden_statuses')
             );
         },
-        'eddbk_bookings_save_screen_statuses_handler' => function ($c) {
-            return new SaveScreenStatusesHandler(
-                $c->get('wp_bookings_ui/screen_options/key')
+        'eddbk_bookings_save_screen_options_handler' => function ($c) {
+            return new SaveScreenOptionsHandler(
+                $c->get('wp_bookings_ui/screen_options/key'),
+                $c->get('wp_bookings_ui/screen_options/fields'),
+                $c->get('eddbk_screen_options_cache')
             );
+        },
+        'eddbk_screen_options_cache' => function ($c) {
+            return new MemoryMemoizer();
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
+                $c->get('wp_bookings_ui/config/currency'),
                 $c->get('wp_bookings_ui/config/formats'),
                 $c->get('wp_bookings_ui/config/links')
             );
