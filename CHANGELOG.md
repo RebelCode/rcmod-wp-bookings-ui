@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Now using version `0.1.4` of `booking-wizard-components`.
 - Now using version `0.1.22` of `bookings-js`.
 - Session length limit removed.
-- During booking editing session picker showed from the beginning (instead of hiding it and showing label with datetime and "Change" button).
+- The session picker on the Edit Booking modal is no longer hidden initially, but is now always displayed.
 
 ## [0.1-alpha10] - 2018-06-13
 ### Changed
