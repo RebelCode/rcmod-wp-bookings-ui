@@ -56,6 +56,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $metaboxPageId;
 
     /**
+     * Page where settings application should be shown.
+     *
+     * @var string
+     */
+    protected $settingsPageId;
+
+    /**
      * Constructor.
      *
      * @since [*next-version*]
@@ -155,6 +162,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         return in_array(get_current_screen()->id, [
             $this->bookingsPageId,
             $this->metaboxPageId,
+            $this->settingsPageId,
         ]);
     }
 
@@ -421,15 +429,22 @@ class WpBookingsUiModule extends AbstractBaseModule
             $rootMenuConfig->get('position')
         );
 
-        add_submenu_page(
+        $this->settingsPageId = add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
             $this->__($settingsMenuConfig->get('page_title')),
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () use ($c, $comingSoonContext) {
-                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
-                echo $comingSoonTemplate->render($comingSoonContext);
+            function () use ($c) {
+                $settingsTemplate = $c->get('eddbk_ui_settings_template');
+
+                $generalSettingsTabContent = $c->get('eddbk_ui_settings_general_tab_template')->render();
+                $componentsContent = $this->_renderTemplate('components');
+
+                echo $settingsTemplate->render([
+                    'generalSettingsTab' => $generalSettingsTabContent,
+                    'components' => $componentsContent
+                ]);
             }
         );
 

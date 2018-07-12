@@ -107,5 +107,31 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 TemplateFactoryInterface::K_TEMPLATE => $template
             ]);
         },
+        /*
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/settings/index.html';
+            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
+            $template = file_get_contents($templatePath);
+            return $c->get('eddbk_ui_template_factory')->make([
+                TemplateFactoryInterface::K_TEMPLATE => $template
+            ]);
+        },
+        /*
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/settings/general.html';
+            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
+            $template = file_get_contents($templatePath);
+            return $c->get('eddbk_ui_template_factory')->make([
+                TemplateFactoryInterface::K_TEMPLATE => $template
+            ]);
+        },
     ];
 };

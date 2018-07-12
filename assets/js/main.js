@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
       cfToggleable: 'https://unpkg.com/@rebelcode/vc-toggleable@0.1.3/dist/umd/lib.min',
       vueselect: 'https://unpkg.com/vue-select@2.4.0/dist/vue-select',
       wpListTable: 'https://unpkg.com/vue-wp-list-table@1.1.0/dist/vue-wp-list-table.common',
+      vueColor: 'https://cdnjs.cloudflare.com/ajax/libs/vue-color/2.4.6/vue-color.min'
     })
   })
 
@@ -80,7 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'cjs!fastDeepEqual',
     'cjs!wpListTable',
     'textFormatter',
-    'humanizeDuration'
+    'humanizeDuration',
+    'vueColor'
   ]
 
   require(dependenciesList, function () {
@@ -107,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
       return [
         '#eddbk-bookings-page',
         '#eddbk-service-page',
-        '#eddbk-bookings-screen-options'
+        '#eddbk-bookings-screen-options',
+        '#eddbk-settings-page'
       ]
     }
     for (var i = 0; i < Object.keys(serviceList).length; i++) {

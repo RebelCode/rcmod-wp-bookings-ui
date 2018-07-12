@@ -4,7 +4,7 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Timezone') }}:</div>
                 <div class="form-row__input">
-                    <span>{{ state.preview.timezone }}</span>
+                    <span>{{ settingsConfig.preview.timezone }}</span>
                     <span class="settings-edit">{{ _('Edit') }}</span>
                 </div>
             </div>
@@ -12,7 +12,7 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Date format, Time format') }}:</div>
                 <div class="form-row__input">
-                    <span>{{ state.preview.datetimeFormats }}</span>
+                    <span>{{ settingsConfig.preview.datetimeFormats }}</span>
                     <span class="settings-edit">{{ _('Edit') }}</span>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                 <div class="form-row__label">{{ _('Week Starts On') }}:</div>
                 <div class="form-row__input">
                     <select v-model="weekStartsOn">
-                        <option v-for="weekDay of state.weekStartDays" :value="weekDay.key">{{ _(weekDay.title) }}</option>
+                        <option v-for="(weekDay, key) of settingsConfig.weekStartDays" :value="key">{{ weekDay }}</option>
                     </select>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Default Calendar View') }}:</div>
                 <div class="form-row__input">
-                    <switcher :buttons="state.defaultCalendarViews" v-model="defaultCalendarView"></switcher>
+                    <switcher :buttons="settingsConfig.defaultCalendarViews" v-model="defaultCalendarView"></switcher>
                 </div>
             </div>
 
@@ -43,9 +43,9 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Booking Status Colors') }}:</div>
                 <div class="form-row__input">
-                    <div v-for="bookingStatus of state.bookingStatuses">
-                        <color-picker v-model="bookingStatuses[bookingStatuse.key]"></color-picker>
-                        <span>{{ _(bookingStatus.title) }}</span>
+                    <div v-for="(bookingStatus, key) of settingsConfig.bookingStatuses">
+                        <color-picker v-model="bookingStatuses[key]"></color-picker>
+                        <span>{{ bookingStatus }}</span>
                     </div>
                 </div>
             </div>
