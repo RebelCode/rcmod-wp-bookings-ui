@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Changed
+- Now using version `0.1.4` of `booking-wizard-components`.
+- Now using version `0.1.22` of `bookings-js`.
+- Session length limit removed.
+- During booking editing session picker showed from the beginning (instead of hiding it and showing label with datetime and "Change" button).
 
 ## [0.1-alpha10] - 2018-06-13
 ### Changed
