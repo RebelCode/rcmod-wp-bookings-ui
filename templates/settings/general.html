@@ -1,0 +1,67 @@
+<div class="settings-tab settings-tab--general">
+    <div class="row">
+        <div class="col-12 columns">
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Timezone') }}:</div>
+                <div class="form-row__input">
+                    <span>{{ state.preview.timezone }}</span>
+                    <span class="settings-edit">{{ _('Edit') }}</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Date format, Time format') }}:</div>
+                <div class="form-row__input">
+                    <span>{{ state.preview.datetimeFormats }}</span>
+                    <span class="settings-edit">{{ _('Edit') }}</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Week Starts On') }}:</div>
+                <div class="form-row__input">
+                    <select v-model="weekStartsOn">
+                        <option v-for="weekDay of state.weekStartDays" :value="weekDay.key">{{ _(weekDay.title) }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Default Calendar View') }}:</div>
+                <div class="form-row__input">
+                    <switcher :buttons="state.defaultCalendarViews" v-model="defaultCalendarView"></switcher>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Booking Wizard Color') }}:</div>
+                <div class="form-row__input">
+                    <color-picker v-model="bookingWizardColor"></color-picker>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Booking Status Colors') }}:</div>
+                <div class="form-row__input">
+                    <div v-for="bookingStatus of state.bookingStatuses">
+                        <color-picker v-model="bookingStatuses[bookingStatuse.key]"></color-picker>
+                        <span>{{ _(bookingStatus.title) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 columns">
+            <div>
+                <button class="button button-primary" :class="{'loading-button': isSaving}" @click="submit">
+                    {{ _('Save') }}
+                </button>
+                <button class="button" @click="revertChanges">
+                    {{ _('Cancel') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
