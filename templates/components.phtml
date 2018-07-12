@@ -65,7 +65,7 @@
 </script>
 
 <script type="text/x-template" id="session-date-picker-template">
-    <div :class="loading ? 'disabled' : ''">
+    <div class="session-date-picker" :class="loading ? 'disabled' : ''">
         <div class="edd-booking-wizard__info edd-booking-wizard__info--inline" v-if="!loading && !availableSessions.length">
             {{ 'No appointments are available this month.' }}
         </div>
