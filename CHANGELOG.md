@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Now using `0.1.4` of `booking-wizard-components`.
 - Session length limit removed.
+- During booking editing session picker showed from the beginning (instead of hiding it and showing label with datetime and "Change" button).
 
 ## [0.1-alpha10] - 2018-06-13
 ### Changed
