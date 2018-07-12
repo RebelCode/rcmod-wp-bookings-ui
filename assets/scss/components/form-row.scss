@@ -30,6 +30,10 @@
     }
   }
 
+  &__field {
+    width: 100%;
+  }
+
   &--inline {
     .form-row__label {
       width: auto;
