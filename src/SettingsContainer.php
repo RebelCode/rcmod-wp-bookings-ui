@@ -19,6 +19,11 @@ use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use stdClass;
 
+/**
+ * Container for retrieving plugin settings.
+ *
+ * @since [*next-version*]
+ */
 class SettingsContainer implements ContainerInterface
 {
     /* @since [*next-version*] */

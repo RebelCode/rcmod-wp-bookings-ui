@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Added
+- Settings page templates.
+- Settings container implementation.
+
+## [0.1-alpha11] - 2018-07-12
 ### Changed
 - Now using version `0.1.4` of `booking-wizard-components`.
 - Now using version `0.1.22` of `bookings-js`.
