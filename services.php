@@ -43,7 +43,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_ui_state_handler' => function ($c) {
             return new BookingsStateStatusesHandler(
                 $c->get('booking_logic/statuses'),
-                $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/screen_options/key'),
                 $c->get('wp_bookings_ui/screen_options/fields'),
                 $c->get('wp_bookings_ui/screen_options/endpoint'),
@@ -76,9 +75,13 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
+                $c->get('booking_logic/statuses'),
+                $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/config/currency'),
                 $c->get('wp_bookings_ui/config/formats'),
-                $c->get('wp_bookings_ui/config/links')
+                $c->get('wp_bookings_ui/config/links'),
+                $c->get('event_manager'),
+                $c->get('event_factory')
             );
         },
         /*

@@ -443,7 +443,7 @@ class WpBookingsUiModule extends AbstractBaseModule
 
                 echo $settingsTemplate->render([
                     'generalSettingsTab' => $generalSettingsTabContent,
-                    'components' => $componentsContent
+                    'components'         => $componentsContent,
                 ]);
             }
         );

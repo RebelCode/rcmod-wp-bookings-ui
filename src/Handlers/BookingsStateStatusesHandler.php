@@ -15,7 +15,6 @@ use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
-use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use Psr\EventManager\EventInterface;
@@ -62,6 +61,9 @@ class BookingsStateStatusesHandler implements InvocableInterface
     /* @since [*next-version*] */
     use CreateOutOfRangeExceptionCapableTrait;
 
+    /* @since [*next-version*] */
+    use GetVisibleStatusesCapable;
+
     /**
      * List of statuses keys available in application.
      *
@@ -70,15 +72,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @var array|Traversable|stdClass
      */
     protected $statuses;
-
-    /**
-     * Map of known statuses keys translations.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|stdClass|MapInterface
-     */
-    protected $statusesLabels;
 
     /**
      * Option key name to save screen statuses config.
@@ -122,7 +115,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
      * @since [*next-version*]
      *
      * @param array|Traversable|stdClass  $statuses              List of statuses key in application.
-     * @param array|stdClass|MapInterface $statusesLabels        Map of known status keys to statuses labels.
      * @param string                      $screenOptionsKey      Option key name to save screen statuses config.
      * @param array|stdClass|MapInterface $screenOptionsFields   Available fields for screen options.
      * @param string                      $screenOptionsEndpoint Endpoint for saving screen options.
@@ -132,7 +124,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
      */
     public function __construct(
         $statuses,
-        $statusesLabels,
         $screenOptionsKey,
         $screenOptionsFields,
         $screenOptionsEndpoint,
@@ -140,8 +131,7 @@ class BookingsStateStatusesHandler implements InvocableInterface
         $eventManager,
         $eventFactory
     ) {
-        $this->statuses       = $statuses;
-        $this->statusesLabels = $statusesLabels;
+        $this->statuses = $statuses;
 
         $this->screenOptionsKey      = $screenOptionsKey;
         $this->screenOptionsFields   = $screenOptionsFields;
@@ -191,11 +181,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
     {
         return [
             /*
-             * All available booking statuses in application.
-             */
-            'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
-
-            /*
              * List of booking statuses in screen options section that is checked for filtering bookings.
              */
             'screenStatuses' => $this->_getScreenStatuses($userId, $this->statuses),
@@ -210,30 +195,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
              */
             'bookingsTimezone' => $this->_getBookingsTimezone($userId),
         ];
-    }
-
-    /**
-     * Get all translated statuses.
-     *
-     * @since [*next-version*]
-     *
-     * @param array|Traversable|stdClass        $statuses       List of statuses
-     * @param array|ContainerInterface|stdClass $statusesLabels Map of statuses keys to status labels
-     *
-     * @return array Map of statuses codes and translations.
-     */
-    protected function _getTranslatedStatuses($statuses, $statusesLabels)
-    {
-        $translatedStatuses = [];
-
-        $statuses = $this->_getVisibleStatuses($statuses);
-
-        foreach ($statuses as $status) {
-            $statusLabel                 = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
-            $translatedStatuses[$status] = $this->__($statusLabel);
-        }
-
-        return $translatedStatuses;
     }
 
     /**
@@ -314,22 +275,6 @@ class BookingsStateStatusesHandler implements InvocableInterface
 
             return json_decode($screenOptions);
         });
-    }
-
-    /**
-     * Get list of statuses keys that should be visible in UI.
-     *
-     * @since [*next-version*]
-     *
-     * @param array|stdClass|Traversable $statuses List of statuses key to filter.
-     *
-     * @return string[] List of statuses keys without hidden ones.
-     */
-    protected function _getVisibleStatuses($statuses)
-    {
-        return $this->_trigger('eddbk_bookings_visible_statuses', [
-            'statuses' => $statuses,
-        ])->getParam('statuses');
     }
 
     /**

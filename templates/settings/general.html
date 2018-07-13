@@ -4,7 +4,7 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Timezone') }}:</div>
                 <div class="form-row__input">
-                    <span>{{ settingsConfig.preview.timezone }}</span>
+                    <span>{{ config.timezone }}</span>
                     <span class="settings-edit">{{ _('Edit') }}</span>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Booking Status Colors') }}:</div>
                 <div class="form-row__input">
-                    <div v-for="(bookingStatus, key) of settingsConfig.bookingStatuses">
+                    <div v-for="(bookingStatus, key) of statuses">
                         <color-picker v-model="bookingStatuses[key]"></color-picker>
                         <span>{{ bookingStatus }}</span>
                     </div>

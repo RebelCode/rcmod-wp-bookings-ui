@@ -2,11 +2,21 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Collection\MapInterface;
+use Dhii\Data\Container\ContainerGetCapableTrait;
+use Dhii\Data\Container\ContainerHasCapableTrait;
+use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
+use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
+use Dhii\Data\Container\NormalizeKeyCapableTrait;
+use Dhii\Event\EventFactoryInterface;
+use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
-use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
-use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
+use Psr\EventManager\EventManagerInterface;
+use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
 use Traversable;
 
@@ -19,13 +29,52 @@ use Traversable;
 class GeneralUiStateHandler implements InvocableInterface
 {
     /* @since [*next-version*] */
+    use EventsConsumerTrait;
+
+    /* @since [*next-version*] */
     use NormalizeArrayCapableTrait;
 
     /* @since [*next-version*] */
-    use StringTranslatingTrait;
+    use GetVisibleStatusesCapable;
 
     /* @since [*next-version*] */
-    use CreateInvalidArgumentExceptionCapableTrait;
+    use ContainerHasCapableTrait;
+
+    /* @since [*next-version*] */
+    use ContainerGetCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateContainerExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateNotFoundExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateOutOfRangeExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeStringCapableTrait;
+
+    /**
+     * List of statuses keys available in application.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|Traversable|stdClass
+     */
+    protected $statuses;
+
+    /**
+     * Map of known statuses keys translations.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|stdClass|MapInterface
+     */
+    protected $statusesLabels;
 
     /**
      * Currency config of application.
@@ -60,15 +109,31 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $currencyConfig Currency config of application.
-     * @param array|Traversable|stdClass $formatsConfig  List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig    List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass  $statuses       List of statuses key in application.
+     * @param array|stdClass|MapInterface $statusesLabels Map of known status keys to statuses labels.
+     * @param array|Traversable|stdClass  $currencyConfig Currency config of application.
+     * @param array|Traversable|stdClass  $formatsConfig  List of available data formats in application.
+     * @param array|Traversable|stdClass  $linksConfig    List of links to booking related entities (clients, services).
+     * @param EventManagerInterface       $eventManager   The event manager.
+     * @param EventFactoryInterface       $eventFactory   The event factory.
      */
-    public function __construct($currencyConfig, $formatsConfig, $linksConfig)
-    {
+    public function __construct(
+        $statuses,
+        $statusesLabels,
+        $currencyConfig,
+        $formatsConfig,
+        $linksConfig,
+        $eventManager,
+        $eventFactory
+    ) {
+        $this->statuses       = $statuses;
+        $this->statusesLabels = $statusesLabels;
         $this->currencyConfig = $currencyConfig;
         $this->formatsConfig  = $formatsConfig;
         $this->linksConfig    = $linksConfig;
+
+        $this->_setEventManager($eventManager);
+        $this->_setEventFactory($eventFactory);
     }
 
     /**
@@ -88,6 +153,11 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         $event->setParams([
+            /*
+             * All available booking statuses in application.
+             */
+            'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
+
             'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig),
         ]);
     }
@@ -111,6 +181,30 @@ class GeneralUiStateHandler implements InvocableInterface
             'formats'  => $this->_prepareFormatsConfig($formatsConfig),
             'links'    => $this->_prepareLinksConfig($linksConfig),
         ];
+    }
+
+    /**
+     * Get all translated statuses.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|Traversable|stdClass        $statuses       List of statuses
+     * @param array|ContainerInterface|stdClass $statusesLabels Map of statuses keys to status labels
+     *
+     * @return array Map of statuses codes and translations.
+     */
+    protected function _getTranslatedStatuses($statuses, $statusesLabels)
+    {
+        $translatedStatuses = [];
+
+        $statuses = $this->_getVisibleStatuses($statuses);
+
+        foreach ($statuses as $status) {
+            $statusLabel                 = $this->_containerHas($statusesLabels, $status) ? $this->_containerGet($statusesLabels, $status) : $status;
+            $translatedStatuses[$status] = $this->__($statusLabel);
+        }
+
+        return $translatedStatuses;
     }
 
     /**
