@@ -86,20 +86,26 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
-        'eddbk_settings_ui_state_handler' => function ($c) {
+        'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
+            $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
+            $defaultSettingsValues = $containerFactory->make([
+                ContainerFactoryInterface::K_DATA => [
+                    $settingsPrefix => $c->get($settingsPrefix)
+                ]
+            ]);
             return new SettingsStateHandler(
                 $c->get('wp_bookings_ui/settings/options'),
                 $c->get('wp_bookings_ui/settings/fields'),
-                $c->get('wp_bookings_ui/settings/values'),
-                $c->get('wp_bookings_ui/settings/arrayFields'),
-                $c->get('wp_bookings_ui/settings/prefix'),
-                $c->get('wp_bookings_ui/settings/updateEndpoint')
+                $defaultSettingsValues,
+                $c->get('wp_bookings_ui/settings/array_fields'),
+                $settingsPrefix,
+                $c->get('wp_bookings_ui/settings/update_endpoint')
             );
         },
         'eddbk_bookings_update_settings_handler' => function ($c) {
             return new SaveSettingsHandler(
                 $c->get('wp_bookings_ui/settings/fields'),
-                $c->get('wp_bookings_ui/settings/arrayFields'),
+                $c->get('wp_bookings_ui/settings/array_fields'),
                 $c->get('wp_bookings_ui/settings/prefix')
             );
         },

@@ -3,12 +3,19 @@
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Collection\MapInterface;
+use Dhii\Data\Container\ContainerGetCapableTrait;
+use Dhii\Data\Container\ContainerGetPathCapableTrait;
+use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
+use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
+use Dhii\Data\Object\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
+use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
 use stdClass;
 use Traversable;
@@ -31,6 +38,24 @@ class SettingsStateHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use CreateInvalidArgumentExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use ContainerGetCapableTrait;
+
+    /* @since [*next-version*] */
+    use ContainerGetPathCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateNotFoundExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateContainerExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeKeyCapableTrait;
 
     /**
      * Map of available fields to their available options.
@@ -55,7 +80,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var array|stdClass|MapInterface
+     * @var array|stdClass|ContainerInterface
      */
     protected $settingsValues;
 
@@ -91,12 +116,12 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|MapInterface $fieldsOptions  Map of available fields to their available options.
-     * @param array|stdClass|Traversable  $fields         List of settings fields.
-     * @param array|stdClass|MapInterface $settingsValues Map of settings keys to their default values.
-     * @param array|stdClass|Traversable  $arrayFields    List of settings fields that should be serialized.
-     * @param string|Stringable           $prefix         Setting option prefix.
-     * @param array|stdClass|MapInterface $updateEndpoint Configuration of update endpoint.
+     * @param array|stdClass|MapInterface       $fieldsOptions  Map of available fields to their available options.
+     * @param array|stdClass|Traversable        $fields         List of settings fields.
+     * @param array|stdClass|ContainerInterface $settingsValues Map of settings keys to their default values.
+     * @param array|stdClass|Traversable        $arrayFields    List of settings fields that should be serialized.
+     * @param string|Stringable                 $prefix         Setting option prefix.
+     * @param array|stdClass|MapInterface       $updateEndpoint Configuration of update endpoint.
      */
     public function __construct($fieldsOptions, $fields, $settingsValues, $arrayFields, $prefix, $updateEndpoint)
     {
@@ -231,7 +256,7 @@ class SettingsStateHandler implements InvocableInterface
     protected function _getSettingValue($field)
     {
         $key   = $this->_getFieldKey($field);
-        $value = get_option($key) ?: $this->settingsValues->get($key);
+        $value = get_option($key) ?: $this->_containerGetPath($this->settingsValues, explode('/', $key));
 
         if (in_array($field, $this->arrayFields)) {
             $value = $this->_normalizeArray($value);

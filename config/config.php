@@ -1,10 +1,22 @@
 <?php
 
 return [
+    'eddbk_settings' => [
+        'week_starts_on'        => 'sunday',
+        'default_calendar_view' => 'week',
+        'booking_wizard_color'  => '#17a7dd',
+        'booking_statuses_colors'     => [
+            'draft'     => '#dfe4ea',
+            'pending'   => '#1e90ff',
+            'scheduled' => '#2ed573',
+            'completed' => '#57606f',
+            'cancelled' => '#eb4d4b',
+        ],
+    ],
     'wp_bookings_ui' => [
         'settings' => [
             'options' => [
-                'weekStartsOn' => [
+                'week_starts_on' => [
                     'sunday' => 'Sunday',
                     'monday' => 'Monday',
                     'tuesday' => 'Tuesday',
@@ -13,38 +25,24 @@ return [
                     'friday' => 'Friday',
                     'saturday' => 'Saturday',
                 ],
-                'defaultCalendarView' => [
+                'default_calendar_view' => [
                     'day'   => 'Day',
                     'week'  => 'Week',
                     'month' => 'Month',
                 ]
             ],
             'fields' => [
-                'weekStartsOn',
-                'defaultCalendarView',
-                'bookingWizardColor',
-                'bookingStatusesColors',
+                'week_starts_on',
+                'default_calendar_view',
+                'booking_wizard_color',
+                'booking_statuses_colors',
             ],
-            'values' => [
-                'eddbk' => [
-                    'weekStartsOn'        => 'sunday',
-                    'defaultCalendarView' => 'week',
-                    'bookingWizardColor'  => '#17a7dd',
-                    'bookingStatusesColors'     => [
-                        'draft'     => '#dfe4ea',
-                        'pending'   => '#1e90ff',
-                        'scheduled' => '#2ed573',
-                        'completed' => '#57606f',
-                        'cancelled' => '#eb4d4b',
-                    ],
-                ]
+            'prefix' => 'eddbk_settings',
+            'array_fields' => [
+                'booking_statuses_colors'
             ],
-            'arrayFields' => [
-                'bookingStatusesColors'
-            ],
-            'prefix' => 'eddbk',
             'action' => WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION,
-            'updateEndpoint' => [
+            'update_endpoint' => [
                 'method' => 'post',
                 'url' => admin_url('admin-ajax.php?action=' . WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION)
             ],

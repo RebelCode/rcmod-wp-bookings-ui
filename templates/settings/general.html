@@ -1,9 +1,9 @@
 <div class="settings-tab settings-tab--general">
-    <div class="row">
+    <div>
         <div class="col-12 columns">
             <div class="form-row">
                 <div class="form-row__label">{{ _('Timezone') }}:</div>
-                <div class="form-row__input">
+                <div class="form-row__input form-row__input--padded">
                     <span>{{ config.timezone }}</span>
                     <a class="settings-edit">{{ _('Edit') }}</a>
                 </div>
@@ -11,7 +11,7 @@
 
             <div class="form-row">
                 <div class="form-row__label">{{ _('Date format, Time format') }}:</div>
-                <div class="form-row__input">
+                <div class="form-row__input form-row__input--padded">
                     <span>{{ settingsConfig.preview.datetimeFormats }}</span>
                     <a class="settings-edit">{{ _('Edit') }}</a>
                 </div>
@@ -20,8 +20,8 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Week Starts On') }}:</div>
                 <div class="form-row__input">
-                    <select v-model="weekStartsOn">
-                        <option v-for="(weekDay, key) of settingsConfig.options.weekStartsOn" :value="key">{{ weekDay }}</option>
+                    <select v-model="week_starts_on">
+                        <option v-for="(weekDay, key) of settingsConfig.options.week_starts_on" :value="key">{{ weekDay }}</option>
                     </select>
                 </div>
             </div>
@@ -29,14 +29,14 @@
             <div class="form-row">
                 <div class="form-row__label">{{ _('Default Calendar View') }}:</div>
                 <div class="form-row__input">
-                    <switcher :buttons="settingsConfig.options.defaultCalendarView" v-model="defaultCalendarView"></switcher>
+                    <switcher :buttons="settingsConfig.options.default_calendar_view" v-model="default_calendar_view"></switcher>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-row__label">{{ _('Booking Wizard Color') }}:</div>
                 <div class="form-row__input">
-                    <color-picker v-model="bookingWizardColor"></color-picker>
+                    <color-picker v-model="booking_wizard_color"></color-picker>
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                 <div class="form-row__label">{{ _('Booking Status Colors') }}:</div>
                 <div class="form-row__input">
                     <div class="settings-color-input" v-for="(bookingStatus, key) of state.statuses">
-                        <color-picker v-model="bookingStatusesColors[key]"></color-picker>
+                        <color-picker v-model="booking_statuses_colors[key]"></color-picker>
                         <span class="settings-color-input__title">{{ bookingStatus }}</span>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div style="margin-top: 2rem">
         <div class="col-12 columns">
             <div>
                 <button class="button button-primary" :class="{'loading-button': isSaving}" @click="submit">
