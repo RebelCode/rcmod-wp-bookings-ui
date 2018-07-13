@@ -7,6 +7,7 @@ use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\EventManager\EventInterface;
 use stdClass;
@@ -23,6 +24,9 @@ class SettingsStateHandler implements InvocableInterface
     use NormalizeArrayCapableTrait;
 
     /* @since [*next-version*] */
+    use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
     use StringTranslatingTrait;
 
     /* @since [*next-version*] */
@@ -35,7 +39,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @var array|stdClass|MapInterface
      */
-    private $fieldsOptions;
+    protected $fieldsOptions;
 
     /**
      * List of settings fields.
@@ -44,7 +48,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @var array|stdClass|Traversable
      */
-    private $fields;
+    protected $fields;
 
     /**
      * Map of settings keys to their default values.
@@ -53,7 +57,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @var array|stdClass|MapInterface
      */
-    private $settingsValues;
+    protected $settingsValues;
 
     /**
      * List of settings fields that should be serialized.
@@ -62,7 +66,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @var array
      */
-    private $arrayFields;
+    protected $arrayFields;
 
     /**
      * Setting option prefix.
@@ -71,7 +75,7 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @var string|Stringable
      */
-    private $prefix;
+    protected $prefix;
 
     /**
      * SettingsStateHandler constructor.
@@ -198,6 +202,8 @@ class SettingsStateHandler implements InvocableInterface
      */
     protected function _getFieldKey($field)
     {
+        $field = $this->_normalizeString($field);
+
         return $this->prefix . '/' . $field;
     }
 
