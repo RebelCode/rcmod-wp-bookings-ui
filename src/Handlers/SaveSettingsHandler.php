@@ -6,7 +6,6 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
-use Dhii\Exception\RuntimeException;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
@@ -117,9 +116,11 @@ class SaveSettingsHandler implements InvocableInterface
      */
     protected function _handleSave()
     {
-        $data = $this->_getRequestData();
+        $data   = $this->_getRequestData();
+        $fields = $this->_normalizeArray($this->fields);
+
         foreach ($data as $key => $value) {
-            if (in_array($key, $this->fields)) {
+            if (in_array($key, $fields)) {
                 $this->_saveSetting($key, $value);
             }
         }
@@ -144,21 +145,13 @@ class SaveSettingsHandler implements InvocableInterface
      *
      * @param string|Stringable $field Setting field.
      * @param mixed             $value Setting value.
-     *
-     * @throws RuntimeException If setting is not updated.
      */
     protected function _saveSetting($field, $value)
     {
         $field = $this->_normalizeString($field);
         $key   = $this->_getFieldKey($field);
 
-        $updateResult = update_option($key, $value);
-
-        if ($updateResult === false) {
-            throw $this->_createRuntimeException(
-                $this->__('Could not update setting "%1$s"', [$key])
-            );
-        }
+        update_option($key, $value);
     }
 
     /**

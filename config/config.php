@@ -27,8 +27,8 @@ return [
             ],
             'values' => [
                 'eddbk' => [
-                    'weekStartsOn'        => 'monday',
-                    'defaultCalendarView' => 'day',
+                    'weekStartsOn'        => 'sunday',
+                    'defaultCalendarView' => 'week',
                     'bookingWizardColor'  => '#17a7dd',
                     'bookingStatusesColors'     => [
                         'draft'     => '#dfe4ea',
