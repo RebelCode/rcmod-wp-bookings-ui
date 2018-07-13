@@ -58,6 +58,15 @@ class SettingsStateHandler implements InvocableInterface
     use NormalizeKeyCapableTrait;
 
     /**
+     * Settings container.
+     *
+     * @since [*next-version*]
+     *
+     * @var ContainerInterface
+     */
+    protected $settingsContainer;
+
+    /**
      * Map of available fields to their available options.
      *
      * @since [*next-version*]
@@ -76,33 +85,6 @@ class SettingsStateHandler implements InvocableInterface
     protected $fields;
 
     /**
-     * Map of settings keys to their default values.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|stdClass|ContainerInterface
-     */
-    protected $settingsValues;
-
-    /**
-     * List of settings fields that should be serialized.
-     *
-     * @since [*next-version*]
-     *
-     * @var array
-     */
-    protected $arrayFields;
-
-    /**
-     * Setting option prefix.
-     *
-     * @since [*next-version*]
-     *
-     * @var string|Stringable
-     */
-    protected $prefix;
-
-    /**
      * Update endpoint configuration.
      *
      * @since [*next-version*]
@@ -116,21 +98,17 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|MapInterface       $fieldsOptions  Map of available fields to their available options.
-     * @param array|stdClass|Traversable        $fields         List of settings fields.
-     * @param array|stdClass|ContainerInterface $settingsValues Map of settings keys to their default values.
-     * @param array|stdClass|Traversable        $arrayFields    List of settings fields that should be serialized.
-     * @param string|Stringable                 $prefix         Setting option prefix.
-     * @param array|stdClass|MapInterface       $updateEndpoint Configuration of update endpoint.
+     * @param ContainerInterface          $settingsContainer Settings container.
+     * @param array|stdClass|MapInterface $fieldsOptions     Map of available fields to their available options.
+     * @param array|stdClass|Traversable  $fields            List of settings fields.
+     * @param array|stdClass|MapInterface $updateEndpoint    Configuration of update endpoint.
      */
-    public function __construct($fieldsOptions, $fields, $settingsValues, $arrayFields, $prefix, $updateEndpoint)
+    public function __construct($settingsContainer, $fieldsOptions, $fields, $updateEndpoint)
     {
-        $this->fieldsOptions  = $fieldsOptions;
-        $this->fields         = $fields;
-        $this->settingsValues = $settingsValues;
-        $this->arrayFields    = $this->_normalizeArray($arrayFields);
-        $this->prefix         = $prefix;
-        $this->updateEndpoint = $updateEndpoint;
+        $this->settingsContainer = $settingsContainer;
+        $this->fieldsOptions     = $fieldsOptions;
+        $this->fields            = $fields;
+        $this->updateEndpoint    = $updateEndpoint;
     }
 
     /**
@@ -229,22 +207,6 @@ class SettingsStateHandler implements InvocableInterface
     }
 
     /**
-     * Prepare setting option key from field name.
-     *
-     * @since [*next-version*]
-     *
-     * @param string|Stringable $field Field name to prepare key from.
-     *
-     * @return string Prepared setting option key from field name.
-     */
-    protected function _getFieldKey($field)
-    {
-        $field = $this->_normalizeString($field);
-
-        return $this->prefix . '/' . $field;
-    }
-
-    /**
      * Get setting value of field.
      *
      * @since [*next-version*]
@@ -255,13 +217,8 @@ class SettingsStateHandler implements InvocableInterface
      */
     protected function _getSettingValue($field)
     {
-        $key   = $this->_getFieldKey($field);
-        $value = get_option($key) ?: $this->_containerGetPath($this->settingsValues, explode('/', $key));
+        $field = $this->_normalizeString($field);
 
-        if (in_array($field, $this->arrayFields)) {
-            $value = $this->_normalizeArray($value);
-        }
-
-        return $value;
+        return $this->settingsContainer->get($field);
     }
 }

@@ -5,7 +5,7 @@
         <span class="dashicons dashicons-arrow-down"></span>
     </div>
     <div class="eddbk-color-picker-popup">
-        <core-color-picker v-model="color"></core-color-picker>
+        <core-color-picker v-model="color" :disable-alpha="true"></core-color-picker>
         <div class="eddbk-color-picker-popup__buttons">
             <button class="button button-primary" @click="selectColor">
                 {{ _('Select Color') }}

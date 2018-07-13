@@ -12,6 +12,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsH
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
@@ -77,6 +78,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
+                $c->get('eddbk_settings_container'),
                 $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/config/currency'),
@@ -86,19 +88,19 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
-        'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
+        'eddbk_settings_container' => function ($c) {
             $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
-            $defaultSettingsValues = $containerFactory->make([
-                ContainerFactoryInterface::K_DATA => [
-                    $settingsPrefix => $c->get($settingsPrefix)
-                ]
-            ]);
+            return new SettingsContainer(
+                $c->get($settingsPrefix),
+                $c->get('wp_bookings_ui/settings/array_fields'),
+                $settingsPrefix
+            );
+        },
+        'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
             return new SettingsStateHandler(
+                $c->get('eddbk_settings_container'),
                 $c->get('wp_bookings_ui/settings/options'),
                 $c->get('wp_bookings_ui/settings/fields'),
-                $defaultSettingsValues,
-                $c->get('wp_bookings_ui/settings/array_fields'),
-                $settingsPrefix,
                 $c->get('wp_bookings_ui/settings/update_endpoint')
             );
         },

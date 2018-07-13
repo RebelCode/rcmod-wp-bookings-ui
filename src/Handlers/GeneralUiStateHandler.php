@@ -59,6 +59,15 @@ class GeneralUiStateHandler implements InvocableInterface
     use NormalizeStringCapableTrait;
 
     /**
+     * Settings container.
+     *
+     * @since [*next-version*]
+     *
+     * @var ContainerInterface
+     */
+    protected $settingsContainer;
+
+    /**
      * List of statuses keys available in application.
      *
      * @since [*next-version*]
@@ -109,15 +118,17 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass  $statuses       List of statuses key in application.
-     * @param array|stdClass|MapInterface $statusesLabels Map of known status keys to statuses labels.
-     * @param array|Traversable|stdClass  $currencyConfig Currency config of application.
-     * @param array|Traversable|stdClass  $formatsConfig  List of available data formats in application.
-     * @param array|Traversable|stdClass  $linksConfig    List of links to booking related entities (clients, services).
-     * @param EventManagerInterface       $eventManager   The event manager.
-     * @param EventFactoryInterface       $eventFactory   The event factory.
+     * @param ContainerInterface          $settingsContainer Settings container.
+     * @param array|Traversable|stdClass  $statuses          List of statuses key in application.
+     * @param array|stdClass|MapInterface $statusesLabels    Map of known status keys to statuses labels.
+     * @param array|Traversable|stdClass  $currencyConfig    Currency config of application.
+     * @param array|Traversable|stdClass  $formatsConfig     List of available data formats in application.
+     * @param array|Traversable|stdClass  $linksConfig       List of links to booking related entities (clients, services).
+     * @param EventManagerInterface       $eventManager      The event manager.
+     * @param EventFactoryInterface       $eventFactory      The event factory.
      */
     public function __construct(
+        $settingsContainer,
         $statuses,
         $statusesLabels,
         $currencyConfig,
@@ -126,6 +137,8 @@ class GeneralUiStateHandler implements InvocableInterface
         $eventManager,
         $eventFactory
     ) {
+        $this->settingsContainer = $settingsContainer;
+
         $this->statuses       = $statuses;
         $this->statusesLabels = $statusesLabels;
         $this->currencyConfig = $currencyConfig;
@@ -180,6 +193,10 @@ class GeneralUiStateHandler implements InvocableInterface
             'currency' => $this->_prepareCurrencyConfig($currencyConfig),
             'formats'  => $this->_prepareFormatsConfig($formatsConfig),
             'links'    => $this->_prepareLinksConfig($linksConfig),
+
+            'weekStartsOn'          => $this->settingsContainer->get('week_starts_on'),
+            'defaultCalendarView'   => $this->settingsContainer->get('default_calendar_view'),
+            'bookingStatusesColors' => $this->settingsContainer->get('booking_statuses_colors'),
         ];
     }
 

@@ -27,6 +27,7 @@
 
         <bookings-calendar :color-scheme="colorScheme"
                            :bookings="bookings"
+                           :default-view="calendarView"
                            ref="calendar"
                            @period-change="updateBookings"
                            @booking-click="editBooking"
