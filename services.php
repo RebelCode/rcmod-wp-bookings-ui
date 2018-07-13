@@ -9,6 +9,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
@@ -90,6 +91,14 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/settings/options'),
                 $c->get('wp_bookings_ui/settings/fields'),
                 $c->get('wp_bookings_ui/settings/values'),
+                $c->get('wp_bookings_ui/settings/arrayFields'),
+                $c->get('wp_bookings_ui/settings/prefix'),
+                $c->get('wp_bookings_ui/settings/updateEndpoint')
+            );
+        },
+        'eddbk_bookings_update_settings_handler' => function ($c) {
+            return new SaveSettingsHandler(
+                $c->get('wp_bookings_ui/settings/fields'),
                 $c->get('wp_bookings_ui/settings/arrayFields'),
                 $c->get('wp_bookings_ui/settings/prefix')
             );

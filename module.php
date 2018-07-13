@@ -10,6 +10,9 @@ define('WP_BOOKINGS_UI_MODULE_KEY', 'wp_bookings_ui');
 define('WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY', 'eddbk_screen_options');
 
 /* @since [*next-version*] */
+define('WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION', 'update_eddbk_settings');
+
+/* @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
 
 /* @since [*next-version*] */

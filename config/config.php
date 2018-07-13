@@ -42,7 +42,12 @@ return [
             'arrayFields' => [
                 'bookingStatusesColors'
             ],
-            'prefix' => 'eddbk'
+            'prefix' => 'eddbk',
+            'action' => WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION,
+            'updateEndpoint' => [
+                'method' => 'post',
+                'url' => admin_url('admin-ajax.php?action=' . WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION)
+            ],
         ],
         'screen_options' => [
             'key' => WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY,

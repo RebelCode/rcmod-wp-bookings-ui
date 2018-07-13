@@ -152,9 +152,6 @@ class SaveSettingsHandler implements InvocableInterface
         $field = $this->_normalizeString($field);
         $key   = $this->_getFieldKey($field);
 
-        if (in_array($field, $this->arrayFields)) {
-            $value = json_encode($value);
-        }
         $updateResult = update_option($key, $value);
 
         if ($updateResult === false) {

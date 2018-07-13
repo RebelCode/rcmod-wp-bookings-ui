@@ -78,6 +78,15 @@ class SettingsStateHandler implements InvocableInterface
     protected $prefix;
 
     /**
+     * Update endpoint configuration.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|stdClass|MapInterface
+     */
+    protected $updateEndpoint;
+
+    /**
      * SettingsStateHandler constructor.
      *
      * @since [*next-version*]
@@ -87,14 +96,16 @@ class SettingsStateHandler implements InvocableInterface
      * @param array|stdClass|MapInterface $settingsValues Map of settings keys to their default values.
      * @param array|stdClass|Traversable  $arrayFields    List of settings fields that should be serialized.
      * @param string|Stringable           $prefix         Setting option prefix.
+     * @param array|stdClass|MapInterface $updateEndpoint Configuration of update endpoint.
      */
-    public function __construct($fieldsOptions, $fields, $settingsValues, $arrayFields, $prefix)
+    public function __construct($fieldsOptions, $fields, $settingsValues, $arrayFields, $prefix, $updateEndpoint)
     {
         $this->fieldsOptions  = $fieldsOptions;
         $this->fields         = $fields;
         $this->settingsValues = $settingsValues;
         $this->arrayFields    = $this->_normalizeArray($arrayFields);
         $this->prefix         = $prefix;
+        $this->updateEndpoint = $updateEndpoint;
     }
 
     /**
@@ -115,9 +126,10 @@ class SettingsStateHandler implements InvocableInterface
 
         $event->setParams([
             'settingsUi' => [
-                'preview' => $this->_getPreviewSettingsFields(),
-                'options' => $this->_prepareFieldsOptions($this->fieldsOptions),
-                'values'  => $this->_prepareSettingsValues(),
+                'preview'        => $this->_getPreviewSettingsFields(),
+                'options'        => $this->_prepareFieldsOptions($this->fieldsOptions),
+                'values'         => $this->_prepareSettingsValues(),
+                'updateEndpoint' => $this->_normalizeArray($this->updateEndpoint),
             ],
         ]);
     }
@@ -219,7 +231,8 @@ class SettingsStateHandler implements InvocableInterface
     protected function _getSettingValue($field)
     {
         $key   = $this->_getFieldKey($field);
-        $value = $this->settingsValues->get($key);
+        $value = get_option($key) ?: $this->settingsValues->get($key);
+
         if (in_array($field, $this->arrayFields)) {
             $value = $this->_normalizeArray($value);
         }
