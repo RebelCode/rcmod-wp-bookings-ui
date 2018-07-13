@@ -108,7 +108,7 @@ class SettingsContainer implements ContainerInterface
     public function get($id)
     {
         $key   = $this->_getFieldKey($id);
-        $value = get_option($key) ?: $this->_containerGetPath($this->defaultValues, explode('/', $key));
+        $value = get_option($key) ?: $this->_containerGetPath($this->defaultValues, explode('/', $id));
 
         if (in_array($id, $this->arrayFields)) {
             $value = $this->_normalizeArray($value);
@@ -124,9 +124,7 @@ class SettingsContainer implements ContainerInterface
      */
     public function has($id)
     {
-        $key = $this->_getFieldKey($id);
-
-        return $this->_containerHasPath($this->defaultValues, explode('/', $key));
+        return $this->_containerHasPath($this->defaultValues, explode('/', $id));
     }
 
     /**
