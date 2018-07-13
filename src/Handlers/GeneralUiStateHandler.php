@@ -159,34 +159,6 @@ class GeneralUiStateHandler implements InvocableInterface
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
             'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig),
-
-            'settingsUi' => [
-                'preview' => [
-                    'datetimeFormats' => 'datetime formats config',
-                ],
-                'weekStartDays' => [
-                    'monday'  => $this->__('Monday'),
-                    'tuesday' => $this->__('Tuesday'),
-                    'sunday'  => $this->__('Sunday'),
-                ],
-                'defaultCalendarViews' => [
-                    'day'   => 'Day',
-                    'week'  => 'Week',
-                    'month' => 'Month',
-                ],
-                'values' => [
-                    'weekStartsOn'        => 'monday',
-                    'defaultCalendarView' => 'day',
-                    'bookingWizardColor'  => '#17a7dd',
-                    'bookingStatuses'     => [
-                        'draft'     => '#dfe4ea',
-                        'pending'   => '#1e90ff',
-                        'scheduled' => '#2ed573',
-                        'completed' => '#57606f',
-                        'cancelled' => '#eb4d4b',
-                    ],
-                ],
-            ],
         ]);
     }
 
