@@ -2,6 +2,48 @@
 
 return [
     'wp_bookings_ui' => [
+        'settings' => [
+            'options' => [
+                'weekStartsOn' => [
+                    'sunday' => 'Sunday',
+                    'monday' => 'Monday',
+                    'tuesday' => 'Tuesday',
+                    'wednesday' => 'Wednesday',
+                    'thursday' => 'Thursday',
+                    'friday' => 'Friday',
+                    'saturday' => 'Saturday',
+                ],
+                'defaultCalendarView' => [
+                    'day'   => 'Day',
+                    'week'  => 'Week',
+                    'month' => 'Month',
+                ]
+            ],
+            'fields' => [
+                'weekStartsOn',
+                'defaultCalendarView',
+                'bookingWizardColor',
+                'bookingStatusesColors',
+            ],
+            'values' => [
+                'eddbk' => [
+                    'weekStartsOn'        => 'monday',
+                    'defaultCalendarView' => 'day',
+                    'bookingWizardColor'  => '#17a7dd',
+                    'bookingStatusesColors'     => [
+                        'draft'     => '#dfe4ea',
+                        'pending'   => '#1e90ff',
+                        'scheduled' => '#2ed573',
+                        'completed' => '#57606f',
+                        'cancelled' => '#eb4d4b',
+                    ],
+                ]
+            ],
+            'arrayFields' => [
+                'bookingStatusesColors'
+            ],
+            'prefix' => 'eddbk'
+        ],
         'screen_options' => [
             'key' => WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY,
             'fields' => [
