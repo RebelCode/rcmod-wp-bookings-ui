@@ -5,9 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha12] - 2018-07-14
+### Changed
+- Booking `statuses` information moved to general UI state handler.
+
 ### Added
 - Settings page templates.
 - Settings container implementation.
+- Settings page state handler.
+- Setting update endpoint handler.
 
 ## [0.1-alpha11] - 2018-07-12
 ### Changed
