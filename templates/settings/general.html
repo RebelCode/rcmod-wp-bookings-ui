@@ -5,7 +5,7 @@
                 <div class="form-row__label">{{ _('Timezone') }}</div>
                 <div class="form-row__input form-row__input--padded">
                     <span>{{ config.timezone }}</span>
-                    <a class="settings-edit">{{ _('Edit') }}</a>
+                    <a class="settings-edit" target="_blank" :href="settingsConfig.generalSettingsUrl">{{ _('Edit') }}</a>
                 </div>
             </div>
 
@@ -13,7 +13,7 @@
                 <div class="form-row__label">{{ _('Date format, Time format') }}</div>
                 <div class="form-row__input form-row__input--padded">
                     <span>{{ settingsConfig.preview.datetimeFormats }}</span>
-                    <a class="settings-edit">{{ _('Edit') }}</a>
+                    <a class="settings-edit" target="_blank" :href="settingsConfig.generalSettingsUrl">{{ _('Edit') }}</a>
                 </div>
             </div>
 

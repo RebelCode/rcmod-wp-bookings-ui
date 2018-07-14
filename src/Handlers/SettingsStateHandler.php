@@ -129,12 +129,25 @@ class SettingsStateHandler implements InvocableInterface
 
         $event->setParams([
             'settingsUi' => [
-                'preview'        => $this->_getPreviewSettingsFields(),
-                'options'        => $this->_prepareFieldsOptions($this->fieldsOptions),
-                'values'         => $this->_prepareSettingsValues(),
-                'updateEndpoint' => $this->_normalizeArray($this->updateEndpoint),
+                'preview'            => $this->_getPreviewSettingsFields(),
+                'options'            => $this->_prepareFieldsOptions($this->fieldsOptions),
+                'values'             => $this->_prepareSettingsValues(),
+                'updateEndpoint'     => $this->_normalizeArray($this->updateEndpoint),
+                'generalSettingsUrl' => $this->_getGeneralSettingsUrl(),
             ],
         ]);
+    }
+
+    /**
+     * Get website general settings URL.
+     *
+     * @since [*next-version*]
+     *
+     * @return string General settings URL.
+     */
+    protected function _getGeneralSettingsUrl()
+    {
+        return admin_url('options-general.php');
     }
 
     /**
