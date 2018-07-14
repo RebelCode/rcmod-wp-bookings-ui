@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'eddbk_settings' => [
+    'eddbk' => [
         'week_starts_on'        => 'sunday',
         'default_calendar_view' => 'week',
         'booking_wizard_color'  => '#17a7dd',
@@ -37,7 +37,7 @@ return [
                 'booking_wizard_color',
                 'booking_statuses_colors',
             ],
-            'prefix' => 'eddbk_settings',
+            'prefix' => 'eddbk',
             'array_fields' => [
                 'booking_statuses_colors'
             ],

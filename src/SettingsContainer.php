@@ -18,6 +18,7 @@ use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use stdClass;
+use Traversable;
 
 /**
  * Container for retrieving plugin settings.
