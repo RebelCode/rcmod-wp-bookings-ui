@@ -56,6 +56,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $metaboxPageId;
 
     /**
+     * Page where settings application should be shown.
+     *
+     * @var string
+     */
+    protected $settingsPageId;
+
+    /**
      * Constructor.
      *
      * @since [*next-version*]
@@ -126,7 +133,11 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_ui_state_handler'));
 
+        $this->_attach('eddbk_settings_ui_state', $c->get('eddbk_settings_ui_state_handler'));
+
         $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_options_handler'));
+
+        $this->_attach('wp_ajax_' . $c->get('wp_bookings_ui/settings/action'), $c->get('eddbk_bookings_update_settings_handler'));
     }
 
     /**
@@ -152,22 +163,37 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _isOnAppPage()
     {
-        return in_array(get_current_screen()->id, [
+        return in_array($this->_getCurrentScreenId(), [
             $this->bookingsPageId,
             $this->metaboxPageId,
+            $this->settingsPageId,
         ]);
     }
 
     /**
-     * Check current screen is bookings page.
+     * Check current screen is page.
      *
      * @since [*next-version*]
      *
-     * @return bool Is current page is a bookings list page.
+     * @param int|string $pageId Page ID to check.
+     *
+     * @return bool Is current page is a some page.
      */
-    protected function _isOnBookingsPage()
+    protected function _isOnPage($pageId)
     {
-        return get_current_screen()->id === $this->bookingsPageId;
+        return $this->_getCurrentScreenId() === $pageId;
+    }
+
+    /**
+     * Get current screen identifier.
+     *
+     * @since [*next-version*]
+     *
+     * @return int|string Screen ID.
+     */
+    protected function _getCurrentScreenId()
+    {
+        return get_current_screen()->id;
     }
 
     /**
@@ -235,6 +261,24 @@ class WpBookingsUiModule extends AbstractBaseModule
         }
 
         return $resultingConfig;
+    }
+
+    /**
+     * Get app state for settings page.
+     *
+     * @since [*next-version*]
+     *
+     * @return array Front-end application's state on settings's page.
+     */
+    protected function _getSettingsAppState()
+    {
+        return $this->_trigger('eddbk_settings_ui_state', [
+            'settingsUi' => [
+                'preview' => [],
+                'options' => [],
+                'values'  => [],
+            ],
+        ])->getParams();
     }
 
     /**
@@ -349,7 +393,20 @@ class WpBookingsUiModule extends AbstractBaseModule
             wp_enqueue_style('rc-app-' . $styleId, $assetsUrlMap->get($styleDependency));
         }
 
-        $state = $this->_isOnBookingsPage() ? $this->_getBookingsAppState($c) : $this->_getServiceAppState();
+        $currentScreenId = $this->_getCurrentScreenId();
+        switch ($currentScreenId) {
+            case $this->bookingsPageId:
+                $state = $this->_getBookingsAppState($c);
+                break;
+            case $this->metaboxPageId:
+                $state = $this->_getServiceAppState();
+                break;
+            case $this->settingsPageId:
+                $state = $this->_getSettingsAppState();
+                break;
+            default:
+                $state = [];
+        }
         $state = $this->_getAppState($state);
 
         wp_localize_script('rc-app', 'EDDBK_APP_STATE', $state);
@@ -382,7 +439,7 @@ class WpBookingsUiModule extends AbstractBaseModule
          * Add screen options on bookings management page.
          */
         $this->_attach('screen_settings', function ($event) {
-            if (!$this->_isOnBookingsPage()) {
+            if (!$this->_isOnPage($this->bookingsPageId)) {
                 return $event->getParam(0);
             }
             $event->setParams([
@@ -421,15 +478,22 @@ class WpBookingsUiModule extends AbstractBaseModule
             $rootMenuConfig->get('position')
         );
 
-        add_submenu_page(
+        $this->settingsPageId = add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
             $this->__($settingsMenuConfig->get('page_title')),
             $this->__($settingsMenuConfig->get('menu_title')),
             $settingsMenuConfig->get('capability'),
             $settingsMenuConfig->get('menu_slug'),
-            function () use ($c, $comingSoonContext) {
-                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
-                echo $comingSoonTemplate->render($comingSoonContext);
+            function () use ($c) {
+                $settingsTemplate = $c->get('eddbk_ui_settings_template');
+
+                $generalSettingsTabContent = $c->get('eddbk_ui_settings_general_tab_template')->render();
+                $componentsContent = $this->_renderTemplate('components');
+
+                echo $settingsTemplate->render([
+                    'generalSettingsTab' => $generalSettingsTabContent,
+                    'components'         => $componentsContent,
+                ]);
             }
         );
 

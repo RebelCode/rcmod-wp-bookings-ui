@@ -1,3 +1,20 @@
+<script type="text/x-template" id="color-picker-template">
+<div class="eddbk-color-picker" :class="{'eddbk-color-picker--opened': isPickerOpened}" v-click-outside="closePicker">
+    <div class="eddbk-color-picker-input" @click="openPicker">
+        <div class="eddbk-color-picker-input__square" :style="{'background-color':value}"></div>
+        <span class="dashicons dashicons-arrow-down"></span>
+    </div>
+    <div class="eddbk-color-picker-popup">
+        <core-color-picker v-model="color" :disable-alpha="true"></core-color-picker>
+        <div class="eddbk-color-picker-popup__buttons">
+            <button class="button button-primary" @click="selectColor">
+                {{ _('Select Color') }}
+            </button>
+        </div>
+    </div>
+</div>
+</script>
+
 <script type="text/x-template" id="service-session-selector-template">
     <div>
         <template v-if="!service">

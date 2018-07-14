@@ -9,7 +9,10 @@ use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
@@ -43,7 +46,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_ui_state_handler' => function ($c) {
             return new BookingsStateStatusesHandler(
                 $c->get('booking_logic/statuses'),
-                $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/screen_options/key'),
                 $c->get('wp_bookings_ui/screen_options/fields'),
                 $c->get('wp_bookings_ui/screen_options/endpoint'),
@@ -76,9 +78,37 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
+                $c->get('eddbk_settings_container'),
+                $c->get('booking_logic/statuses'),
+                $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/config/currency'),
                 $c->get('wp_bookings_ui/config/formats'),
-                $c->get('wp_bookings_ui/config/links')
+                $c->get('wp_bookings_ui/config/links'),
+                $c->get('event_manager'),
+                $c->get('event_factory')
+            );
+        },
+        'eddbk_settings_container' => function ($c) {
+            $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
+            return new SettingsContainer(
+                $c->get($settingsPrefix),
+                $c->get('wp_bookings_ui/settings/array_fields'),
+                $settingsPrefix
+            );
+        },
+        'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
+            return new SettingsStateHandler(
+                $c->get('eddbk_settings_container'),
+                $c->get('wp_bookings_ui/settings/options'),
+                $c->get('wp_bookings_ui/settings/fields'),
+                $c->get('wp_bookings_ui/settings/update_endpoint')
+            );
+        },
+        'eddbk_bookings_update_settings_handler' => function ($c) {
+            return new SaveSettingsHandler(
+                $c->get('wp_bookings_ui/settings/fields'),
+                $c->get('wp_bookings_ui/settings/array_fields'),
+                $c->get('wp_bookings_ui/settings/prefix')
             );
         },
         /*
@@ -101,6 +131,32 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          */
         'eddbk_ui_coming_soon_template' => function (ContainerInterface $c) {
             $templateFile = 'templates/about-settings-coming-soon.html';
+            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
+            $template = file_get_contents($templatePath);
+            return $c->get('eddbk_ui_template_factory')->make([
+                TemplateFactoryInterface::K_TEMPLATE => $template
+            ]);
+        },
+        /*
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/settings/index.html';
+            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
+            $template = file_get_contents($templatePath);
+            return $c->get('eddbk_ui_template_factory')->make([
+                TemplateFactoryInterface::K_TEMPLATE => $template
+            ]);
+        },
+        /*
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/settings/general.html';
             $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
             $template = file_get_contents($templatePath);
             return $c->get('eddbk_ui_template_factory')->make([
