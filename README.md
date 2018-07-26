@@ -54,7 +54,7 @@ Expected structure of **state** on service page (when user open some service for
   ],
   // Current service's bookings display options.
   "displayOptions": {
-    "useCustomerTimezone": true
+    "allowCustomerChangeTimezone": true
     // ... other options
   }
 }
