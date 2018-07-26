@@ -321,7 +321,7 @@ class WpBookingsUiModule extends AbstractBaseModule
              * Display options settings for current service.
              */
             'displayOptions' => [
-                'useCustomerTimezone' => false,
+                'allowCustomerChangeTimezone' => false,
             ],
         ])->getParams();
     }

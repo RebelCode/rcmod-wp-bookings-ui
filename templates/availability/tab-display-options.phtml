@@ -4,10 +4,10 @@
     </div>
     <div class="wide-form__row">
         <div class="wide-form__label" style="width: 100%;max-width: 600px">
-            {{ _("Show dates and times on the site using the customer's timezone") }}
+            {{ _("Allow clients to change timezone in the booking wizard") }}
         </div>
         <div class="wide-form__input">
-            <bool-switcher v-model="useCustomerTimezone"></bool-switcher>
+            <bool-switcher v-model="allowCustomerChangeTimezone"></bool-switcher>
         </div>
     </div>
 </div>
