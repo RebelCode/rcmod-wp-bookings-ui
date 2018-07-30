@@ -21,12 +21,16 @@
   display: flex;
   margin-bottom: 1.5rem;
 
+  &--condensed {
+    margin-bottom: 1rem;
+  }
+
   &--with-error {
-    .form-row__label {
+    & > .form-row__label {
       color: $alert-color;
-    }
-    .form-row__error {
-      color: $alert-color;
+      .form-row__error {
+        color: $alert-color;
+      }
     }
   }
 
@@ -116,6 +120,11 @@
 
     &--smaller {
       width: 80px;
+    }
+
+    &--light {
+      font-weight: normal;
+      width: 60px;
     }
   }
 
