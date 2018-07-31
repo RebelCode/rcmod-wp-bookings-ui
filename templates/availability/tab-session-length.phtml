@@ -8,6 +8,7 @@
                            ref="sessionLength"
                            class="session-length__input"
                            :data-validation-error="_('Please enter a session length greater than 0.')"
+                           :data-uniqness-error="_('This session length already exists for this service.')"
                            @keydown.enter="addNewSession"
                     >
                     <select v-model="sessionTimeUnit">
