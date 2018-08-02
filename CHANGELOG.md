@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Changed
+- New edit mode for booking. Now user can see session date and time without loading list of sessions.
 
 ## [0.1-alpha12] - 2018-07-14
 ### Changed
