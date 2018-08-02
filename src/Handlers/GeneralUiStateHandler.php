@@ -13,6 +13,7 @@ use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
 use Psr\EventManager\EventManagerInterface;
@@ -114,6 +115,15 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $linksConfig;
 
     /**
+     * List of UI action pipes configuration.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|Traversable|stdClass
+     */
+    protected $uiActionsConfig;
+
+    /**
      * GeneralUiStateHandler constructor.
      *
      * @since [*next-version*]
@@ -124,6 +134,7 @@ class GeneralUiStateHandler implements InvocableInterface
      * @param array|Traversable|stdClass  $currencyConfig    Currency config of application.
      * @param array|Traversable|stdClass  $formatsConfig     List of available data formats in application.
      * @param array|Traversable|stdClass  $linksConfig       List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass  $uiActionsConfig   List of UI action pipes configuration.
      * @param EventManagerInterface       $eventManager      The event manager.
      * @param EventFactoryInterface       $eventFactory      The event factory.
      */
@@ -134,16 +145,18 @@ class GeneralUiStateHandler implements InvocableInterface
         $currencyConfig,
         $formatsConfig,
         $linksConfig,
+        $uiActionsConfig,
         $eventManager,
         $eventFactory
     ) {
         $this->settingsContainer = $settingsContainer;
 
-        $this->statuses       = $statuses;
-        $this->statusesLabels = $statusesLabels;
-        $this->currencyConfig = $currencyConfig;
-        $this->formatsConfig  = $formatsConfig;
-        $this->linksConfig    = $linksConfig;
+        $this->statuses        = $statuses;
+        $this->statusesLabels  = $statusesLabels;
+        $this->currencyConfig  = $currencyConfig;
+        $this->formatsConfig   = $formatsConfig;
+        $this->linksConfig     = $linksConfig;
+        $this->uiActionsConfig = $uiActionsConfig;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -171,7 +184,7 @@ class GeneralUiStateHandler implements InvocableInterface
              */
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
-            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig),
+            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig, $this->uiActionsConfig),
         ]);
     }
 
@@ -180,19 +193,21 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $currencyConfig Currency config of application.
-     * @param array|Traversable|stdClass $formatsConfig  List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig    List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass $currencyConfig  Currency config of application.
+     * @param array|Traversable|stdClass $formatsConfig   List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig     List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass $uiActionsConfig List of UI action pipes configuration.
      *
      * @return array UI configuration.
      */
-    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig)
+    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig, $uiActionsConfig)
     {
         return [
-            'timezone' => $this->_getWebsiteTimezone(),
-            'currency' => $this->_prepareCurrencyConfig($currencyConfig),
-            'formats'  => $this->_prepareFormatsConfig($formatsConfig),
-            'links'    => $this->_prepareLinksConfig($linksConfig),
+            'timezone'  => $this->_getWebsiteTimezone(),
+            'currency'  => $this->_prepareCurrencyConfig($currencyConfig),
+            'formats'   => $this->_prepareFormatsConfig($formatsConfig),
+            'links'     => $this->_prepareLinksConfig($linksConfig),
+            'uiActions' => $this->_iteratorToArrayRecursive($uiActionsConfig),
 
             'weekStartsOn'          => $this->settingsContainer->get('week_starts_on'),
             'defaultCalendarView'   => $this->settingsContainer->get('default_calendar_view'),
@@ -304,5 +319,49 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         return $preparedLinksConfig;
+    }
+
+    /**
+     * Convert an iterator to an array.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|stdClass|Traversable $iterator The array or Traversable object to convert
+     *
+     * @throws InvalidArgumentException if $iterator is not an array or a Traversable object
+     *
+     * @return array Result of iterator to array transform.
+     */
+    protected function _iteratorToArrayRecursive($iterator)
+    {
+        if (!($iterator instanceof stdClass) && !is_array($iterator) && !$iterator instanceof Traversable) {
+            throw $this->_createInvalidArgumentException(
+                $this->__('Argument is not an array or stdClass or Traversable object'), null, null, $iterator
+            );
+        }
+        if ($iterator instanceof stdClass) {
+            return (array) $iterator;
+        }
+        if (method_exists($iterator, 'toArray')) {
+            return $iterator->toArray();
+        }
+        $array = [];
+        foreach ($iterator as $key => $value) {
+            if (is_scalar($value)) {
+                $array[$key] = $value;
+                continue;
+            }
+            if ($value instanceof Traversable) {
+                $array[$key] = $this->_iteratorToArrayRecursive($value);
+                continue;
+            }
+            if (is_array($value)) {
+                $array[$key] = $this->_iteratorToArrayRecursive($value);
+                continue;
+            }
+            $array[$key] = $value;
+        }
+
+        return $array;
     }
 }
