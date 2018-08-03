@@ -12,6 +12,7 @@ use Dhii\Event\EventFactoryInterface;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
@@ -58,6 +59,9 @@ class GeneralUiStateHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIterableCapableTrait;
 
     /**
      * Settings container.
@@ -326,36 +330,18 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|Traversable $iterator The array or Traversable object to convert
+     * @param array|stdClass|Traversable $iterator The object to convert.
      *
-     * @throws InvalidArgumentException if $iterator is not an array or a Traversable object
+     * @throws InvalidArgumentException If $iterator is not iterable.
      *
      * @return array Result of iterator to array transform.
      */
     protected function _iteratorToArrayRecursive($iterator)
     {
-        if (!($iterator instanceof stdClass) && !is_array($iterator) && !$iterator instanceof Traversable) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an array or stdClass or Traversable object'), null, null, $iterator
-            );
-        }
-        if ($iterator instanceof stdClass) {
-            return (array) $iterator;
-        }
-        if (method_exists($iterator, 'toArray')) {
-            return $iterator->toArray();
-        }
-        $array = [];
+        $iterator = $this->_normalizeIterable($iterator);
+        $array    = [];
         foreach ($iterator as $key => $value) {
-            if (is_scalar($value)) {
-                $array[$key] = $value;
-                continue;
-            }
-            if ($value instanceof Traversable) {
-                $array[$key] = $this->_iteratorToArrayRecursive($value);
-                continue;
-            }
-            if (is_array($value)) {
+            if ($value instanceof Traversable || is_array($value) || $value instanceof stdClass) {
                 $array[$key] = $this->_iteratorToArrayRecursive($value);
                 continue;
             }
