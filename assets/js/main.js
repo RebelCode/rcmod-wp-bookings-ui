@@ -24,8 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       uiFramework: 'https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework',
       stdLib: 'https://unpkg.com/@rebelcode/std-lib@0.1.4/dist/std-lib.umd',
 
-      // bookingWizardComponents: 'https://unpkg.com/@rebelcode/booking-wizard-components@0.1.5/dist/lib.min',
-      bookingWizardComponents: 'http://scotchbox.local/new-eddbk-wizard/dist/bwc.min',
+      bookingWizardComponents: 'https://unpkg.com/@rebelcode/booking-wizard-components@0.1.5/dist/lib.min',
       calendar: 'https://unpkg.com/@rebelcode/vc-calendar@0.1.2/dist/vc-calendar',
       repeater: 'https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater',
       selectionList: 'https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list',
@@ -102,9 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   function defineServices (di, dependencies) {
-    var serviceList = dependencies.app.services(dependencies, document)
+    var applicationState = window.EDDBK_APP_STATE
+    var serviceList = dependencies.app.services(dependencies, applicationState, document)
     serviceList['APP_STATE'] = function () {
-      return window.EDDBK_APP_STATE
+      return applicationState
     }
     serviceList['selectorList'] = function () {
       return [

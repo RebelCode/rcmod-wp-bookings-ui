@@ -231,14 +231,16 @@ return [
             /*
              * Actions for booking enabled tick change.
              */
-            'bookings_enabled_changed' => [
+            'bookingsEnabledChanged' => [
                 /*
                  * Add message to "Download Prices" and hide it. Added message will be shown
                  * if user manually unhide this metabox.
                  */
                 [
-                    'action' => 'message',
+                    'action' => 'addBlock',
                     'arguments' => [
+                        'block' => 'rc-message-box',
+                        'mode' => 'prepend',
                         'selector' => '#edd_product_prices .inside',
                         'text' => 'The EDD Download Prices are no longer applicable when enabling Bookings. Prices are to be set from the Session Length tab in the Bookings meta box.'
                     ]
@@ -267,8 +269,10 @@ return [
                  * Add message to the "Download Files" meta box.
                  */
                 [
-                    'action' => 'message',
+                    'action' => 'addBlock',
                     'arguments' => [
+                        'block' => 'rc-message-box',
+                        'mode' => 'prepend',
                         'selector' => '#edd_product_files .inside',
                         'text' => 'With Bookings enabled, any downloadable files added here will be included in the purchase price of a booking, and they can be included in the EDD Purchase Confirmation page and Purchase Receipt email. Price assignment is not currently applicable.'
                     ]
