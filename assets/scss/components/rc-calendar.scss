@@ -24,11 +24,6 @@
 
   .fc-event {
     cursor: pointer;
-
-    &.fc-event--past {
-      opacity: .5;
-      filter: grayscale(.5);
-    }
   }
 
 
@@ -60,6 +55,11 @@
 
     .fc-event {
       padding: 1px 4px;
+
+      &.fc-event--past {
+        opacity: .5;
+        filter: grayscale(.5);
+      }
     }
 
     .fc-today {
@@ -172,7 +172,7 @@
       color: #000 !important;
 
       &.fc-event--past {
-        pointer-events: none;
+        // pointer-events: none;
       }
 
       .fc-time {
