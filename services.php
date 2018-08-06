@@ -84,6 +84,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/config/currency'),
                 $c->get('wp_bookings_ui/config/formats'),
                 $c->get('wp_bookings_ui/config/links'),
+                $c->get('wp_bookings_ui/ui_actions'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );

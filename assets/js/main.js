@@ -101,9 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   function defineServices (di, dependencies) {
-    var serviceList = dependencies.app.services(dependencies, document)
+    var applicationState = window.EDDBK_APP_STATE
+    var serviceList = dependencies.app.services(dependencies, applicationState, document)
     serviceList['APP_STATE'] = function () {
-      return window.EDDBK_APP_STATE
+      return applicationState
     }
     serviceList['selectorList'] = function () {
       return [
