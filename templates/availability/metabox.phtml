@@ -1,6 +1,10 @@
 <div id="eddbk-service-page" v-cloak>
     <div class="vcloak--visible loading-container loading-container--white"></div>
-    <service-bookings-application inline-template>
+    <service-bookings-application :session-lengths-count-limit="3"
+                                  :availability-repeat-days-limit="730"
+                                  exceeded-limit-message="Lorem ipsum dolor sit amet! AAA!!!!"
+                                  inline-template
+    >
         <div class="vcloak--hidden">
             <?=$this->render('availability/service-availability-editor');?>
             <div>
@@ -8,6 +12,10 @@
                     <input value="1" type="checkbox" name="enable_booking" id="enable_booking" v-model="bookingsEnabled">
                     Enable booking for this download
                 </label>
+            </div>
+            <div class="alert alert-warning mt-12" v-if="bookingsEnabled && isExceededLimitWarningVisible">
+                <span class="dashicons dashicons-info"></span>
+                <span>{{ exceededLimitMessage }}</span>
             </div>
             <tabs :options="tabsConfig" v-model="activeTab" v-if="bookingsEnabled">
                 <tab title="Session Length">
