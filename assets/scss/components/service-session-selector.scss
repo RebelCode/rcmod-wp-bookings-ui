@@ -9,13 +9,13 @@
   &-header {
     display: flex;
     justify-content: space-between;
+    padding-bottom: .5rem;
 
     .dashicons {
       cursor: pointer;
     }
   }
   &-buttons {
-    padding-top: .5rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
