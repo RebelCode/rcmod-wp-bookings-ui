@@ -1,8 +1,7 @@
 <div id="eddbk-service-page" v-cloak>
     <div class="vcloak--visible loading-container loading-container--white"></div>
-    <service-bookings-application :session-lengths-count-limit="3"
-                                  :availability-repeat-days-limit="730"
-                                  exceeded-limit-message="Lorem ipsum dolor sit amet! AAA!!!!"
+    <service-bookings-application :session-lengths-count-limit="1"
+                                  :availability-total-duration-limit="730"
                                   inline-template
     >
         <div class="vcloak--hidden">
@@ -13,9 +12,16 @@
                     Enable booking for this download
                 </label>
             </div>
-            <div class="alert alert-warning mt-12" v-if="bookingsEnabled && isExceededLimitWarningVisible">
+            <div class="alert alert-warning mt-12" v-if="bookingsEnabled && isPossibleComplexSetup">
                 <span class="dashicons dashicons-info"></span>
-                <span>{{ exceededLimitMessage }}</span>
+                <div class="pl-4 pr-4">
+                    <div><strong>{{ _('Possible complex setup') }}</strong></div>
+                    <div class="mt-4">
+                        It could be slow to save this Service with the current bookings setup.
+                        In some rare cases, the site may time out. To learn more, please
+                        <a href="https://docs.eddbookings.com/article/402-complex-bookings-setups" target="_blank">click here</a>.
+                    </div>
+                </div>
             </div>
             <tabs :options="tabsConfig" v-model="activeTab" v-if="bookingsEnabled">
                 <tab title="Session Length">
