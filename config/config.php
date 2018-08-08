@@ -224,6 +224,25 @@ return [
         ],
 
         /*
+         * Validators configurations. Corresponding validator will be created and
+         * will be injectable into components.
+         */
+        'validators' => [
+            'complexSetupValidator' => [
+                [
+                    'field' => 'sessions',
+                    'rule' => 'length',
+                    'value' => [0, 2]
+                ],
+                [
+                    'field' => 'maxAvailabilitiesDuration',
+                    'rule' => 'max_value',
+                    'value' => 730
+                ]
+            ]
+        ],
+
+        /*
          * List of different UI actions pipes. Each of pipe is configurable and can be ran
          * on client on some action.
          */

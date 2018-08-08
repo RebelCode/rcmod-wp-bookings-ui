@@ -12,7 +12,11 @@
                     Enable booking for this download
                 </label>
             </div>
-            <div class="alert alert-warning mt-12" v-if="bookingsEnabled && isPossibleComplexSetup">
+            <div class="alert alert-warning mt-12"
+                 v-if="bookingsEnabled && lastComplexSetupValidationResult
+                    && !lastComplexSetupValidationResult.valid
+                    && (lastComplexSetupValidationResult.hasError('sessions') || lastComplexSetupValidationResult.hasError('maxAvailabilitiesDuration'))"
+            >
                 <span class="dashicons dashicons-info"></span>
                 <div class="pl-4 pr-4">
                     <div><strong>{{ _('Possible complex setup') }}</strong></div>
