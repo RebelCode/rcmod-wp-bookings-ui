@@ -38,3 +38,21 @@
     }
   }
 }
+
+.button-hero-row {
+  display: flex;
+  margin: 0 -8px;
+  a.button.button-hero {
+    flex-grow: 1;
+    flex-basis: 0;
+    justify-content: center;
+    vertical-align: middle !important;
+    height: auto !important;
+    text-align: center;
+    padding: 12px 36px !important;
+    line-height: 1.5;
+    margin: 8px;
+    flex-direction: column;
+    display: flex;
+  }
+}

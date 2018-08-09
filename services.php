@@ -126,12 +126,12 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             );
         },
         /*
-         * The placeholder template for about and settings.
+         * The placeholder template for about page.
          *
          * @since [*next-version*]
          */
-        'eddbk_ui_coming_soon_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/about-settings-coming-soon.html';
+        'eddbk_ui_about_template' => function (ContainerInterface $c) {
+            $templateFile = 'templates/about.html';
             $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
             $template = file_get_contents($templatePath);
             return $c->get('eddbk_ui_template_factory')->make([

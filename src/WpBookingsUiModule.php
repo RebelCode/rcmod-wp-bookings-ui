@@ -63,6 +63,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $settingsPageId;
 
     /**
+     * About page.
+     *
+     * @var string
+     */
+    protected $aboutPageId;
+
+    /**
      * Constructor.
      *
      * @since [*next-version*]
@@ -167,6 +174,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->bookingsPageId,
             $this->metaboxPageId,
             $this->settingsPageId,
+            $this->aboutPageId,
         ]);
     }
 
@@ -497,14 +505,14 @@ class WpBookingsUiModule extends AbstractBaseModule
             }
         );
 
-        add_submenu_page(
+        $this->aboutPageId = add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
             $this->__($aboutMenuConfig->get('page_title')),
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
             function () use ($c, $comingSoonContext) {
-                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
+                $comingSoonTemplate = $c->get('eddbk_ui_about_template');
                 echo $comingSoonTemplate->render($comingSoonContext);
             }
         );
