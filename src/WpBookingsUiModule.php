@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
+use stdClass;
 
 /**
  * Class WpBookingsUiModule.
@@ -500,23 +501,36 @@ class WpBookingsUiModule extends AbstractBaseModule
             }
         );
 
-        $aboutContext = [
-            'get_started_url'     => $c->get('wp_bookings_ui/urls/get_started'),
-            'feature_request_url' => $c->get('wp_bookings_ui/urls/feature_request'),
-            'contact_us_url'      => $c->get('wp_bookings_ui/urls/contact_us'),
-            'enter_license_url'   => admin_url($c->get('wp_bookings_ui/urls/license')),
-        ];
         $this->aboutPageId = add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
             $this->__($aboutMenuConfig->get('page_title')),
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () use ($c, $aboutContext) {
+            function () use ($c) {
                 $aboutTemplate = $c->get('eddbk_ui_about_template');
-                echo $aboutTemplate->render($aboutContext);
+                echo $aboutTemplate->render($this->_getAboutPageContext($c->get('wp_bookings_ui/urls')));
             }
         );
+    }
+
+    /**
+     * Get context for about page.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|stdClass|ContainerInterface $urls Map of urls for context.
+     *
+     * @return array Context for about page.
+     */
+    protected function _getAboutPageContext($urls)
+    {
+        return [
+            'get_started_url'     => $this->_containerGet($urls, 'get_started'),
+            'feature_request_url' => $this->_containerGet($urls, 'feature_request'),
+            'contact_us_url'      => $this->_containerGet($urls, 'contact_us'),
+            'enter_license_url'   => admin_url($this->_containerGet($urls, 'license')),
+        ];
     }
 
     /**
