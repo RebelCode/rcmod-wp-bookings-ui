@@ -502,7 +502,6 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $aboutContext = [
             'get_started_url'     => $c->get('wp_bookings_ui/urls/get_started'),
-            'roadmap_url'         => $c->get('wp_bookings_ui/urls/roadmap'),
             'feature_request_url' => $c->get('wp_bookings_ui/urls/feature_request'),
             'contact_us_url'      => $c->get('wp_bookings_ui/urls/contact_us'),
             'enter_license_url'   => admin_url($c->get('wp_bookings_ui/urls/license')),
