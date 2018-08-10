@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
-use stdClass;
 
 /**
  * Class WpBookingsUiModule.
@@ -508,29 +507,33 @@ class WpBookingsUiModule extends AbstractBaseModule
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
             function () use ($c) {
-                $aboutTemplate = $c->get('eddbk_ui_about_template');
-                echo $aboutTemplate->render($this->_getAboutPageContext($c->get('wp_bookings_ui/urls')));
+                echo $this->_renderAboutPage($c);
             }
         );
     }
 
     /**
-     * Get context for about page.
+     * Render about page.
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|ContainerInterface $urls Map of urls for context.
+     * @param ContainerInterface $c The container.
      *
-     * @return array Context for about page.
+     * @return string About page rendered content.
      */
-    protected function _getAboutPageContext($urls)
+    protected function _renderAboutPage($c)
     {
-        return [
+        $aboutTemplate = $c->get('eddbk_ui_about_template');
+
+        $urls    = $c->get('wp_bookings_ui/urls');
+        $context = [
             'get_started_url'     => $this->_containerGet($urls, 'get_started'),
             'feature_request_url' => $this->_containerGet($urls, 'feature_request'),
             'contact_us_url'      => $this->_containerGet($urls, 'contact_us'),
             'enter_license_url'   => admin_url($this->_containerGet($urls, 'license')),
         ];
+
+        return $aboutTemplate->render($context);
     }
 
     /**
