@@ -184,6 +184,11 @@ class GeneralUiStateHandler implements InvocableInterface
 
         $event->setParams([
             /*
+             * Get wp rest nonce string.
+             */
+            'wp_rest_nonce' => $this->_getRestNonce(),
+
+            /*
              * All available booking statuses in application.
              */
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
@@ -323,6 +328,18 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         return $preparedLinksConfig;
+    }
+
+    /**
+     * Get wp_rest nonce string.
+     *
+     * @since [*next-version*]
+     *
+     * @return string Created wp_rest nonce string.
+     */
+    protected function _getRestNonce()
+    {
+        return wp_create_nonce('wp_rest');
     }
 
     /**
