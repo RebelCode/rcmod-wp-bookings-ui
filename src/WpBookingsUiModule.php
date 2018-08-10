@@ -63,6 +63,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $settingsPageId;
 
     /**
+     * About page.
+     *
+     * @var string
+     */
+    protected $aboutPageId;
+
+    /**
      * Constructor.
      *
      * @since [*next-version*]
@@ -167,6 +174,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             $this->bookingsPageId,
             $this->metaboxPageId,
             $this->settingsPageId,
+            $this->aboutPageId,
         ]);
     }
 
@@ -461,11 +469,6 @@ class WpBookingsUiModule extends AbstractBaseModule
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
-        $comingSoonContext = [
-            'beta_guidelines_url' => $c->get('wp_bookings_ui/urls/beta_guidelines'),
-            'beta_docs_url'       => $c->get('wp_bookings_ui/urls/beta_docs'),
-        ];
-
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),
             $this->__($rootMenuConfig->get('menu_title')),
@@ -497,17 +500,40 @@ class WpBookingsUiModule extends AbstractBaseModule
             }
         );
 
-        add_submenu_page(
+        $this->aboutPageId = add_submenu_page(
             $rootMenuConfig->get('menu_slug'),
             $this->__($aboutMenuConfig->get('page_title')),
             $this->__($aboutMenuConfig->get('menu_title')),
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
-            function () use ($c, $comingSoonContext) {
-                $comingSoonTemplate = $c->get('eddbk_ui_coming_soon_template');
-                echo $comingSoonTemplate->render($comingSoonContext);
+            function () use ($c) {
+                echo $this->_renderAboutPage($c);
             }
         );
+    }
+
+    /**
+     * Render about page.
+     *
+     * @since [*next-version*]
+     *
+     * @param ContainerInterface $c The container.
+     *
+     * @return string About page rendered content.
+     */
+    protected function _renderAboutPage($c)
+    {
+        $aboutTemplate = $c->get('eddbk_ui_about_template');
+
+        $urls    = $c->get('wp_bookings_ui/urls');
+        $context = [
+            'get_started_url'     => $this->_containerGet($urls, 'get_started'),
+            'feature_request_url' => $this->_containerGet($urls, 'feature_request'),
+            'contact_us_url'      => $this->_containerGet($urls, 'contact_us'),
+            'enter_license_url'   => admin_url($this->_containerGet($urls, 'license')),
+        ];
+
+        return $aboutTemplate->render($context);
     }
 
     /**
