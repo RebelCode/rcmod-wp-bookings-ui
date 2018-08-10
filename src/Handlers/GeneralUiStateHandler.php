@@ -14,6 +14,7 @@ use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
+use Dhii\Util\String\StringableInterface as Stringable;
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
@@ -128,6 +129,15 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $uiActionsConfig;
 
     /**
+     * The WP Rest nonce.
+     *
+     * @since [*next-version*]
+     *
+     * @var string|Stringable
+     */
+    protected $wpRestNonce;
+
+    /**
      * GeneralUiStateHandler constructor.
      *
      * @since [*next-version*]
@@ -139,6 +149,7 @@ class GeneralUiStateHandler implements InvocableInterface
      * @param array|Traversable|stdClass  $formatsConfig     List of available data formats in application.
      * @param array|Traversable|stdClass  $linksConfig       List of links to booking related entities (clients, services).
      * @param array|Traversable|stdClass  $uiActionsConfig   List of UI action pipes configuration.
+     * @param string|Stringable           $wpRestNonce       The WP Rest nonce.
      * @param EventManagerInterface       $eventManager      The event manager.
      * @param EventFactoryInterface       $eventFactory      The event factory.
      */
@@ -150,6 +161,7 @@ class GeneralUiStateHandler implements InvocableInterface
         $formatsConfig,
         $linksConfig,
         $uiActionsConfig,
+        $wpRestNonce,
         $eventManager,
         $eventFactory
     ) {
@@ -161,6 +173,7 @@ class GeneralUiStateHandler implements InvocableInterface
         $this->formatsConfig   = $formatsConfig;
         $this->linksConfig     = $linksConfig;
         $this->uiActionsConfig = $uiActionsConfig;
+        $this->wpRestNonce     = $wpRestNonce;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -183,6 +196,11 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         $event->setParams([
+            /*
+             * Get wp rest nonce string.
+             */
+            'wp_rest_nonce' => $this->_normalizeString($this->wpRestNonce),
+
             /*
              * All available booking statuses in application.
              */
