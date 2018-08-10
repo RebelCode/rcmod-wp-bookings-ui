@@ -126,17 +126,27 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             );
         },
         /*
+         * Function for making templates.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_make_template' => function (ContainerInterface $c) {
+            return function ($templateName) use ($c) {
+                $templatePath = WP_BOOKINGS_UI_TEMPLATES_DIR . DIRECTORY_SEPARATOR . $templateName;
+                $template = file_get_contents($templatePath);
+                return $c->get('eddbk_ui_template_factory')->make([
+                    TemplateFactoryInterface::K_TEMPLATE => $template
+                ]);
+            };
+        },
+        /*
          * The placeholder template for about page.
          *
          * @since [*next-version*]
          */
         'eddbk_ui_about_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/about.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('about.html');
         },
         /*
          * The template for settings page.
@@ -144,12 +154,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @since [*next-version*]
          */
         'eddbk_ui_settings_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/settings/index.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/index.html');
         },
         /*
          * The template for settings page.
@@ -157,12 +163,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @since [*next-version*]
          */
         'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/settings/general.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/general.html');
         },
     ];
 };

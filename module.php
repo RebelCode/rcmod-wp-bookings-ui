@@ -16,6 +16,9 @@ define('WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION', 'update_eddbk_settings');
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
 
 /* @since [*next-version*] */
+define('WP_BOOKINGS_UI_TEMPLATES_DIR', WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . 'templates');
+
+/* @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_DEFINITIONS_PATH', __DIR__ . '/services.php');
 
 /* @since [*next-version*] */
