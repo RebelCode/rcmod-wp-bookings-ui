@@ -513,8 +513,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             $aboutMenuConfig->get('capability'),
             $aboutMenuConfig->get('menu_slug'),
             function () use ($c, $aboutContext) {
-                $comingSoonTemplate = $c->get('eddbk_ui_about_template');
-                echo $comingSoonTemplate->render($aboutContext);
+                $aboutTemplate = $c->get('eddbk_ui_about_template');
+                echo $aboutTemplate->render($aboutContext);
             }
         );
     }
