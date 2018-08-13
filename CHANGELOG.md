@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Configuration for UI action pipelines.
 - Message box template.
 - Edit mode for booking. Now user can see session date and time without loading list of sessions.
+- About page.
 
 ## [0.1-alpha12] - 2018-07-14
 ### Changed

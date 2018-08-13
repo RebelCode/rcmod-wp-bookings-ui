@@ -16,6 +16,7 @@ use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
+use RebelCode\Bookings\WordPress\Module\WpNonce;
 
 /**
  * Function for retrieving array of services definitions.
@@ -76,6 +77,9 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_screen_options_cache' => function ($c) {
             return new MemoryMemoizer();
         },
+        'eddbk_wp_rest_nonce' => function (ContainerInterface $c) {
+            return new WpNonce('wp_rest');
+        },
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
                 $c->get('eddbk_settings_container'),
@@ -86,6 +90,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/config/links'),
                 $c->get('wp_bookings_ui/ui_actions'),
                 $c->get('wp_bookings_ui/validators'),
+                $c->get('eddbk_wp_rest_nonce'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );
@@ -127,17 +132,27 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             );
         },
         /*
-         * The placeholder template for about and settings.
+         * Function for making templates.
          *
          * @since [*next-version*]
          */
-        'eddbk_ui_coming_soon_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/about-settings-coming-soon.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+        'eddbk_ui_make_template' => function (ContainerInterface $c) {
+            return function ($templateName) use ($c) {
+                $templatePath = WP_BOOKINGS_UI_TEMPLATES_DIR . DIRECTORY_SEPARATOR . $templateName;
+                $template = file_get_contents($templatePath);
+                return $c->get('eddbk_ui_template_factory')->make([
+                    TemplateFactoryInterface::K_TEMPLATE => $template
+                ]);
+            };
+        },
+        /*
+         * The placeholder template for about page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_about_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('about.html');
         },
         /*
          * The template for settings page.
@@ -145,12 +160,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @since [*next-version*]
          */
         'eddbk_ui_settings_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/settings/index.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/index.html');
         },
         /*
          * The template for settings page.
@@ -158,12 +169,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @since [*next-version*]
          */
         'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
-            $templateFile = 'templates/settings/general.html';
-            $templatePath = WP_BOOKINGS_UI_MODULE_DIR . DIRECTORY_SEPARATOR . $templateFile;
-            $template = file_get_contents($templatePath);
-            return $c->get('eddbk_ui_template_factory')->make([
-                TemplateFactoryInterface::K_TEMPLATE => $template
-            ]);
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/general.html');
         },
     ];
 };
