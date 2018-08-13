@@ -15,7 +15,7 @@
             <div class="alert alert-warning mt-12"
                  v-if="bookingsEnabled && lastComplexSetupValidationResult
                     && !lastComplexSetupValidationResult.valid
-                    && (lastComplexSetupValidationResult.hasError('sessions') || lastComplexSetupValidationResult.hasError('maxAvailabilitiesDuration'))"
+                    && (lastComplexSetupValidationResult.hasErrors('sessions') || lastComplexSetupValidationResult.hasErrors('maxAvailabilitiesDuration'))"
             >
                 <span class="dashicons dashicons-info"></span>
                 <div class="pl-4 pr-4">
