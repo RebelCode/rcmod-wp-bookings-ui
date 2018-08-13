@@ -137,6 +137,7 @@ class GeneralUiStateHandler implements InvocableInterface
      */
     protected $validatorsConfig;
 
+    /*
      * The WP Rest nonce.
      *
      * @since [*next-version*]
