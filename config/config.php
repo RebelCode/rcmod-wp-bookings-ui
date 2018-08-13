@@ -227,6 +227,33 @@ return [
         ],
 
         /*
+         * Validators configurations. Corresponding validator will be created and
+         * will be injectable into components.
+         */
+        'validators' => [
+            'complexSetupValidator' => [
+                /*
+                 * First possible complex setup indicator is a big amount of available sessions lengths.
+                 * If the amount > 2, complex setup validation wouldn't pass.
+                 */
+                [
+                    'field' => 'sessions',
+                    'rule' => 'length',
+                    'value' => [0, 2] // Max count of session lengths is 2.
+                ],
+                /*
+                 * Second indicator is a very long availability duration for service.
+                 * If duration is longer that 2 years (730 days), complex setup validation wouldn't pass.
+                 */
+                [
+                    'field' => 'maxAvailabilitiesDuration',
+                    'rule' => 'max_value',
+                    'value' => 730 // Max availability duration in days is 730 (2 years).
+                ]
+            ]
+        ],
+
+        /*
          * List of different UI actions pipes. Each of pipe is configurable and can be ran
          * on client on some action.
          */

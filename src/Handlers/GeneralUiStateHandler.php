@@ -129,6 +129,15 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $uiActionsConfig;
 
     /**
+     * List of validators configuration.
+     *
+     * @since [*next-version*]
+     *
+     * @var array|Traversable|stdClass
+     */
+    protected $validatorsConfig;
+
+    /*
      * The WP Rest nonce.
      *
      * @since [*next-version*]
@@ -149,6 +158,7 @@ class GeneralUiStateHandler implements InvocableInterface
      * @param array|Traversable|stdClass  $formatsConfig     List of available data formats in application.
      * @param array|Traversable|stdClass  $linksConfig       List of links to booking related entities (clients, services).
      * @param array|Traversable|stdClass  $uiActionsConfig   List of UI action pipes configuration.
+     * @param array|Traversable|stdClass  $validatorsConfig  List of validators configuration.
      * @param string|Stringable           $wpRestNonce       The WP Rest nonce.
      * @param EventManagerInterface       $eventManager      The event manager.
      * @param EventFactoryInterface       $eventFactory      The event factory.
@@ -161,19 +171,21 @@ class GeneralUiStateHandler implements InvocableInterface
         $formatsConfig,
         $linksConfig,
         $uiActionsConfig,
+        $validatorsConfig,
         $wpRestNonce,
         $eventManager,
         $eventFactory
     ) {
         $this->settingsContainer = $settingsContainer;
 
-        $this->statuses        = $statuses;
-        $this->statusesLabels  = $statusesLabels;
-        $this->currencyConfig  = $currencyConfig;
-        $this->formatsConfig   = $formatsConfig;
-        $this->linksConfig     = $linksConfig;
-        $this->uiActionsConfig = $uiActionsConfig;
-        $this->wpRestNonce     = $wpRestNonce;
+        $this->statuses         = $statuses;
+        $this->statusesLabels   = $statusesLabels;
+        $this->currencyConfig   = $currencyConfig;
+        $this->formatsConfig    = $formatsConfig;
+        $this->linksConfig      = $linksConfig;
+        $this->uiActionsConfig  = $uiActionsConfig;
+        $this->validatorsConfig = $validatorsConfig;
+        $this->wpRestNonce      = $wpRestNonce;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -206,7 +218,7 @@ class GeneralUiStateHandler implements InvocableInterface
              */
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
-            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig, $this->uiActionsConfig),
+            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig, $this->uiActionsConfig, $this->validatorsConfig),
         ]);
     }
 
@@ -215,21 +227,23 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $currencyConfig  Currency config of application.
-     * @param array|Traversable|stdClass $formatsConfig   List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig     List of links to booking related entities (clients, services).
-     * @param array|Traversable|stdClass $uiActionsConfig List of UI action pipes configuration.
+     * @param array|Traversable|stdClass $currencyConfig   Currency config of application.
+     * @param array|Traversable|stdClass $formatsConfig    List of available data formats in application.
+     * @param array|Traversable|stdClass $linksConfig      List of links to booking related entities (clients, services).
+     * @param array|Traversable|stdClass $uiActionsConfig  List of UI action pipes configuration.
+     * @param array|Traversable|stdClass $validatorsConfig List of validators configuration.
      *
      * @return array UI configuration.
      */
-    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig, $uiActionsConfig)
+    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig, $uiActionsConfig, $validatorsConfig)
     {
         return [
-            'timezone'  => $this->_getWebsiteTimezone(),
-            'currency'  => $this->_prepareCurrencyConfig($currencyConfig),
-            'formats'   => $this->_prepareFormatsConfig($formatsConfig),
-            'links'     => $this->_prepareLinksConfig($linksConfig),
-            'uiActions' => $this->_iteratorToArrayRecursive($uiActionsConfig),
+            'timezone'   => $this->_getWebsiteTimezone(),
+            'currency'   => $this->_prepareCurrencyConfig($currencyConfig),
+            'formats'    => $this->_prepareFormatsConfig($formatsConfig),
+            'links'      => $this->_prepareLinksConfig($linksConfig),
+            'uiActions'  => $this->_iteratorToArrayRecursive($uiActionsConfig),
+            'validators' => $this->_iteratorToArrayRecursive($validatorsConfig),
 
             'weekStartsOn'          => $this->settingsContainer->get('week_starts_on'),
             'defaultCalendarView'   => $this->settingsContainer->get('default_calendar_view'),
