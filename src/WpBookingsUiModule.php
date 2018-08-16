@@ -527,6 +527,9 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $urls    = $c->get('wp_bookings_ui/urls');
         $context = [
+            'edd_ref_url'         => $this->_containerGet($urls, 'edd_ref'),
+            'rebelcode_url'       => $this->_containerGet($urls, 'rebelcode'),
+            'how_to_wizard_url'   => $this->_containerGet($urls, 'how_to_wizard'),
             'get_started_url'     => $this->_containerGet($urls, 'get_started'),
             'feature_request_url' => $this->_containerGet($urls, 'feature_request'),
             'contact_us_url'      => $this->_containerGet($urls, 'contact_us'),

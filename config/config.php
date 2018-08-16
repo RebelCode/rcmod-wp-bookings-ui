@@ -173,6 +173,9 @@ return [
         'urls' => [
             'get_started' => 'https://docs.eddbookings.com/category/22-getting-started',
             'roadmap' => 'https://eddbookings.com/roadmap/',
+            'edd_ref' => 'https://easydigitaldownloads.com/?ref=15',
+            'rebelcode' => 'https://rebelcode.com/',
+            'how_to_wizard' => 'https://docs.eddbookings.com/article/31-how-to-add-the-booking-wizard-to-your-website',
             'feature_request' => 'https://eddbookings.com/roadmap/#feature-request',
             'contact_us' => 'https://eddbookings.com/contact/',
             'license' => 'edit.php?post_type=download&page=edd-settings&tab=licenses'
