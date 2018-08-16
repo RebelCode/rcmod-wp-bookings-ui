@@ -56,7 +56,7 @@
                                                      v-validate="'required|date_format:' + config.formats.datetime.tzFree + '|after:$start' + (model.isAllDay ? ',true' : '')"
                                                      name="end"
                                                      @input="errors.remove('end')"
-                                                     v-model="model.end"
+                                                     v-model="visibleEnd"
                                                      :time-disabled="model.isAllDay"
                                                      :disabled-before="model.start"
                                     ></datetime-picker>
