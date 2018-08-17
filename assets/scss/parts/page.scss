@@ -45,9 +45,14 @@
   @include breakpoint(mobile) {
     display: block;
   }
+  &--2 {
+    .button-hero-container {flex-basis: 50%;}
+  }
+  &--3 {
+    .button-hero-container {flex-basis: 33%;}
+  }
   .button-hero-container {
     padding: 8px;
-    flex-basis: 33%;
     display: flex;
     box-sizing: border-box;
 
@@ -66,5 +71,10 @@
     line-height: 1.5;
     flex-direction: column;
     display: flex;
+    white-space: normal;
+
+    .dashicons-external {
+      opacity: .6;
+    }
   }
 }
