@@ -7,7 +7,7 @@
     inline-template
 >
     <div :class="isLoading ? 'loading-container' : ''">
-        <bookings-filter @submit="applyFilter" :search-string.sync="search" :status.sync="status"></bookings-filter>
+        <bookings-filter @submit="goToPage(1)" :search-string.sync="search" :status.sync="status"></bookings-filter>
         <list-table
             class="table-eddbk-bookings"
             :columns="columns"
@@ -17,7 +17,7 @@
             :bulk-actions="[]"
             :total-pages="pagesCount"
             :total-items="bookingsCount"
-            :per-page="10"
+            :per-page="numItems"
             :current-page="page"
             action-column="date"
             @pagination="goToPage"

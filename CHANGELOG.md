@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Fixed
+- Pagination issue when switching to the different status.
+- Pagination issue with wrong number of items expected from server.
 
 ## [0.1-alpha13] - 2018-08-13
 ### Added
