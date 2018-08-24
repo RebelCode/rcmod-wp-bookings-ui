@@ -238,7 +238,7 @@ class RegisterUiHandler implements InvocableInterface
     protected function _getScreenSettingsRendererCallback($pageKey, $handler)
     {
         return function ($event) use ($pageKey, $handler) {
-            if (!$this->_isOnPage('bookings')) {
+            if (!$this->_isOnPage($pageKey)) {
                 return $event->getParam(0);
             }
             $event->setParams([
