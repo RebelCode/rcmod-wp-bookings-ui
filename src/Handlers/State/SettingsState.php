@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module\Handlers;
+namespace RebelCode\Bookings\WordPress\Module\Handlers\State;
 
 use Dhii\Collection\MapInterface;
 use Dhii\Data\Container\ContainerGetCapableTrait;
@@ -8,15 +8,11 @@ use Dhii\Data\Container\ContainerGetPathCapableTrait;
 use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Object\NormalizeKeyCapableTrait;
-use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
-use Dhii\I18n\StringTranslatingTrait;
-use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
-use Psr\EventManager\EventInterface;
 use stdClass;
 use Traversable;
 
@@ -25,19 +21,13 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-class SettingsStateHandler implements InvocableInterface
+class SettingsState extends StateHandler
 {
     /* @since [*next-version*] */
     use NormalizeArrayCapableTrait;
 
     /* @since [*next-version*] */
     use NormalizeStringCapableTrait;
-
-    /* @since [*next-version*] */
-    use StringTranslatingTrait;
-
-    /* @since [*next-version*] */
-    use CreateInvalidArgumentExceptionCapableTrait;
 
     /* @since [*next-version*] */
     use ContainerGetCapableTrait;
@@ -116,18 +106,9 @@ class SettingsStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      */
-    public function __invoke()
+    protected function _getState()
     {
-        /* @var $event EventInterface */
-        $event = func_get_arg(0);
-
-        if (!($event instanceof EventInterface)) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an event instance'), null, null, $event
-            );
-        }
-
-        $event->setParams([
+        return [
             'settingsUi' => [
                 'preview'            => $this->_getPreviewSettingsFields(),
                 'options'            => $this->_prepareFieldsOptions($this->fieldsOptions),
@@ -135,7 +116,7 @@ class SettingsStateHandler implements InvocableInterface
                 'updateEndpoint'     => $this->_normalizeArray($this->updateEndpoint),
                 'generalSettingsUrl' => $this->_getGeneralSettingsUrl(),
             ],
-        ]);
+        ];
     }
 
     /**

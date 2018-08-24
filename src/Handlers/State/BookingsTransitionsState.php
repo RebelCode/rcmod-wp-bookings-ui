@@ -1,13 +1,9 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module\Handlers;
+namespace RebelCode\Bookings\WordPress\Module\Handlers\State;
 
 use Dhii\Collection\MapInterface;
-use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
-use Dhii\I18n\StringTranslatingTrait;
-use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
-use Psr\EventManager\EventInterface;
 use stdClass;
 use Traversable;
 
@@ -17,16 +13,10 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-class BookingsStateStatusTransitionsHandler implements InvocableInterface
+class BookingsTransitionsState extends StateHandler
 {
     /* @since [*next-version*] */
     use NormalizeArrayCapableTrait;
-
-    /* @since [*next-version*] */
-    use CreateInvalidArgumentExceptionCapableTrait;
-
-    /* @since [*next-version*] */
-    use StringTranslatingTrait;
 
     /**
      * Map of transitions that should be applied when changing status.
@@ -75,35 +65,13 @@ class BookingsStateStatusTransitionsHandler implements InvocableInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @since [*next-version*]
-     */
-    public function __invoke()
-    {
-        /* @var $event EventInterface */
-        $event = func_get_arg(0);
-
-        if (!($event instanceof EventInterface)) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an event instance'), null, null, $event
-            );
-        }
-
-        $event->setParams(array_merge(
-            $event->getParams(),
-            $this->_getTransitionParams()
-        ));
-    }
-
-    /**
      * Get transitions related parameters to attach on event.
      *
      * @since [*next-version*]
      *
      * @return array
      */
-    protected function _getTransitionParams()
+    protected function _getState()
     {
         return [
             /*

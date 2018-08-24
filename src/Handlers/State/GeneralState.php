@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module\Handlers;
+namespace RebelCode\Bookings\WordPress\Module\Handlers\State;
 
 use Dhii\Collection\MapInterface;
 use Dhii\Data\Container\ContainerGetCapableTrait;
@@ -10,15 +10,14 @@ use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
-use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
-use Psr\EventManager\EventInterface;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\GetVisibleStatusesCapable;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
 use Traversable;
@@ -29,7 +28,7 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-class GeneralUiStateHandler implements InvocableInterface
+class GeneralState extends StateHandler
 {
     /* @since [*next-version*] */
     use EventsConsumerTrait;
@@ -196,18 +195,9 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      */
-    public function __invoke()
+    protected function _getState()
     {
-        /* @var $event EventInterface */
-        $event = func_get_arg(0);
-
-        if (!($event instanceof EventInterface)) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an event instance'), null, null, $event
-            );
-        }
-
-        $event->setParams([
+        return [
             /*
              * Get wp rest nonce string.
              */
@@ -219,7 +209,7 @@ class GeneralUiStateHandler implements InvocableInterface
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
             'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig, $this->uiActionsConfig, $this->validatorsConfig),
-        ]);
+        ];
     }
 
     /**

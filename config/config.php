@@ -59,6 +59,41 @@ return [
             'id' => 'service_booking_settings',
             'post_type' => 'download',
             'title' => 'Booking Options',
+            'renderer' => 'eddbk_metabox_render',
+        ],
+        'menu' => [
+            'bookings' => [
+                'page_title' => 'Bookings',
+                'menu_title' => 'Bookings',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-bookings',
+                'icon' => 'dashicons-calendar-alt',
+                'position' => 20,
+                'renderer' => 'eddbk_bookings_render',
+                'screen_settings_filter' => 'eddbk_screen_options_render'
+            ],
+            'settings' => [
+                'root_slug' => 'eddbk-bookings',
+                'page_title' => 'Settings',
+                'menu_title' => 'Settings',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-settings',
+                'renderer' => 'eddbk_settings_render',
+            ],
+            'about' => [
+                'root_slug' => 'eddbk-bookings',
+                'page_title' => 'About',
+                'menu_title' => 'About',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-about',
+                'renderer' => 'eddbk_about_render',
+            ],
+        ],
+        'state_filters' => [
+            'general' => 'eddbk_general_ui_state',
+            'bookings' => 'eddbk_bookings_ui_state',
+            'metabox' => 'eddbk_service_ui_state',
+            'settings' => 'eddbk_settings_ui_state'
         ],
         'config' => [
             'formats' => [
@@ -80,28 +115,6 @@ return [
                 'name'   => edd_get_currency(),
                 'symbol' => edd_currency_symbol(),
             ]
-        ],
-        'menu' => [
-            'root' => [
-                'page_title' => 'Bookings',
-                'menu_title' => 'Bookings',
-                'capability' => 'publish_posts',
-                'menu_slug' => 'eddbk-bookings',
-                'icon' => 'dashicons-calendar-alt',
-                'position' => 20,
-            ],
-            'settings' => [
-                'page_title' => 'Settings',
-                'menu_title' => 'Settings',
-                'capability' => 'publish_posts',
-                'menu_slug' => 'eddbk-settings',
-            ],
-            'about' => [
-                'page_title' => 'About',
-                'menu_title' => 'About',
-                'capability' => 'publish_posts',
-                'menu_slug' => 'eddbk-about',
-            ],
         ],
         'statuses_labels' => [
             'draft' => 'Draft',
