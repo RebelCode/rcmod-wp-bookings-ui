@@ -47,10 +47,25 @@ class EnqueueAssetsHandler implements InvocableInterface
     /* @since [*next-version*] */
     use ReadApplicationPagesCapable;
 
+    /**
+     * The name of WP handle to attach require related scripts and styles.
+     *
+     * @since [*next-version*]
+     */
     const REQUIRE_APP_ID = 'rc-app-require';
 
+    /**
+     * The name of WP handle to attach app related scripts and styles.
+     *
+     * @since [*next-version*]
+     */
     const APP_ID = 'rc-app';
 
+    /**
+     * The name of state variable for outputting state.
+     *
+     * @since [*next-version*]
+     */
     const VAR_STATE_NAME = 'EDDBK_APP_STATE';
 
     /**
