@@ -28,7 +28,7 @@ define('WP_BOOKINGS_UI_MODULE_RELATIVE_DIR', 'modules/rcmod-wp-bookings-ui');
 define('WP_BOOKINGS_UI_MODULE_CONFIG_DIR', __DIR__ . '/config');
 
 /* @since [*next-version*] */
-define('WP_BOOKINGS_UI_MODULE_CONFIG_FILE', WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '/config.php');
+define('WP_BOOKINGS_UI_MODULE_CONFIG_FILE', __DIR__ . '/config.php');
 
 /**
  * Create and configure module.
