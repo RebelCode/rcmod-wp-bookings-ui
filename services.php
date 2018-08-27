@@ -4,6 +4,7 @@ use Dhii\Cache\MemoryMemoizer;
 use Dhii\Data\Container\ContainerFactoryInterface;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
+use Dhii\Output\TemplateInterface;
 use Psr\Container\ContainerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\EnqueueAssetsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\RegisterUiHandler;
@@ -40,12 +41,27 @@ use RebelCode\Bookings\WordPress\Module\WpNonce;
  */
 return function ($eventManager, $eventFactory, $containerFactory) {
     return [
+        /**
+         * Event based template manager.
+         *
+         * @since [*next-version*]
+         *
+         * @return TemplateManager
+         */
         'template_manager' => function ($c) use ($eventManager, $eventFactory) {
             $templateManager = new TemplateManager($eventManager, $eventFactory);
             $templateManager->registerTemplates($c->get('wp_bookings_ui/templates'));
 
             return $templateManager;
         },
+
+        /**
+         * Map of assets urls.
+         *
+         * @since [*next-version*]
+         *
+         * @return ContainerInterface
+         */
         'assets_urls_map' => function ($c) use ($containerFactory) {
             $assetsUrlsMap = require_once $c->get('wp_bookings_ui/assets_urls_map_path');
 
@@ -53,6 +69,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 ContainerFactoryInterface::K_DATA => $assetsUrlsMap,
             ]);
         },
+
         /**
          * Service for registering UI application page.
          *
@@ -68,6 +85,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
         /**
          * Service for handling assets and state on application pages.
          *
@@ -84,6 +102,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
         /**
          * State for service application page.
          *
@@ -97,6 +116,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
         /**
          * State for bookings application page.
          *
@@ -111,6 +131,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
         /**
          * Information about statuses for bookings application page.
          *
@@ -129,6 +150,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
         /**
          * Information about statuses transitions for bookings application page.
          *
@@ -143,6 +165,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/hidden_transitions')
             );
         },
+
         /**
          * Renderer handler for the service metabox.
          *
@@ -155,6 +178,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('template_manager')
             );
         },
+
         /**
          * Renderer handler for the bookings page.
          *
@@ -167,6 +191,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('template_manager')
             );
         },
+
         /**
          * Renderer handler for the screen options on the bookings page.
          *
@@ -179,6 +204,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('template_manager')
             );
         },
+
         /**
          * Renderer handler for the settings page.
          *
@@ -193,6 +219,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('template_manager')
             );
         },
+
         /**
          * Renderer handler for the about page.
          *
@@ -207,11 +234,26 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             );
         },
 
+        /**
+         * Handler for filtering statuses.
+         *
+         * @since [*next-version*]
+         *
+         * @return VisibleStatusesHandler
+         */
         'eddbk_bookings_visible_statuses_handler' => function ($c) {
             return new VisibleStatusesHandler(
                 $c->get('wp_bookings_ui/hidden_statuses')
             );
         },
+
+        /**
+         * Handler for saving screen options.
+         *
+         * @since [*next-version*]
+         *
+         * @return SaveScreenOptionsHandler
+         */
         'eddbk_bookings_save_screen_options_handler' => function ($c) {
             return new SaveScreenOptionsHandler(
                 $c->get('wp_bookings_ui/screen_options/key'),
@@ -219,13 +261,37 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('eddbk_screen_options_cache')
             );
         },
+
+        /**
+         * Cache for screen options.
+         *
+         * @since [*next-version*]
+         *
+         * @return MemoryMemoizer
+         */
         'eddbk_screen_options_cache' => function ($c) {
             return new MemoryMemoizer();
         },
+
+        /**
+         * WP Nonce instance for rest API access.
+         *
+         * @since [*next-version*]
+         *
+         * @return WpNonce
+         */
         'eddbk_wp_rest_nonce' => function (ContainerInterface $c) {
             return new WpNonce('wp_rest');
         },
-        'eddbk_general_ui_state_handler' => function (ContainerInterface $c) {
+
+        /**
+         * General state handler.
+         *
+         * @since [*next-version*]
+         *
+         * @return GeneralState
+         */
+        'eddbk_general_state_handler' => function (ContainerInterface $c) {
             return new GeneralState(
                 $c->get('eddbk_settings_container'),
                 $c->get('booking_logic/statuses'),
@@ -240,6 +306,14 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('event_factory')
             );
         },
+
+        /**
+         * Container for settings of EDDBK plugin.
+         *
+         * @since [*next-version*]
+         *
+         * @return SettingsContainer
+         */
         'eddbk_settings_container' => function ($c) {
             $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
             return new SettingsContainer(
@@ -248,7 +322,15 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $settingsPrefix
             );
         },
-        'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
+
+        /**
+         * Settings state handler.
+         *
+         * @since [*next-version*]
+         *
+         * @return SettingsState
+         */
+        'eddbk_settings_state_handler' => function ($c) use ($containerFactory) {
             return new SettingsState(
                 $c->get('eddbk_settings_container'),
                 $c->get('wp_bookings_ui/settings/options'),
@@ -256,6 +338,14 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/settings/update_endpoint')
             );
         },
+
+        /**
+         * Handler for saving settings.
+         *
+         * @since [*next-version*]
+         *
+         * @return SaveSettingsHandler
+         */
         'eddbk_bookings_update_settings_handler' => function ($c) {
             return new SaveSettingsHandler(
                 $c->get('wp_bookings_ui/settings/fields'),
@@ -263,10 +353,13 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/settings/prefix')
             );
         },
-        /*
+
+        /**
          * The factory used to create templates used in this module.
          *
          * @since [*next-version*]
+         *
+         * @return PlaceholderTemplateFactory
          */
         'eddbk_ui_template_factory' => function (ContainerInterface $c) {
             return new PlaceholderTemplateFactory(
@@ -276,10 +369,13 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('wp_bookings_ui/templates_config/token_default')
             );
         },
-        /*
+
+        /**
          * Function for making templates.
          *
          * @since [*next-version*]
+         *
+         * @return callable
          */
         'eddbk_ui_make_template' => function (ContainerInterface $c) {
             return function ($templateName) use ($c) {
@@ -290,28 +386,37 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 ]);
             };
         },
-        /*
+
+        /**
          * The placeholder template for about page.
          *
          * @since [*next-version*]
+         *
+         * @return TemplateInterface
          */
         'eddbk_ui_about_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('about.html');
         },
-        /*
+
+        /**
          * The template for settings page.
          *
          * @since [*next-version*]
+         *
+         * @return TemplateInterface
          */
         'eddbk_ui_settings_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('settings/index.html');
         },
-        /*
+
+        /**
          * The template for settings page.
          *
          * @since [*next-version*]
+         *
+         * @return TemplateInterface
          */
         'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');

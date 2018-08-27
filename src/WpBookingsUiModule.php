@@ -143,9 +143,9 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $this->_attach('eddbk_service_ui_state', $c->get('eddbk_service_state_handler'));
 
-        $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_ui_state_handler'));
+        $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_state_handler'));
 
-        $this->_attach('eddbk_settings_ui_state', $c->get('eddbk_settings_ui_state_handler'));
+        $this->_attach('eddbk_settings_ui_state', $c->get('eddbk_settings_state_handler'));
 
         /*
          * Other handlers
