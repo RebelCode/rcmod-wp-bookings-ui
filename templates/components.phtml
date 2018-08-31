@@ -42,8 +42,10 @@
                 <div class="form-row__input exclusions-datepicker">
                     <session-date-picker
                             v-model="selectedDaySessions"
+                            :timezone="timezone"
                             :is-daily-duration="isDailyDuration"
                             :selected-day.sync="selectedDay"
+                            :opened-on-date.sync="openedOnDate"
                             :session.sync="session"
                             :loading="isSessionsLoading"
                             :selected-session-length="sessionDuration"
