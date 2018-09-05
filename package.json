@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Booking plugin application",
   "scripts": {
+    "postinstall": "node ./lib/fetch-require-deps.js",
     "watch": "./node_modules/webpack/bin/webpack.js --watch",
     "build": "./node_modules/webpack/bin/webpack.js -p"
   },
