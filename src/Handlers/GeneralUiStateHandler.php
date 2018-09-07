@@ -189,7 +189,7 @@ class GeneralUiStateHandler implements InvocableInterface
     ) {
         $this->settingsContainer = $settingsContainer;
 
-        $this->scriptsBasePath = $scriptsBasePath;
+        $this->scriptsBasePath  = $scriptsBasePath;
         $this->statuses         = $statuses;
         $this->statusesLabels   = $statusesLabels;
         $this->currencyConfig   = $currencyConfig;
