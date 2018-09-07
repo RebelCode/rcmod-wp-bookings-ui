@@ -1,13 +1,17 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
+const webpack = require('webpack')
+const fs = require('fs');
+
+const bowerConfig = JSON.parse(fs.readFileSync('./bower.json', 'utf8'));
 
 const config = {
   context: path.resolve(__dirname, './'),
   entry: {
-    app: './assets/scss/app.scss'
+    app: './assets/main.js'
   },
   output: {
-    filename: './dist/_.js'
+    filename: './dist/main.js'
   },
   module: {
     rules: [
@@ -26,6 +30,12 @@ const config = {
       filename: './dist/wp-booking-ui.css',
       allChunks: true,
     }),
+    new webpack.DefinePlugin({
+      BOWER_DEPS: JSON.stringify(Object.keys(bowerConfig.dependencies).reduce((result, key) => {
+        result[key] = bowerConfig.dependencies[key].split('.').slice(0, -1).join('.')
+        return result
+      }, {}))
+    })
   ],
 }
 

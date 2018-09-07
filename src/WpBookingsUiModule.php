@@ -387,8 +387,6 @@ class WpBookingsUiModule extends AbstractBaseModule
             ),
         ]);
 
-        wp_localize_script('rc-app-require', 'EDDBK_REQUIRE_BASE_URL', $c->get('wp_bookings_ui/assets/scripts_base_path'));
-
         /*
          * All application components located here
          */
