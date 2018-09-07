@@ -83,6 +83,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_general_ui_state_handler' => function ($c) {
             return new GeneralUiStateHandler(
                 $c->get('eddbk_settings_container'),
+                $c->get('wp_bookings_ui/assets/scripts_base_path'),
                 $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/statuses_labels'),
                 $c->get('wp_bookings_ui/config/currency'),

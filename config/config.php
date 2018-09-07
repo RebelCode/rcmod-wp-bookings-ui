@@ -182,10 +182,11 @@ return [
         ],
         'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR.'/assets_urls_map.php',
         'assets' => [
+            'scripts_base_path' => plugins_url(WP_BOOKINGS_UI_MODULE_RELATIVE_DIR . '/dist/scripts/', EDDBK_FILE),
             'require.js' => 'require',
             'bookings' => [
                 'app.min.js' => 'bookings_ui/dist/app.min.js',
-                'main.js' => 'bookings_ui/assets/js/main.js',
+                'main.js' => 'bookings_ui/assets/main.js',
             ],
             'styles' => [
                 'app' => 'bookings_ui/dist/wp-booking-ui.css',
