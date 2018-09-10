@@ -16,8 +16,8 @@ use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
-use RebelCode\Bookings\WordPress\Module\WpNonce;
-use RebelCode\Bookings\WordPress\Module\WpNonceFactory;
+use RebelCode\WordPress\Nonce\Factory\NonceFactoryInterface;
+use RebelCode\WordPress\Nonce\NonceInterface;
 
 /**
  * Function for retrieving array of services definitions.
@@ -80,26 +80,15 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
 
         /**
-         * WP Nonce factory.
-         *
-         * @since [*next-version*]
-         *
-         * @return WpNonceFactory
-         */
-        'eddbk_wp_nonce_factory' => function (ContainerInterface $c) {
-            return new WpNonceFactory();
-        },
-
-        /**
          * WP Rest Api nonce.
          *
          * @since [*next-version*]
          *
-         * @return WpNonce
+         * @return NonceInterface
          */
         'eddbk_wp_rest_nonce' => function (ContainerInterface $c) {
-            return $c->get('eddbk_wp_nonce_factory')->make([
-                'name' => 'wp_rest'
+            return $c->get('eddbk_rest_api_nonce_factory')->make([
+                NonceFactoryInterface::K_CONFIG_ID => 'wp_rest'
             ]);
         },
 
