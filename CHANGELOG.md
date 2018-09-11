@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha17] - 2018-09-11
 ### Changed
 - Depends on nonce factory from `eddbk_rest_api` to create nonce instance.
 
