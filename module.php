@@ -42,7 +42,7 @@ define('WP_BOOKINGS_UI_MODULE_CONFIG_FILE', WP_BOOKINGS_UI_MODULE_CONFIG_DIR . '
 return function (ContainerInterface $c) {
     return new WpBookingsUiModule(
         WP_BOOKINGS_UI_MODULE_KEY,
-        [],
+        ['eddbk_rest_api'],
         $c->get('config_factory'),
         $c->get('container_factory'),
         $c->get('composite_container_factory'),
