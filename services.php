@@ -88,7 +88,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          */
         'eddbk_wp_rest_nonce' => function (ContainerInterface $c) {
             return $c->get('eddbk_rest_api_nonce_factory')->make([
-                NonceFactoryInterface::K_CONFIG_ID => 'wp_rest'
+                NonceFactoryInterface::K_CONFIG_ID => $c->get('wp_bookings_ui/wp_rest_api_nonce')
             ]);
         },
 

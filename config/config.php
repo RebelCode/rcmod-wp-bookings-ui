@@ -14,6 +14,7 @@ return [
         ],
     ],
     'wp_bookings_ui' => [
+        'wp_rest_api_nonce' => 'wp_rest',
         'settings' => [
             'options' => [
                 'week_starts_on' => [
