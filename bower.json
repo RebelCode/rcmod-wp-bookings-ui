@@ -15,7 +15,7 @@
     "textFormatter": "https://unpkg.com/sprintf-js@1.1.1/dist/sprintf.min.js",
     "uiFramework": "https://unpkg.com/@rebelcode/ui-framework@0.1.1/dist/static/js/uiFramework.js",
     "stdLib": "https://unpkg.com/@rebelcode/std-lib@0.1.4/dist/std-lib.umd.js",
-    "bookingWizardComponents": "https://unpkg.com/@rebelcode/booking-wizard-components@0.1.7/dist/lib.min.js",
+    "bookingWizardComponents": "https://unpkg.com/@rebelcode/booking-wizard-components@0.1.8/dist/lib.min.js",
     "calendar": "https://unpkg.com/@rebelcode/vc-calendar@0.1.2/dist/vc-calendar.js",
     "repeater": "https://unpkg.com/@rebelcode/vc-repeater@0.1.0/dist/vc-repeater.js",
     "selectionList": "https://unpkg.com/@rebelcode/vc-selection-list@0.1.0/dist/vc-selection-list.js",
