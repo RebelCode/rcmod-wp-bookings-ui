@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Changed
+- Assets management ans styles moved away from this module. Now this module only enqueue built application's JS and styles.
 
 ## [0.1-alpha19] - 2018-09-13
 ### Changed
