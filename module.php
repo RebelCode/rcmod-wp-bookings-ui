@@ -13,7 +13,7 @@ define('WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY', 'eddbk_screen_options');
 define('WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION', 'update_eddbk_settings');
 
 /* @since [*next-version*] */
-define('WP_BOOKINGS_UI_MODULE_APP_VERSION', '0.1.27');
+define('WP_BOOKINGS_UI_MODULE_APP_VERSION', '0.2.0');
 
 /* @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
