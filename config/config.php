@@ -187,7 +187,6 @@ return [
             'require.js' => 'require',
             'bookings' => [
                 'app.min.js' => 'bookings_ui/dist/app.min.js',
-                'main.js' => 'bookings_ui/dist/main.js',
             ],
             'styles' => [
                 'app' => 'bookings_ui/dist/wp-booking-ui.css',
