@@ -377,21 +377,8 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Enqueue require-related script and script list from the container
          */
-        wp_enqueue_script('rc-app-require', $assetsUrlMap->get(
-            $c->get('wp_bookings_ui/assets/require.js')
-        ), [], false, true);
-
-        wp_localize_script('rc-app-require', 'RC_APP_REQUIRE_FILES', [
-            'app' => $assetsUrlMap->get(
-                $c->get('wp_bookings_ui/assets/bookings/app.min.js')
-            ),
-        ]);
-
-        /*
-         * All application components located here
-         */
         wp_enqueue_script('rc-app', $assetsUrlMap->get(
-            $c->get('wp_bookings_ui/assets/bookings/main.js')
+            $c->get('wp_bookings_ui/assets/bookings/app.min.js')
         ), [], false, true);
 
         /*
