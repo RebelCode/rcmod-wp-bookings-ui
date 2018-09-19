@@ -7,7 +7,6 @@ use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
-use Dhii\Exception\RuntimeException;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
@@ -174,20 +173,12 @@ class SaveScreenOptionsHandler implements InvocableInterface
      * @param int|float|string|Stringable $userId User ID.
      * @param string|Stringable           $key    User option key.
      * @param mixed                       $value  User option value.
-     *
-     * @throws RuntimeException If options is not updated for user.
      */
     protected function _updateUserOption($userId, $key, $value)
     {
         $userId = $this->_normalizeInt($userId);
         $key    = $this->_normalizeString($key);
 
-        $updateResult = update_user_option($userId, $key, $value);
-
-        if ($updateResult === false) {
-            throw $this->_createRuntimeException(
-                $this->__('Could not update option "%1$s" for user "%2$s"', [$key, $userId])
-            );
-        }
+        update_user_option($userId, $key, $value);
     }
 }

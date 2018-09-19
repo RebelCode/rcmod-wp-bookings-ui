@@ -74,15 +74,6 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $settingsContainer;
 
     /**
-     * Base path of local scripts.
-     *
-     * @since [*next-version*]
-     *
-     * @var string|Stringable
-     */
-    protected $scriptsBasePath;
-
-    /**
      * List of statuses keys available in application.
      *
      * @since [*next-version*]
@@ -161,7 +152,6 @@ class GeneralUiStateHandler implements InvocableInterface
      * @since [*next-version*]
      *
      * @param ContainerInterface          $settingsContainer Settings container.
-     * @param string|Stringable           $scriptsBasePath   Base path of local scripts.
      * @param array|Traversable|stdClass  $statuses          List of statuses key in application.
      * @param array|stdClass|MapInterface $statusesLabels    Map of known status keys to statuses labels.
      * @param array|Traversable|stdClass  $currencyConfig    Currency config of application.
@@ -175,7 +165,6 @@ class GeneralUiStateHandler implements InvocableInterface
      */
     public function __construct(
         $settingsContainer,
-        $scriptsBasePath,
         $statuses,
         $statusesLabels,
         $currencyConfig,
@@ -189,7 +178,6 @@ class GeneralUiStateHandler implements InvocableInterface
     ) {
         $this->settingsContainer = $settingsContainer;
 
-        $this->scriptsBasePath  = $scriptsBasePath;
         $this->statuses         = $statuses;
         $this->statusesLabels   = $statusesLabels;
         $this->currencyConfig   = $currencyConfig;
@@ -220,11 +208,6 @@ class GeneralUiStateHandler implements InvocableInterface
         }
 
         $event->setParams([
-            /*
-             * Local scripts base
-             */
-            'scripts_base' => $this->_normalizeString($this->scriptsBasePath),
-
             /*
              * Get wp rest nonce string.
              */
