@@ -173,6 +173,7 @@
                                             @input="errors.remove('ends_after')"
                                             style="width: 90px"
                                             :disabled="{to: availabilityStart}"
+                                            :open-date="availabilityStart"
                                 ></datepicker>
                             </div>
                         </div>
@@ -197,6 +198,8 @@
                                             :highlighted="excludeDatesModels"
                                             @selected="excludeDateSelected"
                                             ref="exclusions"
+                                            :disabled="{to: availabilityStart}"
+                                            :open-date="availabilityStart"
                                 ></datepicker>
                             </div>
 
