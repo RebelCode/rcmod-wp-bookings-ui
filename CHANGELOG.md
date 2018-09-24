@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha20] - 2018-09-24
 ### Changed
 - Assets management ans styles moved away from this module. Now this module only enqueue built application's JS and styles.
 - Using version `0.2.1` of `bookings-js`
