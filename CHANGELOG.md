@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1-alpha20] - 2018-09-24
 ### Changed
-- Assets management ans styles moved away from this module. Now this module only enqueue built application's JS and styles.
+- Assets management and styles have been removed fom this module. This module now only enqueues built JS and styles.
 - Using version `0.2.1` of `bookings-js`
 
 ## [0.1-alpha19] - 2018-09-13
