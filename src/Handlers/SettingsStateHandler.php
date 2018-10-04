@@ -12,11 +12,11 @@ use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
-use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayConvertCapable;
 use stdClass;
 use Traversable;
 
@@ -49,13 +49,13 @@ class SettingsStateHandler implements InvocableInterface
     use CreateNotFoundExceptionCapableTrait;
 
     /* @since [*next-version*] */
-    use NormalizeIterableCapableTrait;
-
-    /* @since [*next-version*] */
     use CreateContainerExceptionCapableTrait;
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayConvertCapable;
 
     /**
      * Settings container.
@@ -129,8 +129,10 @@ class SettingsStateHandler implements InvocableInterface
 
         $event->setParams([
             'settingsUi' => [
-                'preview'            => $this->_getPreviewSettingsFields(),
-                'options'            => $this->_prepareFieldsOptions($this->fieldsOptions),
+                'preview' => $this->_getPreviewSettingsFields(),
+                'options' => $this->_iteratorToArrayRecursive($this->fieldsOptions, function ($value) {
+                    return is_string($value) ? $this->_translate($value) : $value;
+                }),
                 'values'             => $this->_prepareSettingsValues(),
                 'updateEndpoint'     => $this->_normalizeArray($this->updateEndpoint),
                 'generalSettingsUrl' => $this->_getGeneralSettingsUrl(),
@@ -177,29 +179,6 @@ class SettingsStateHandler implements InvocableInterface
         $timeFormat = get_option('time_format');
 
         return date($dateFormat) . ' | ' . date($timeFormat);
-    }
-
-    /**
-     * Prepare fields options for displaying in UI state.
-     *
-     * @since [*next-version*]
-     *
-     * @param array|stdClass|MapInterface $fieldsOptions Map of available fields to their available options.
-     *
-     * @return array Prepared fields options for displaying in UI state.
-     */
-    protected function _prepareFieldsOptions($fieldsOptions)
-    {
-        $preparedFieldsOptions = [];
-        foreach ($fieldsOptions as $optionsKey => $values) {
-            $prepared = [];
-            foreach ($values as $key => $value) {
-                $prepared[$key] = $this->__($value);
-            }
-            $preparedFieldsOptions[$optionsKey] = $prepared;
-        }
-
-        return $preparedFieldsOptions;
     }
 
     /**

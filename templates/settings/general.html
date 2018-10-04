@@ -1,6 +1,14 @@
 <div class="settings-tab settings-tab--general">
     <div style="margin-top: 1.5rem">
         <div class="col-12 columns">
+
+            <div class="form-row">
+                <div class="form-row__label">{{ _('Booking Wizard Labels') }}</div>
+                <div class="form-row__input">
+                    <wizard-editor v-model="booking_wizard_labels" :defaults="settingsConfig.options.default_wizard_labels"></wizard-editor>
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-row__label">{{ _('Timezone') }}</div>
                 <div class="form-row__input form-row__input--padded">
