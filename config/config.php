@@ -17,6 +17,50 @@ return [
     'wp_bookings_ui' => [
         'wp_rest_api_nonce' => 'wp_rest',
         'settings' => [
+            'wizard_labels' => [
+                'general' => [
+                    'title' => 'Book an Appointment',
+                    'buttons' => [
+                        'back' => 'Back',
+                        'next' => 'Next',
+                        'book' => 'Book Now',
+                    ],
+                ],
+                'preview' => [
+                    'price' => 'Starting at %s for a %s appointment.',
+                    'available' => 'More appointment durations available in the next step.',
+                    'booking' => 'You are booking:',
+                ],
+                'confirmation' => [
+                    'booking' => 'You are booking: *%s* - %s appointment',
+                    'starting' => 'Starting at *%s*',
+                    'price' => 'The price is of *%s*',
+                ],
+                'fields' => [
+                    'service' => [
+                        'title' => 'Select a service',
+                        'placeholder' => 'Select option',
+                    ],
+                    'duration' => [
+                        'title' => 'Select duration',
+                    ],
+                    'date' => [
+                        'title' => 'Select a date',
+                        'empty' => 'No appointments are available this month.',
+                    ],
+                    'time' => [
+                        'title' => 'Select available time',
+                        'placeholder' => 'Select a date to pick a time from.',
+                    ],
+                    'timezone' => [
+                        'title' => 'Change timezone',
+                    ],
+                    'notes' => [
+                        'title' => 'Additional notes',
+                        'placeholder' => 'If you have got any special requests for this service, please note them down here.',
+                    ],
+                ],
+            ],
             'options' => [
                 'week_starts_on' => [
                     'sunday' => 'Sunday',
@@ -32,50 +76,6 @@ return [
                     'week'  => 'Week',
                     'month' => 'Month',
                 ],
-                'default_wizard_labels' => [
-                    'general' => [
-                        'title' => 'Book an Appointment',
-                        'buttons' => [
-                            'back' => 'Back',
-                            'next' => 'Next',
-                            'book' => 'Book Now',
-                        ],
-                    ],
-                    'preview' => [
-                        'price' => 'Starting at %s for a %s appointment.',
-                        'available' => 'More appointment durations available in the next step.',
-                        'booking' => 'You are booking:',
-                    ],
-                    'confirmation' => [
-                        'booking' => 'You are booking: *%s* - %s appointment',
-                        'starting' => 'Starting at *%s*',
-                        'price' => 'The price is of *%s*',
-                    ],
-                    'fields' => [
-                        'service' => [
-                            'title' => 'Select a service',
-                            'placeholder' => 'Select option',
-                        ],
-                        'duration' => [
-                            'title' => 'Select duration',
-                        ],
-                        'date' => [
-                            'title' => 'Select a date',
-                            'empty' => 'No appointments are available this month.',
-                        ],
-                        'time' => [
-                            'title' => 'Select available time',
-                            'placeholder' => 'Select a date to pick a time from.',
-                        ],
-                        'timezone' => [
-                            'title' => 'Change timezone',
-                        ],
-                        'notes' => [
-                            'title' => 'Additional notes',
-                            'placeholder' => 'If you have got any special requests for this service, please note them down here.',
-                        ],
-                    ],
-                ]
             ],
             'fields' => [
                 'week_starts_on',

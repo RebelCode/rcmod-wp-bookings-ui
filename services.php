@@ -5,6 +5,7 @@ use Dhii\Data\Container\ContainerFactoryInterface;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
 use Psr\Container\ContainerInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\FrontApplicationLabelsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusesHandler;
@@ -12,6 +13,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsH
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\WizardLabelsHandler;
 use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
@@ -115,12 +117,23 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $settingsPrefix
             );
         },
+        'eddbk_localized_wizard_labels' => function ($c) {
+            $wizardLabelsHandler = new WizardLabelsHandler($c->get('wp_bookings_ui/settings/wizard_labels'));
+            return $wizardLabelsHandler();
+        },
+        'eddbk_front_application_labels_handler' => function ($c) {
+            return new FrontApplicationLabelsHandler(
+                $c->get('eddbk_settings_container'),
+                $c->get('eddbk_localized_wizard_labels')
+            );
+        },
         'eddbk_settings_ui_state_handler' => function ($c) use ($containerFactory) {
             return new SettingsStateHandler(
                 $c->get('eddbk_settings_container'),
                 $c->get('wp_bookings_ui/settings/options'),
                 $c->get('wp_bookings_ui/settings/fields'),
-                $c->get('wp_bookings_ui/settings/update_endpoint')
+                $c->get('wp_bookings_ui/settings/update_endpoint'),
+                $c->get('eddbk_localized_wizard_labels')
             );
         },
         'eddbk_bookings_update_settings_handler' => function ($c) {

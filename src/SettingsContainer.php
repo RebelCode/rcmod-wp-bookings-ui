@@ -13,7 +13,6 @@ use Dhii\Data\Object\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
-use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
@@ -55,13 +54,13 @@ class SettingsContainer implements ContainerInterface
     use CreateInvalidArgumentExceptionCapableTrait;
 
     /* @since [*next-version*] */
-    use NormalizeIterableCapableTrait;
-
-    /* @since [*next-version*] */
     use CreateNotFoundExceptionCapableTrait;
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayConvertCapable;
 
     /**
      * Map of settings keys to their default values.
@@ -117,7 +116,7 @@ class SettingsContainer implements ContainerInterface
         $value = get_option($key) ?: $this->_containerGetPath($this->defaultValues, explode('/', $id));
 
         if (in_array($id, $this->arrayFields)) {
-            $value = $this->_normalizeArray($value);
+            $value = $this->_iteratorToArrayRecursive($value);
         }
 
         return $value;

@@ -94,21 +94,32 @@ class SettingsStateHandler implements InvocableInterface
     protected $updateEndpoint;
 
     /**
+     * Wizard default labels.
+     *
+     * @since [*next-version*]
+     *
+     * @var array
+     */
+    protected $defaultWizardLabels;
+
+    /**
      * SettingsStateHandler constructor.
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface          $settingsContainer Settings container.
-     * @param array|stdClass|MapInterface $fieldsOptions     Map of available fields to their available options.
-     * @param array|stdClass|Traversable  $fields            List of settings fields.
-     * @param array|stdClass|MapInterface $updateEndpoint    Configuration of update endpoint.
+     * @param ContainerInterface          $settingsContainer   Settings container.
+     * @param array|stdClass|MapInterface $fieldsOptions       Map of available fields to their available options.
+     * @param array|stdClass|Traversable  $fields              List of settings fields.
+     * @param array|stdClass|MapInterface $updateEndpoint      Configuration of update endpoint.
+     * @param array                       $defaultWizardLabels Wizard default labels.
      */
-    public function __construct($settingsContainer, $fieldsOptions, $fields, $updateEndpoint)
+    public function __construct($settingsContainer, $fieldsOptions, $fields, $updateEndpoint, $defaultWizardLabels)
     {
-        $this->settingsContainer = $settingsContainer;
-        $this->fieldsOptions     = $fieldsOptions;
-        $this->fields            = $fields;
-        $this->updateEndpoint    = $updateEndpoint;
+        $this->settingsContainer   = $settingsContainer;
+        $this->fieldsOptions       = $fieldsOptions;
+        $this->fields              = $fields;
+        $this->updateEndpoint      = $updateEndpoint;
+        $this->defaultWizardLabels = $defaultWizardLabels;
     }
 
     /**
@@ -129,10 +140,9 @@ class SettingsStateHandler implements InvocableInterface
 
         $event->setParams([
             'settingsUi' => [
-                'preview' => $this->_getPreviewSettingsFields(),
-                'options' => $this->_iteratorToArrayRecursive($this->fieldsOptions, function ($value) {
-                    return is_string($value) ? $this->_translate($value) : $value;
-                }),
+                'preview'            => $this->_getPreviewSettingsFields(),
+                'options'            => $this->_iteratorToArrayRecursive($this->fieldsOptions),
+                'labels'             => $this->defaultWizardLabels,
                 'values'             => $this->_prepareSettingsValues(),
                 'updateEndpoint'     => $this->_normalizeArray($this->updateEndpoint),
                 'generalSettingsUrl' => $this->_getGeneralSettingsUrl(),
