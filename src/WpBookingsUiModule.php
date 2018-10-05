@@ -480,9 +480,11 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $settingsTemplate = $c->get('eddbk_ui_settings_template');
 
                 $generalSettingsTabContent = $c->get('eddbk_ui_settings_general_tab_template')->render();
+                $wizardSettingsTabContent = $c->get('eddbk_ui_settings_wizard_tab_template')->render();
                 $componentsContent = $this->_renderTemplate('components');
 
                 echo $settingsTemplate->render([
+                    'wizardSettingsTab' => $wizardSettingsTabContent,
                     'generalSettingsTab' => $generalSettingsTabContent,
                     'components'         => $componentsContent,
                 ]);

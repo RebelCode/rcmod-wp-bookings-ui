@@ -197,5 +197,14 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('settings/general.html');
         },
+        /*
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_wizard_tab_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/wizard.html');
+        },
     ];
 };
