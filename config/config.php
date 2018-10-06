@@ -1,19 +1,6 @@
 <?php
 
 return [
-    'eddbk' => [
-        'week_starts_on'        => 'sunday',
-        'default_calendar_view' => 'week',
-        'booking_wizard_color'  => '#17a7dd',
-        'booking_statuses_colors'     => [
-            'draft'     => '#dfe4ea',
-            'pending'   => '#1e90ff',
-            'scheduled' => '#2ed573',
-            'completed' => '#57606f',
-            'cancelled' => '#eb4d4b',
-        ],
-        'booking_wizard_labels' => []
-    ],
     'wp_bookings_ui' => [
         'wp_rest_api_nonce' => 'wp_rest',
         'settings' => [
@@ -85,6 +72,19 @@ return [
                 'booking_wizard_labels'
             ],
             'prefix' => 'eddbk',
+            'default_values' => [
+                'week_starts_on'        => 'sunday',
+                'default_calendar_view' => 'week',
+                'booking_wizard_color'  => '#17a7dd',
+                'booking_statuses_colors'     => [
+                    'draft'     => '#dfe4ea',
+                    'pending'   => '#1e90ff',
+                    'scheduled' => '#2ed573',
+                    'completed' => '#57606f',
+                    'cancelled' => '#eb4d4b',
+                ],
+                'booking_wizard_labels' => []
+            ],
             'array_fields' => [
                 'booking_statuses_colors'
             ],

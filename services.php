@@ -110,11 +110,10 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             );
         },
         'eddbk_settings_container' => function ($c) {
-            $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
             return new SettingsContainer(
-                $c->get($settingsPrefix),
+                $c->get('wp_bookings_ui/settings/default_values'),
                 $c->get('wp_bookings_ui/settings/array_fields'),
-                $settingsPrefix
+                $c->get('wp_bookings_ui/settings/prefix')
             );
         },
         'eddbk_localized_wizard_labels' => function ($c) {
