@@ -7,7 +7,7 @@ use stdClass;
 use Traversable;
 
 /**
- * Trait IteratorToArrayConvertCapable, adds ability to convert an iterator to an array.
+ * Trait IteratorToArrayRecursiveCapableTrait, adds ability to convert an iterator to an array.
  *
  * @since [*next-version*]
  */
