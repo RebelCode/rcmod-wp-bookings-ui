@@ -18,7 +18,7 @@ use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
 use Psr\EventManager\EventManagerInterface;
-use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapable;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapableTrait;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
 use Traversable;
@@ -65,7 +65,7 @@ class GeneralUiStateHandler implements InvocableInterface
     use NormalizeIterableCapableTrait;
 
     /* @since [*next-version*] */
-    use IteratorToArrayRecursiveCapable;
+    use IteratorToArrayRecursiveCapableTrait;
 
     /**
      * Settings container.

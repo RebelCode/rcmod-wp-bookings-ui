@@ -2,7 +2,6 @@
 
 namespace RebelCode\Bookings\WordPress\Module;
 
-use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use InvalidArgumentException;
 use stdClass;
 use Traversable;
@@ -12,7 +11,7 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-trait IteratorToArrayRecursiveCapable
+trait IteratorToArrayRecursiveCapableTrait
 {
     /**
      * Convert an iterator to an array.

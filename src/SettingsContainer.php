@@ -64,7 +64,7 @@ class SettingsContainer implements ContainerInterface
     use NormalizeIterableCapableTrait;
 
     /* @since [*next-version*] */
-    use IteratorToArrayRecursiveCapable;
+    use IteratorToArrayRecursiveCapableTrait;
 
     /**
      * Map of settings keys to their default values.
