@@ -17,6 +17,7 @@ use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapableTrait;
 use stdClass;
 use Traversable;
 
@@ -49,13 +50,16 @@ class SettingsStateHandler implements InvocableInterface
     use CreateNotFoundExceptionCapableTrait;
 
     /* @since [*next-version*] */
-    use NormalizeIterableCapableTrait;
-
-    /* @since [*next-version*] */
     use CreateContainerExceptionCapableTrait;
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapableTrait;
 
     /**
      * Settings container.
@@ -94,21 +98,32 @@ class SettingsStateHandler implements InvocableInterface
     protected $updateEndpoint;
 
     /**
+     * Wizard default labels.
+     *
+     * @since [*next-version*]
+     *
+     * @var array
+     */
+    protected $defaultWizardLabels;
+
+    /**
      * SettingsStateHandler constructor.
      *
      * @since [*next-version*]
      *
-     * @param ContainerInterface          $settingsContainer Settings container.
-     * @param array|stdClass|MapInterface $fieldsOptions     Map of available fields to their available options.
-     * @param array|stdClass|Traversable  $fields            List of settings fields.
-     * @param array|stdClass|MapInterface $updateEndpoint    Configuration of update endpoint.
+     * @param ContainerInterface          $settingsContainer   Settings container.
+     * @param array|stdClass|MapInterface $fieldsOptions       Map of available fields to their available options.
+     * @param array|stdClass|Traversable  $fields              List of settings fields.
+     * @param array|stdClass|MapInterface $updateEndpoint      Configuration of update endpoint.
+     * @param array                       $defaultWizardLabels Wizard default labels.
      */
-    public function __construct($settingsContainer, $fieldsOptions, $fields, $updateEndpoint)
+    public function __construct($settingsContainer, $fieldsOptions, $fields, $updateEndpoint, $defaultWizardLabels)
     {
-        $this->settingsContainer = $settingsContainer;
-        $this->fieldsOptions     = $fieldsOptions;
-        $this->fields            = $fields;
-        $this->updateEndpoint    = $updateEndpoint;
+        $this->settingsContainer   = $settingsContainer;
+        $this->fieldsOptions       = $fieldsOptions;
+        $this->fields              = $fields;
+        $this->updateEndpoint      = $updateEndpoint;
+        $this->defaultWizardLabels = $defaultWizardLabels;
     }
 
     /**
@@ -130,7 +145,8 @@ class SettingsStateHandler implements InvocableInterface
         $event->setParams([
             'settingsUi' => [
                 'preview'            => $this->_getPreviewSettingsFields(),
-                'options'            => $this->_prepareFieldsOptions($this->fieldsOptions),
+                'options'            => $this->_iteratorToArrayRecursive($this->fieldsOptions),
+                'labels'             => $this->defaultWizardLabels,
                 'values'             => $this->_prepareSettingsValues(),
                 'updateEndpoint'     => $this->_normalizeArray($this->updateEndpoint),
                 'generalSettingsUrl' => $this->_getGeneralSettingsUrl(),
@@ -177,29 +193,6 @@ class SettingsStateHandler implements InvocableInterface
         $timeFormat = get_option('time_format');
 
         return date($dateFormat) . ' | ' . date($timeFormat);
-    }
-
-    /**
-     * Prepare fields options for displaying in UI state.
-     *
-     * @since [*next-version*]
-     *
-     * @param array|stdClass|MapInterface $fieldsOptions Map of available fields to their available options.
-     *
-     * @return array Prepared fields options for displaying in UI state.
-     */
-    protected function _prepareFieldsOptions($fieldsOptions)
-    {
-        $preparedFieldsOptions = [];
-        foreach ($fieldsOptions as $optionsKey => $values) {
-            $prepared = [];
-            foreach ($values as $key => $value) {
-                $prepared[$key] = $this->__($value);
-            }
-            $preparedFieldsOptions[$optionsKey] = $prepared;
-        }
-
-        return $preparedFieldsOptions;
     }
 
     /**

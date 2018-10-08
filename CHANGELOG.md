@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Added
+- Setting for wizard labels overrides.
+
+### Changed
+- Settings default values moved to module's configuration namespace.
+- Using version `0.2.3` of `bookings-js`
 
 ## [0.1-alpha21] - 2018-09-24
 ### Changed
