@@ -13,6 +13,7 @@ use Dhii\Data\Object\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
@@ -60,7 +61,10 @@ class SettingsContainer implements ContainerInterface
     use NormalizeKeyCapableTrait;
 
     /* @since [*next-version*] */
-    use IteratorToArrayConvertCapable;
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapable;
 
     /**
      * Map of settings keys to their default values.

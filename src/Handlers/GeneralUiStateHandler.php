@@ -12,12 +12,13 @@ use Dhii\Event\EventFactoryInterface;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventInterface;
 use Psr\EventManager\EventManagerInterface;
-use RebelCode\Bookings\WordPress\Module\IteratorToArrayConvertCapable;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapable;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
 use Traversable;
@@ -61,7 +62,10 @@ class GeneralUiStateHandler implements InvocableInterface
     use NormalizeStringCapableTrait;
 
     /* @since [*next-version*] */
-    use IteratorToArrayConvertCapable;
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapable;
 
     /**
      * Settings container.

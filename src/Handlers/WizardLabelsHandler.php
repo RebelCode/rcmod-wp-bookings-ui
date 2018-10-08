@@ -6,7 +6,8 @@ use Dhii\Collection\MapInterface;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
-use RebelCode\Bookings\WordPress\Module\IteratorToArrayConvertCapable;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapable;
 use stdClass;
 use Traversable;
 
@@ -24,7 +25,10 @@ class WizardLabelsHandler implements InvocableInterface
     use CreateInvalidArgumentExceptionCapableTrait;
 
     /* @since [*next-version*] */
-    use IteratorToArrayConvertCapable;
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapable;
 
     /**
      * List of default labels.

@@ -3,6 +3,7 @@
 namespace RebelCode\Bookings\WordPress\Module;
 
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
+use InvalidArgumentException;
 use stdClass;
 use Traversable;
 
@@ -11,11 +12,8 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-trait IteratorToArrayConvertCapable
+trait IteratorToArrayRecursiveCapable
 {
-    /* @since [*next-version*] */
-    use NormalizeIterableCapableTrait;
-
     /**
      * Convert an iterator to an array.
      *
@@ -42,4 +40,19 @@ trait IteratorToArrayConvertCapable
 
         return $array;
     }
+
+    /**
+     * Normalizes an iterable.
+     *
+     * Makes sure that the return value can be iterated over.
+     *
+     * @since [*next-version*]
+     *
+     * @param mixed $iterable The iterable to normalize.
+     *
+     * @throws InvalidArgumentException If the iterable could not be normalized.
+     *
+     * @return array|Traversable|stdClass The normalized iterable.
+     */
+    protected abstract function _normalizeIterable($iterable);
 }
