@@ -2,6 +2,7 @@
 
 use Dhii\Cache\MemoryMemoizer;
 use Dhii\Data\Container\ContainerFactoryInterface;
+use Dhii\Output\PlaceholderTemplate;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
 use Psr\Container\ContainerInterface;
@@ -186,6 +187,17 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_ui_settings_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('settings/index.html');
+        },
+        /**
+         * The template for the services page.
+         *
+         * @since [*next-version*]
+         *
+         * @return PlaceholderTemplate
+         */
+        'eddbk_ui_services_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('services/index.html');
         },
         /*
          * The template for settings page.

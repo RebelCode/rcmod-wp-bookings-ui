@@ -49,6 +49,15 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $bookingsPageId;
 
     /**
+     * Registered service's page ID.
+     *
+     * @since [*next-version*]
+     *
+     * @var string
+     */
+    protected $servicesPageId;
+
+    /**
      * Page where metabox application should be shown.
      *
      * @var string
@@ -174,6 +183,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return in_array($this->_getCurrentScreenId(), [
             $this->bookingsPageId,
+            $this->servicesPageId,
             $this->metaboxPageId,
             $this->settingsPageId,
             $this->aboutPageId,
@@ -292,6 +302,18 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
+     * Get a state for the services page.
+     *
+     * @since [*next-version*]
+     *
+     * @return array The state for the client application.
+     */
+    protected function _getServicesListAppState()
+    {
+        return $this->_trigger('eddbk_services_ui_state', [])->getParams();
+    }
+
+    /**
      * Get app state for service page.
      *
      * @since [*next-version*]
@@ -340,9 +362,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Get application state with general data.
      *
      * @since [*next-version*]
-     * 
+     *
      * @param array $concreteAppState Concrete state of application for page.
-     * 
+     *
      * @return array Application state with general items.
      */
     protected function _getAppState(array $concreteAppState)
@@ -354,7 +376,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Get items in state available for all application parts.
      *
      * @since [*next-version*]
-     * 
+     *
      * @return array General items in state, that available across all application.
      */
     protected function _getGeneralAppState()
@@ -394,6 +416,9 @@ class WpBookingsUiModule extends AbstractBaseModule
         switch ($currentScreenId) {
             case $this->bookingsPageId:
                 $state = $this->_getBookingsAppState($c);
+                break;
+            case $this->servicesPageId:
+                $state = $this->_getServicesListAppState();
                 break;
             case $this->metaboxPageId:
                 $state = $this->_getServiceAppState();
@@ -455,6 +480,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected function _adminMenu($c)
     {
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
+        $servicesMenuConfig = $c->get('wp_bookings_ui/menu/services');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
@@ -468,6 +494,22 @@ class WpBookingsUiModule extends AbstractBaseModule
             },
             $rootMenuConfig->get('icon'),
             $rootMenuConfig->get('position')
+        );
+
+        $this->servicesPageId = add_submenu_page(
+            $rootMenuConfig->get('menu_slug'),
+            $this->__($servicesMenuConfig->get('page_title')),
+            $this->__($servicesMenuConfig->get('menu_title')),
+            $servicesMenuConfig->get('capability'),
+            $servicesMenuConfig->get('menu_slug'),
+            function () use ($c) {
+                $servicesTemplate = $c->get('eddbk_ui_services_template');
+                $componentsContent = $this->_renderTemplate('components');
+
+                echo $servicesTemplate->render([
+                    'components' => $componentsContent,
+                ]);
+            }
         );
 
         $this->settingsPageId = add_submenu_page(
@@ -484,7 +526,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $componentsContent = $this->_renderTemplate('components');
 
                 echo $settingsTemplate->render([
-                    'wizardSettingsTab' => $wizardSettingsTabContent,
+                    'wizardSettingsTab'  => $wizardSettingsTabContent,
                     'generalSettingsTab' => $generalSettingsTabContent,
                     'components'         => $componentsContent,
                 ]);

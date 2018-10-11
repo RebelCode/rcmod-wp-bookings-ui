@@ -137,6 +137,12 @@ return [
                 'icon' => 'dashicons-calendar-alt',
                 'position' => 20,
             ],
+            'services' => [
+                'page_title' => 'Services',
+                'menu_title' => 'Services',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-services',
+            ],
             'settings' => [
                 'page_title' => 'Settings',
                 'menu_title' => 'Settings',
