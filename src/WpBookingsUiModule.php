@@ -308,9 +308,11 @@ class WpBookingsUiModule extends AbstractBaseModule
      *
      * @return array The state for the client application.
      */
-    protected function _getServicesListAppState()
+    protected function _getServicesListAppState($c)
     {
-        return $this->_trigger('eddbk_services_ui_state', [])->getParams();
+        return $this->_trigger('eddbk_services_ui_state', [
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config')),
+        ])->getParams();
     }
 
     /**
@@ -418,7 +420,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $state = $this->_getBookingsAppState($c);
                 break;
             case $this->servicesPageId:
-                $state = $this->_getServicesListAppState();
+                $state = $this->_getServicesListAppState($c);
                 break;
             case $this->metaboxPageId:
                 $state = $this->_getServiceAppState();

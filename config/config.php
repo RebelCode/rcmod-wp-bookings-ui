@@ -278,6 +278,12 @@ return [
                     'endpoint' => '/eddbk/v1/sessions/',
                 ],
             ],
+            'services' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+            ],
         ],
 
         /*
