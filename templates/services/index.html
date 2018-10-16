@@ -2,10 +2,11 @@
     <div class="vcloak--visible loading-container"></div>
     <services-page inline-template>
         <div class="wrap vcloak--hidden">
+            <service-editor></service-editor>
             <h1 class="wp-heading-inline">
                 {{ _('Services') }}
             </h1>
-            <button class="page-title-action">Add New</button>
+            <button class="page-title-action" @click="openServiceEditor({})">Add New</button>
             <p class="search-box search-box--services">
                 <label for="services-search-input" class="screen-reader-text">
                     {{ _('Search Services') }}:
@@ -14,7 +15,7 @@
             </p>
             <hr class="wp-header-end">
 
-            <services></services>
+            <services @edit="openServiceEditor"></services>
         </div>
     </services-page>
 </div>
