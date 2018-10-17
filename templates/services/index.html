@@ -2,7 +2,7 @@
     <div class="vcloak--visible loading-container"></div>
     <services-page inline-template>
         <div class="wrap vcloak--hidden">
-            <service-editor></service-editor>
+            <service-editor @saved="fetchServices"></service-editor>
             <h1 class="wp-heading-inline">
                 {{ _('Services') }}
             </h1>
@@ -15,7 +15,7 @@
             </p>
             <hr class="wp-header-end">
 
-            <services @edit="openServiceEditor"></services>
+            <services @edit="openServiceEditor" @delete="deleteService"></services>
         </div>
     </services-page>
 </div>

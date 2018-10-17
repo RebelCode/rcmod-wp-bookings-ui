@@ -283,6 +283,18 @@ return [
                     'method' => 'get',
                     'endpoint' => '/eddbk/v1/services/',
                 ],
+                'delete' => [
+                    'method' => 'delete',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'update' => [
+                    'method' => 'patch',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'create' => [
+                    'method' => 'post',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
             ],
         ],
 
