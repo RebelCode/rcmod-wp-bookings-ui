@@ -298,7 +298,7 @@ return [
                  * If the amount > 2, complex setup validation wouldn't pass.
                  */
                 [
-                    'field' => 'sessions',
+                    'field' => 'model.sessionLengths',
                     'rule' => 'length',
                     'value' => [0, 2] // Max count of session lengths is 2.
                 ],
