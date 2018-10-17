@@ -58,13 +58,6 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $servicesPageId;
 
     /**
-     * Page where metabox application should be shown.
-     *
-     * @var string
-     */
-    protected $metaboxPageId;
-
-    /**
      * Page where settings application should be shown.
      *
      * @var string
@@ -124,7 +117,6 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        $this->metaboxPageId   = $c->get('wp_bookings_ui/metabox/post_type');
         $this->templateManager = $c->get('template_manager');
 
         $assetsConfig = $c->get('assets_urls_map');
@@ -134,7 +126,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         }, 999);
 
         $this->_attach('admin_init', function () use ($c) {
-            $this->_adminInit($c);
+            $this->_adminInit();
         });
 
         $this->_attach('admin_menu', function () use ($c) {
@@ -184,7 +176,6 @@ class WpBookingsUiModule extends AbstractBaseModule
         return in_array($this->_getCurrentScreenId(), [
             $this->bookingsPageId,
             $this->servicesPageId,
-            $this->metaboxPageId,
             $this->settingsPageId,
             $this->aboutPageId,
         ]);
@@ -422,9 +413,6 @@ class WpBookingsUiModule extends AbstractBaseModule
             case $this->servicesPageId:
                 $state = $this->_getServicesListAppState($c);
                 break;
-            case $this->metaboxPageId:
-                $state = $this->_getServiceAppState();
-                break;
             case $this->settingsPageId:
                 $state = $this->_getSettingsAppState();
                 break;
@@ -440,25 +428,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Register hook on admin init which will register everything else.
      *
      * @since [*next-version*]
-     *
-     * @param ContainerInterface $c Configuration container of module.
      */
-    protected function _adminInit($c)
+    protected function _adminInit()
     {
-        $metaboxConfig = $c->get('wp_bookings_ui/metabox');
-        /*
-         * Add metabox with availabilities configuration to
-         * service's edit page.
-         */
-        add_meta_box(
-            $metaboxConfig->get('id'),
-            $this->__($metaboxConfig->get('title')),
-            function () {
-                echo $this->_renderTemplate('availability/metabox');
-            },
-            $metaboxConfig->get('post_type')
-        );
-
         /*
          * Add screen options on bookings management page.
          */

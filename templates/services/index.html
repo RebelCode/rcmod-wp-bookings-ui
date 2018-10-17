@@ -11,7 +11,8 @@
                 <label for="services-search-input" class="screen-reader-text">
                     {{ _('Search Services') }}:
                 </label>
-                <input type="search" id="services-search-input" :placeholder="_('Search Services')" name="s">
+                <input type="search" id="services-search-input" :placeholder="_('Search Services')" v-model="search" @keyup.enter="fetchServices">
+                <input type="submit" id="search-submit" :value="_('Search')" class="button" @click="fetchServices">
             </p>
             <hr class="wp-header-end">
 
