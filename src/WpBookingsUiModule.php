@@ -342,7 +342,7 @@ class WpBookingsUiModule extends AbstractBaseModule
             /*
              * List of availabilities for current service.
              */
-            'availabilities' => [
+            'availability' => [
                 'rules' => [],
             ],
 
