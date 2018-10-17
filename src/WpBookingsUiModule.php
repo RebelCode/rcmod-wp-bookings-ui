@@ -307,51 +307,6 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Get app state for service page.
-     *
-     * @since [*next-version*]
-     *
-     * @return array Front-end application's state on service's page.
-     */
-    protected function _getServiceAppState()
-    {
-        $pageId = get_post()->ID;
-
-        return $this->_trigger('eddbk_services_nedit_ui_state', [
-            'id' => $pageId,
-
-            /*
-             * Service timezone
-             */
-            'timezone' => null,
-
-            /*
-             * Is bookings available for service
-             */
-            'bookingsEnabled' => false,
-
-            /*
-             * List of availabilities for current service.
-             */
-            'availability' => [
-                'rules' => [],
-            ],
-
-            /*
-             * List of available sessions for current service.
-             */
-            'sessionLengths' => [],
-
-            /*
-             * Display options settings for current service.
-             */
-            'displayOptions' => [
-                'allowCustomerChangeTimezone' => false,
-            ],
-        ])->getParams();
-    }
-
-    /**
      * Get application state with general data.
      *
      * @since [*next-version*]
