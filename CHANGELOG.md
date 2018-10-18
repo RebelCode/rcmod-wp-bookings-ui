@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added separate WP page for managing services.
 
-### Changed
-- Stopped using a metabox for the service editing functionality.
+### Removed
+- Removed the bookings metabox in the new/edit download page.
 
 ## [0.1-alpha22] - 2018-10-08
 ### Added
