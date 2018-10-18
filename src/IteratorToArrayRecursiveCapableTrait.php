@@ -53,5 +53,5 @@ trait IteratorToArrayRecursiveCapableTrait
      *
      * @return array|Traversable|stdClass The normalized iterable.
      */
-    protected abstract function _normalizeIterable($iterable);
+    abstract protected function _normalizeIterable($iterable);
 }

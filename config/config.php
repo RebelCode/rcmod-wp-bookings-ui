@@ -102,11 +102,6 @@ return [
             ],
             'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY),
         ],
-        'metabox' => [
-            'id' => 'service_booking_settings',
-            'post_type' => 'download',
-            'title' => 'Booking Options',
-        ],
         'config' => [
             'formats' => [
                 'datetime' => [
@@ -136,6 +131,12 @@ return [
                 'menu_slug' => 'eddbk-bookings',
                 'icon' => 'dashicons-calendar-alt',
                 'position' => 20,
+            ],
+            'services' => [
+                'page_title' => 'Services',
+                'menu_title' => 'Services',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-services',
             ],
             'settings' => [
                 'page_title' => 'Settings',
@@ -195,13 +196,7 @@ return [
         'templates' => [
             'components',
             'main',
-
-            'availability/metabox',
             'availability/service-availability-editor',
-            'availability/tab-availability',
-            'availability/tab-display-options',
-            'availability/tab-session-length',
-
             'booking/booking-editor',
             'booking/bookings-calendar-view',
             'booking/bookings-list-view',
@@ -272,6 +267,24 @@ return [
                     'endpoint' => '/eddbk/v1/sessions/',
                 ],
             ],
+            'services' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'delete' => [
+                    'method' => 'delete',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'update' => [
+                    'method' => 'patch',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'create' => [
+                    'method' => 'post',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+            ],
         ],
 
         /*
@@ -285,7 +298,7 @@ return [
                  * If the amount > 2, complex setup validation wouldn't pass.
                  */
                 [
-                    'field' => 'sessions',
+                    'field' => 'model.sessionLengths',
                     'rule' => 'length',
                     'value' => [0, 2] // Max count of session lengths is 2.
                 ],
@@ -305,57 +318,6 @@ return [
          * List of different UI actions pipes. Each of pipe is configurable and can be ran
          * on client on some action.
          */
-        'ui_actions' => [
-            /*
-             * Actions for booking enabled tick change.
-             */
-            'bookingsEnabledChanged' => [
-                /*
-                 * Add message to "Download Prices" and hide it. Added message will be shown
-                 * if user manually unhide this metabox.
-                 */
-                [
-                    'action' => 'addBlock',
-                    'arguments' => [
-                        'block' => 'rc-message-box',
-                        'mode' => 'prepend',
-                        'selector' => '#edd_product_prices .inside',
-                        'text' => 'The EDD Download Prices are no longer applicable when enabling Bookings. Prices are to be set from the Session Length tab in the Bookings meta box.'
-                    ]
-                ],
-                [
-                    'action' => 'checkboxClick',
-                    'arguments' => [
-                        'value' => false, // value that should be set on "act"
-                        'selector' => '#edd_product_prices-hide'
-                    ]
-                ],
-
-                /*
-                 * Automatically check the "Disable the automatic output of the purchase button"
-                 * option in the Download Settings meta box
-                 */
-                [
-                    'action' => 'checkboxClick',
-                    'arguments' => [
-                        'value' => true, // value that should be set on "act"
-                        'selector' => '#_edd_hide_purchase_link'
-                    ]
-                ],
-
-                /*
-                 * Add message to the "Download Files" meta box.
-                 */
-                [
-                    'action' => 'addBlock',
-                    'arguments' => [
-                        'block' => 'rc-message-box',
-                        'mode' => 'prepend',
-                        'selector' => '#edd_product_files .inside',
-                        'text' => 'With Bookings enabled, any downloadable files added here will be included in the purchase price of a booking, and they can be included in the EDD Purchase Confirmation page and Purchase Receipt email. Price assignment is not currently applicable.'
-                    ]
-                ],
-            ]
-        ],
+        'ui_actions' => [],
     ],
 ];

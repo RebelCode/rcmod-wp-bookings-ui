@@ -49,11 +49,13 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $bookingsPageId;
 
     /**
-     * Page where metabox application should be shown.
+     * Registered service's page ID.
+     *
+     * @since [*next-version*]
      *
      * @var string
      */
-    protected $metaboxPageId;
+    protected $servicesPageId;
 
     /**
      * Page where settings application should be shown.
@@ -115,7 +117,6 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        $this->metaboxPageId   = $c->get('wp_bookings_ui/metabox/post_type');
         $this->templateManager = $c->get('template_manager');
 
         $assetsConfig = $c->get('assets_urls_map');
@@ -125,7 +126,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         }, 999);
 
         $this->_attach('admin_init', function () use ($c) {
-            $this->_adminInit($c);
+            $this->_adminInit();
         });
 
         $this->_attach('admin_menu', function () use ($c) {
@@ -174,7 +175,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         return in_array($this->_getCurrentScreenId(), [
             $this->bookingsPageId,
-            $this->metaboxPageId,
+            $this->servicesPageId,
             $this->settingsPageId,
             $this->aboutPageId,
         ]);
@@ -292,47 +293,16 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
-     * Get app state for service page.
+     * Get a state for the services page.
      *
      * @since [*next-version*]
      *
-     * @return array Front-end application's state on service's page.
+     * @return array The state for the client application.
      */
-    protected function _getServiceAppState()
+    protected function _getServicesListAppState($c)
     {
-        $pageId = get_post()->ID;
-
-        return $this->_trigger('eddbk_services_nedit_ui_state', [
-            'id' => $pageId,
-
-            /*
-             * Service timezone
-             */
-            'timezone' => null,
-
-            /*
-             * Is bookings available for service
-             */
-            'bookingsEnabled' => false,
-
-            /*
-             * List of availabilities for current service.
-             */
-            'availabilities' => [
-                'rules' => [],
-            ],
-
-            /*
-             * List of available sessions for current service.
-             */
-            'sessionLengths' => [],
-
-            /*
-             * Display options settings for current service.
-             */
-            'displayOptions' => [
-                'allowCustomerChangeTimezone' => false,
-            ],
+        return $this->_trigger('eddbk_services_ui_state', [
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config')),
         ])->getParams();
     }
 
@@ -340,9 +310,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Get application state with general data.
      *
      * @since [*next-version*]
-     * 
+     *
      * @param array $concreteAppState Concrete state of application for page.
-     * 
+     *
      * @return array Application state with general items.
      */
     protected function _getAppState(array $concreteAppState)
@@ -354,7 +324,7 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Get items in state available for all application parts.
      *
      * @since [*next-version*]
-     * 
+     *
      * @return array General items in state, that available across all application.
      */
     protected function _getGeneralAppState()
@@ -395,8 +365,8 @@ class WpBookingsUiModule extends AbstractBaseModule
             case $this->bookingsPageId:
                 $state = $this->_getBookingsAppState($c);
                 break;
-            case $this->metaboxPageId:
-                $state = $this->_getServiceAppState();
+            case $this->servicesPageId:
+                $state = $this->_getServicesListAppState($c);
                 break;
             case $this->settingsPageId:
                 $state = $this->_getSettingsAppState();
@@ -413,25 +383,9 @@ class WpBookingsUiModule extends AbstractBaseModule
      * Register hook on admin init which will register everything else.
      *
      * @since [*next-version*]
-     *
-     * @param ContainerInterface $c Configuration container of module.
      */
-    protected function _adminInit($c)
+    protected function _adminInit()
     {
-        $metaboxConfig = $c->get('wp_bookings_ui/metabox');
-        /*
-         * Add metabox with availabilities configuration to
-         * service's edit page.
-         */
-        add_meta_box(
-            $metaboxConfig->get('id'),
-            $this->__($metaboxConfig->get('title')),
-            function () {
-                echo $this->_renderTemplate('availability/metabox');
-            },
-            $metaboxConfig->get('post_type')
-        );
-
         /*
          * Add screen options on bookings management page.
          */
@@ -455,6 +409,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected function _adminMenu($c)
     {
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
+        $servicesMenuConfig = $c->get('wp_bookings_ui/menu/services');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
@@ -468,6 +423,22 @@ class WpBookingsUiModule extends AbstractBaseModule
             },
             $rootMenuConfig->get('icon'),
             $rootMenuConfig->get('position')
+        );
+
+        $this->servicesPageId = add_submenu_page(
+            $rootMenuConfig->get('menu_slug'),
+            $this->__($servicesMenuConfig->get('page_title')),
+            $this->__($servicesMenuConfig->get('menu_title')),
+            $servicesMenuConfig->get('capability'),
+            $servicesMenuConfig->get('menu_slug'),
+            function () use ($c) {
+                $servicesTemplate = $c->get('eddbk_ui_services_template');
+                $componentsContent = $this->_renderTemplate('components');
+
+                echo $servicesTemplate->render([
+                    'components' => $componentsContent,
+                ]);
+            }
         );
 
         $this->settingsPageId = add_submenu_page(
@@ -484,7 +455,7 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $componentsContent = $this->_renderTemplate('components');
 
                 echo $settingsTemplate->render([
-                    'wizardSettingsTab' => $wizardSettingsTabContent,
+                    'wizardSettingsTab'  => $wizardSettingsTabContent,
                     'generalSettingsTab' => $generalSettingsTabContent,
                     'components'         => $componentsContent,
                 ]);
