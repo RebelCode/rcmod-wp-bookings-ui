@@ -247,7 +247,11 @@
 <script type="text/x-template" id="color-picker-template">
 <div class="eddbk-color-picker" :class="{'eddbk-color-picker--opened': isPickerOpened}" v-click-outside="closePicker">
     <div class="eddbk-color-picker-input" @click="openPicker">
-        <div class="eddbk-color-picker-input__square" :style="{'background-color':value}"></div>
+        <div class="eddbk-color-picker-input__square" :style="{'background-color':value}" v-if="value"></div>
+        <div class="eddbk-color-picker-input__dismiss" v-if="value && isCleanable" @click.stop="removeColor">
+            <span class="dashicons dashicons-dismiss"></span>
+        </div>
+        <div class="eddbk-color-picker-input__placeholder" v-if="!value">{{ placeholder }}</div>
         <span class="dashicons dashicons-arrow-down"></span>
     </div>
     <div class="eddbk-color-picker-popup">
