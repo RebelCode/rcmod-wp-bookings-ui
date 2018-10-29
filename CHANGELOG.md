@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [[*next-version*]] - YYYY-MM-DD
 ### Added
 - Added separate WP page for managing services.
+- Added WP media scripts on the service page.
 
 ### Removed
 - Removed the bookings metabox in the new/edit download page.

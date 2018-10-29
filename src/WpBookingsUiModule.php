@@ -346,8 +346,12 @@ class WpBookingsUiModule extends AbstractBaseModule
             return;
         }
 
-        // Enqueue WordPress media scripts
-        wp_enqueue_media();
+        /*
+         * Enqueue WP media scripts on the services page.
+         */
+        if ($this->_isOnPage($this->servicesPageId)) {
+            wp_enqueue_media();
+        }
 
         /*
          * Enqueue require-related script and script list from the container
