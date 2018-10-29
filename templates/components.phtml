@@ -1,14 +1,20 @@
 <script type="text/x-template" id="service-availability-editor-template">
-    <modal @close="closeModal"
+    <inline-editor @close="closeModal"
            class="eddbk-inputs"
-           style="z-index: 10000"
            :active="modalState.isOn()"
     >
         <div slot="header">
-            {{ _('Service availability') }}
+            <div class="inline-editor__back" @click="closeModal()" :class="{disabled: closeConfirming}">
+                <span class="dashicons dashicons-arrow-left-alt2"></span>
+                {{ _('Go Back') }}
+            </div>
 
-            <div class="modal__close modal--right" @click="closeModal()" v-if="!closeConfirming">&times;</div>
-            <div class="modal__header-buttons modal--right" v-else>
+            <span style="font-weight: 600; padding-left: .5rem;" v-if="!closeConfirming">
+                {{ _('Service availability') }}
+            </span>
+
+<!--            <div class="modal__close modal--right" @click="closeModal()" v-if="!closeConfirming">&times;</div>-->
+            <div class="modal__header-buttons modal--right" v-if="closeConfirming">
                 <input type="button" class="button button-dark-solid" :value="_('Close')" @click="forceCloseModal">
                 <input type="button" class="button" :value="_('Continue Editing')" @click="continueEditing">
             </div>
@@ -22,7 +28,7 @@
                 </div>
                 <div class="form-row__input">
                     <div :class="['form-row form-row--condensed', errors.has('start') ? 'form-row--with-error' : '']">
-                        <div class="form-row__label form-row__label--light">
+                        <div class="form-row__label form-row__label--padding-top form-row__label--light">
                             {{ _('Starts on') }}
                         </div>
                         <div class="form-row__input">
@@ -47,7 +53,7 @@
                         </div>
                     </div>
                     <div :class="['form-row', errors.has('end') ? 'form-row--with-error' : '']">
-                        <div class="form-row__label form-row__label--light">
+                        <div class="form-row__label form-row__label--padding-top form-row__label--light">
                             {{ _('Ends on') }}
                         </div>
                         <div class="form-row__input">
@@ -241,7 +247,7 @@
                 </div>
             </div>
         </div>
-    </modal>
+    </inline-editor>
 </script>
 
 <script type="text/x-template" id="color-picker-template">
@@ -509,6 +515,24 @@
                     <slot name="body"></slot>
                 </div>
                 <div class="modal__footer">
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<script type="text/x-template" id="inline-editor-template">
+    <transition name="editor-transition">
+        <div class="inline-editor" v-if="active">
+            <div :class="['inline-editor__body', this.modalBodyClass]">
+                <div class="inline-editor__header">
+                    <slot name="header"></slot>
+                </div>
+                <div class="inline-editor__content">
+                    <slot name="body"></slot>
+                </div>
+                <div class="inline-editor__footer">
                     <slot name="footer"></slot>
                 </div>
             </div>

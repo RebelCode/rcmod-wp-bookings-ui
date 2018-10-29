@@ -6,7 +6,9 @@
             <h1 class="wp-heading-inline">
                 {{ _('Services') }}
             </h1>
-            <button class="page-title-action" @click="openServiceEditor({})">Add New</button>
+            <button class="page-title-action"
+                    @click="openServiceEditor({})"
+            >Add New</button>
             <p class="search-box search-box--services">
                 <label for="services-search-input" class="screen-reader-text">
                     {{ _('Search Services') }}:
@@ -16,7 +18,12 @@
             </p>
             <hr class="wp-header-end">
 
-            <services @edit="openServiceEditor" @delete="deleteService" @save="saveService"></services>
+            <services @edit="openServiceEditor"
+                      @create="openServiceEditor({})"
+                      @delete="deleteService"
+                      @save="saveService"
+                      :is-initial-fetch-results="isInitialFetchResults"
+            ></services>
         </div>
     </services-page>
 </div>
