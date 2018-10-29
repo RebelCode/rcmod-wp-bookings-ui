@@ -6,7 +6,7 @@
         <div slot="header">
             <div class="inline-editor__back" @click="closeModal()" :class="{disabled: closeConfirming}">
                 <span class="dashicons dashicons-arrow-left-alt2"></span>
-                {{ _('Availabilities list') }}
+                {{ _('Go Back') }}
             </div>
 
             <span style="font-weight: 600; padding-left: .5rem;" v-if="!closeConfirming">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-row__input">
                     <div :class="['form-row form-row--condensed', errors.has('start') ? 'form-row--with-error' : '']">
-                        <div class="form-row__label form-row__label--light">
+                        <div class="form-row__label form-row__label--padding-top form-row__label--light">
                             {{ _('Starts on') }}
                         </div>
                         <div class="form-row__input">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div :class="['form-row', errors.has('end') ? 'form-row--with-error' : '']">
-                        <div class="form-row__label form-row__label--light">
+                        <div class="form-row__label form-row__label--padding-top form-row__label--light">
                             {{ _('Ends on') }}
                         </div>
                         <div class="form-row__input">
