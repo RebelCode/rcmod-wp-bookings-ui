@@ -6,7 +6,7 @@
     "build": "node ./build/build.js"
   },
   "dependencies": {
-    "@rebelcode/bookings-js": "0.2.3"
+    "@rebelcode/bookings-js": "0.2.4"
   },
   "devDependencies": {
     "copyfiles": "^2.1.0",
