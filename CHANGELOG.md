@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha23] - 2018-10-30
 ### Added
-- Added separate WP page for managing services.
+- Added new separate WP page for managing services.
 - Added WP media scripts on the service page.
 
 ### Removed
