@@ -148,6 +148,9 @@ class WpBookingsUiModule extends AbstractBaseModule
         $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_options_handler'));
 
         $this->_attach('wp_ajax_' . $c->get('wp_bookings_ui/settings/action'), $c->get('eddbk_bookings_update_settings_handler'));
+
+        // Event for providing the booking services for the admin bookings UI
+        $this->_attach('eddbk_admin_bookings_ui_services', $c->get('eddbk_admin_bookings_ui_services_handler'));
     }
 
     /**
