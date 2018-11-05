@@ -243,12 +243,22 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $iterator = $this->_normalizeIterator($list);
                 $transformed = new TransformerIterator(
                     $iterator,
-                    $c->get('eddbk_rest_api_full_info_service_transformer')
+                    $c->get('eddbk_bookings_ui_service_transformer')
                 );
                 $array = $this->_normalizeArray($transformed);
 
                 return $array;
             });
         },
+
+        /*
+         * The service transformer to use for the bookings UI.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_service_transformer' => function (ContainerInterface $c) {
+            // Use the same transformer as the REST API when the request is authenticated
+            return $c->get('eddbk_rest_api_full_info_service_transformer');
+        }
     ];
 };
