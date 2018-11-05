@@ -6,6 +6,7 @@ use Dhii\Output\PlaceholderTemplate;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
 use Psr\Container\ContainerInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\AdminBookingsUiServicesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\FrontApplicationLabelsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\GeneralUiStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
@@ -19,6 +20,8 @@ use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
+use RebelCode\Transformers\CallbackTransformer;
+use RebelCode\Transformers\TransformerIterator;
 use RebelCode\WordPress\Nonce\Factory\NonceFactoryInterface;
 use RebelCode\WordPress\Nonce\NonceInterface;
 
@@ -216,6 +219,36 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_ui_settings_wizard_tab_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('settings/wizard.html');
+        },
+
+        /*
+         * The handler for providing services to the admin bookings UI.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_services_handler' => function (ContainerInterface $c) {
+            return new AdminBookingsUiServicesHandler(
+                $c->get('eddbk_services_manager'),
+                $c->get('eddbk_bookings_ui_service_list_transformer')
+            );
+        },
+
+        /*
+         * The transformer for transforming lists of services.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_service_list_transformer' => function (ContainerInterface $c) {
+            return new CallbackTransformer(function ($list) use ($c) {
+                $iterator = $this->_normalizeIterator($list);
+                $transformed = new TransformerIterator(
+                    $iterator,
+                    $c->get('eddbk_rest_api_full_info_service_transformer')
+                );
+                $array = $this->_normalizeArray($transformed);
+
+                return $array;
+            });
         },
     ];
 };
