@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - The handler for getting the services for the bookings UI is now bundled with this module.
 
+### Changed
+- Changed templates to work with new session types.
+
 ## [0.1-alpha23] - 2018-10-30
 ### Added
 - Added new separate WP page for managing services.

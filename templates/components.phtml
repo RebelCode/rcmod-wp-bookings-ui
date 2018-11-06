@@ -278,12 +278,12 @@
         </template>
         <div :class="isEditModeAvailable && !isEditing ? 'readonly' : ''" v-else>
             <div class="form-row">
-                <div class="form-row__label form-row__label--smaller">
+                <div class="form-row__label form-row__label--smaller form-row__label--padding-top">
                     {{ ('Duration') }}
                 </div>
                 <div class="form-row__input" :class="isEditModeAvailable && !isEditing ? 'form-row__input--padded' : ''">
                     <session-duration-picker
-                            v-model="sessionDuration"
+                            v-model="sessionType"
                             :service="service"
                             :isEditModeAvailable="isEditModeAvailable"
                             :isEditing="isEditing"
@@ -291,7 +291,7 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-row__label form-row__label--smaller">
+                <div class="form-row__label form-row__label--smaller form-row__label--padding-top">
                     {{ ('Date') }}
                     <span class="loading-inline" v-if="isSessionsLoading"></span>
                 </div>
@@ -304,7 +304,7 @@
                             :opened-on-date.sync="openedOnDate"
                             :session.sync="session"
                             :loading="isSessionsLoading"
-                            :selected-session-length="sessionDuration"
+                            :selected-session-type="sessionType"
                             :available-sessions="sessions"
                             :prev-available-day.sync="prevAvailableDay"
                             :next-available-day.sync="nextAvailableDay"
@@ -313,7 +313,7 @@
                 </div>
             </div>
             <div class="form-row" v-if="!isDailyDuration">
-                <div class="form-row__label form-row__label--smaller">
+                <div class="form-row__label form-row__label--smaller form-row__label--padding-top">
                     {{ ('Time') }}
                 </div>
                 <div class="form-row__input" v-if="selectedDay">
@@ -327,7 +327,7 @@
                         ></date-navigator>
                         <session-time-picker v-model="session"
                                              :selected-day.sync="selectedDay"
-                                             :selected-session-length="sessionDuration"
+                                             :selected-session-type="sessionType"
                                              :service="service"
                                              :timezone="timezone"
                                              :sessions="selectedDaySessions"
@@ -387,14 +387,14 @@
 <script type="text/x-template" id="session-duration-picker-template">
     <div>
         <div v-show="$attrs.isEditModeAvailable && !$attrs.isEditing">
-            {{ sessionLengthLabel(valueProxy) }}
+            {{ valueProxy ? sessionTypeLabel(valueProxy) : '' }}
         </div>
         <select v-show="!$attrs.isEditModeAvailable || $attrs.isEditing"
                 v-model="valueProxy"
                 class="form-row__field"
         >
-            <option :value="sessionLength" v-for="sessionLength in service.sessionLengths">
-                {{ sessionLengthLabel(sessionLength) }}
+            <option :value="sessionType" v-for="sessionType in service.sessionTypes">
+                {{ sessionTypeLabel(sessionType) }}
             </option>
         </select>
     </div>
