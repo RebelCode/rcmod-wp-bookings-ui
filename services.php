@@ -16,6 +16,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\WizardLabelsHandler;
+use RebelCode\Bookings\WordPress\Module\ServiceListTransformer;
 use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
@@ -239,16 +240,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @since [*next-version*]
          */
         'eddbk_bookings_ui_service_list_transformer' => function (ContainerInterface $c) {
-            return new CallbackTransformer(function ($list) use ($c) {
-                $iterator = $this->_normalizeIterator($list);
-                $transformed = new TransformerIterator(
-                    $iterator,
-                    $c->get('eddbk_bookings_ui_service_transformer')
-                );
-                $array = $this->_normalizeArray($transformed);
-
-                return $array;
-            });
+            return new ServiceListTransformer($c->get('eddbk_bookings_ui_service_transformer'));
         },
 
         /*
