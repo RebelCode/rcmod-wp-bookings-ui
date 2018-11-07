@@ -138,6 +138,12 @@ return [
                 'capability' => 'publish_posts',
                 'menu_slug' => 'eddbk-services',
             ],
+            'staff_members' => [
+                'page_title' => 'Staff Members',
+                'menu_title' => 'Staff Members',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-staff-members',
+            ],
             'settings' => [
                 'page_title' => 'Settings',
                 'menu_title' => 'Settings',
@@ -285,6 +291,24 @@ return [
                     'endpoint' => '/eddbk/v1/services/',
                 ],
             ],
+            'staff_members' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'delete' => [
+                    'method' => 'delete',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'update' => [
+                    'method' => 'patch',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'create' => [
+                    'method' => 'post',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+            ]
         ],
 
         /*

@@ -58,6 +58,15 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $servicesPageId;
 
     /**
+     * Registered staff's page ID.
+     *
+     * @since [*next-version*]
+     *
+     * @var string
+     */
+    protected $staffMembersPageId;
+
+    /**
      * Page where settings application should be shown.
      *
      * @var string
@@ -179,6 +188,7 @@ class WpBookingsUiModule extends AbstractBaseModule
         return in_array($this->_getCurrentScreenId(), [
             $this->bookingsPageId,
             $this->servicesPageId,
+            $this->staffMembersPageId,
             $this->settingsPageId,
             $this->aboutPageId,
         ]);
@@ -310,6 +320,20 @@ class WpBookingsUiModule extends AbstractBaseModule
     }
 
     /**
+     * Get a state for the staff members page.
+     *
+     * @since [*next-version*]
+     *
+     * @return array The state for the client application.
+     */
+    protected function _getStaffMembersAppState($c)
+    {
+        return $this->_trigger('eddbk_staff_members_ui_state', [
+            'endpointsConfig' => $this->_prepareEndpoints($c->get('wp_bookings_ui/endpoints_config')),
+        ])->getParams();
+    }
+
+    /**
      * Get application state with general data.
      *
      * @since [*next-version*]
@@ -350,9 +374,9 @@ class WpBookingsUiModule extends AbstractBaseModule
         }
 
         /*
-         * Enqueue WP media scripts on the services page.
+         * Enqueue WP media scripts on the services page and staff members page.
          */
-        if ($this->_isOnPage($this->servicesPageId)) {
+        if ($this->_isOnPage($this->servicesPageId) || $this->_isOnPage($this->staffMembersPageId)) {
             wp_enqueue_media();
         }
 
@@ -377,6 +401,9 @@ class WpBookingsUiModule extends AbstractBaseModule
                 break;
             case $this->servicesPageId:
                 $state = $this->_getServicesListAppState($c);
+                break;
+            case $this->staffMembersPageId:
+                $state = $this->_getStaffMembersAppState($c);
                 break;
             case $this->settingsPageId:
                 $state = $this->_getSettingsAppState();
@@ -420,6 +447,7 @@ class WpBookingsUiModule extends AbstractBaseModule
     {
         $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
         $servicesMenuConfig = $c->get('wp_bookings_ui/menu/services');
+        $staffMembersMenuConfig = $c->get('wp_bookings_ui/menu/staff_members');
         $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
         $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
 
@@ -446,6 +474,22 @@ class WpBookingsUiModule extends AbstractBaseModule
                 $componentsContent = $this->_renderTemplate('components');
 
                 echo $servicesTemplate->render([
+                    'components' => $componentsContent,
+                ]);
+            }
+        );
+
+        $this->staffMembersPageId = add_submenu_page(
+            $rootMenuConfig->get('menu_slug'),
+            $this->__($staffMembersMenuConfig->get('page_title')),
+            $this->__($staffMembersMenuConfig->get('menu_title')),
+            $staffMembersMenuConfig->get('capability'),
+            $staffMembersMenuConfig->get('menu_slug'),
+            function () use ($c) {
+                $staffMembersTemplate = $c->get('eddbk_ui_staff_members_template');
+                $componentsContent = $this->_renderTemplate('components');
+
+                echo $staffMembersTemplate->render([
                     'components' => $componentsContent,
                 ]);
             }

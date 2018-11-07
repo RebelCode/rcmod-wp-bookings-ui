@@ -203,6 +203,17 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('services/index.html');
         },
+        /**
+         * The template for the staff members page.
+         *
+         * @since [*next-version*]
+         *
+         * @return PlaceholderTemplate
+         */
+        'eddbk_ui_staff_members_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('staff_members/index.html');
+        },
         /*
          * The template for settings page.
          *
