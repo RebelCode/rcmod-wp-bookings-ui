@@ -7,23 +7,22 @@
                 {{ _('Staff Members') }}
             </h1>
             <button class="page-title-action"
-                    @click="openStaffMembersEditor({})"
+                    @click="openEditor({})"
             >Add New</button>
             <p class="search-box search-box--services">
                 <label for="services-search-input" class="screen-reader-text">
                     {{ _('Search Staff Members') }}:
                 </label>
-                <input type="search" id="services-search-input" :placeholder="_('Search Members')" v-model="search" @keyup.enter="fetchStaffMembers">
-                <input type="submit" id="search-submit" :value="_('Search')" class="button" @click="fetchStaffMembers">
+                <input type="search" id="services-search-input" :placeholder="_('Search Staff Members')" v-model="search" @keyup.enter="fetchItems">
+                <input type="submit" id="search-submit" :value="_('Search')" class="button" @click="fetchItems">
             </p>
             <hr class="wp-header-end">
 
-            <staff-memembers @edit="openStaffMembersEditor"
-                      @create="openStaffMembersEditor({})"
-                      @delete="deleteStaffMember"
-                      @save="saveStaffMember"
+            <staff-members @edit="openEditor"
+                      @create="openEditor({})"
+                      @delete="deleteItem"
                       :is-initial-fetch-results="isInitialFetchResults"
-            ></staff-memembers>
+            ></staff-members>
         </div>
     </staff-members-page>
 </div>
