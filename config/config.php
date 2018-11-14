@@ -31,6 +31,9 @@ return [
                     'duration' => [
                         'title' => 'Select duration',
                     ],
+                    'staffMember' => [
+                        'title' => 'Select staff member',
+                    ],
                     'date' => [
                         'title' => 'Select a date',
                         'empty' => 'No appointments are available this month.',
@@ -294,7 +297,7 @@ return [
             'staff_members' => [
                 'fetch' => [
                     'method' => 'get',
-                    'endpoint' => '/eddbk/v1/resources/staff/',
+                    'endpoint' => 'http://scotchbox.local/wp/wp-admin/admin-ajax.php?action=get_staff_members',
                 ],
                 'delete' => [
                     'method' => 'delete',
