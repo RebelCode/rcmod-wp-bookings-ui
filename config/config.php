@@ -51,6 +51,10 @@ return [
                     ],
                 ],
             ],
+            'wizard_fields' => [
+                'duration',
+                'staffMember'
+            ],
             'options' => [
                 'week_starts_on' => [
                     'sunday' => 'Sunday',
@@ -72,7 +76,8 @@ return [
                 'default_calendar_view',
                 'booking_wizard_color',
                 'booking_statuses_colors',
-                'booking_wizard_labels'
+                'booking_wizard_labels',
+                'booking_wizard_fields'
             ],
             'prefix' => 'eddbk',
             'default_values' => [
@@ -86,10 +91,15 @@ return [
                     'completed' => '#57606f',
                     'cancelled' => '#eb4d4b',
                 ],
-                'booking_wizard_labels' => []
+                'booking_wizard_labels' => [],
+                'booking_wizard_fields' => [
+                    'duration',
+                    'staffMember'
+                ]
             ],
             'array_fields' => [
-                'booking_statuses_colors'
+                'booking_statuses_colors',
+                'booking_wizard_fields'
             ],
             'action' => WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION,
             'update_endpoint' => [
@@ -297,7 +307,7 @@ return [
             'staff_members' => [
                 'fetch' => [
                     'method' => 'get',
-                    'endpoint' => 'http://scotchbox.local/wp/wp-admin/admin-ajax.php?action=get_staff_members',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
                 ],
                 'delete' => [
                     'method' => 'delete',

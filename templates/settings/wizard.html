@@ -18,7 +18,11 @@
                     </div>
                 </div>
                 <div class="form-row__input">
-                    <wizard-editor v-model="booking_wizard_labels" :defaults="settingsConfig.labels" :color="booking_wizard_color"></wizard-editor>
+                    <wizard-editor v-model="booking_wizard_labels"
+                                   :defaults="settingsConfig.labels"
+                                   :color="booking_wizard_color"
+                                   :fields-order.sync="booking_wizard_fields"
+                    ></wizard-editor>
                 </div>
             </div>
         </div>
