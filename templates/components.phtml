@@ -276,17 +276,22 @@
             <div class="description">Please select service to choose available session for booking.</div>
         </template>
         <div :class="isEditModeAvailable && !isEditing ? 'readonly' : ''" v-else>
-            <div class="form-row">
+            <div class="form-row" v-for="filterKey of filters" v-if="hasFilterValues(filterKey)">
                 <div class="form-row__label form-row__label--smaller form-row__label--padding-top">
-                    {{ ('Duration') }}
+                    {{ $attrs.field_labels[filterKey] }}
                 </div>
-                <div class="form-row__input" :class="isEditModeAvailable && !isEditing ? 'form-row__input--padded' : ''">
-                    <session-duration-picker
-                            v-model="sessionType"
-                            :service="service"
-                            :isEditModeAvailable="isEditModeAvailable"
-                            :isEditing="isEditing"
-                    ></session-duration-picker>
+                <div>
+                    <div class="form-row__input" :class="isEditModeAvailable && !isEditing ? 'form-row__input--padded' : ''">
+                        <select v-model="filter[filterKey]" class="eddb-control" v-if="!isEditModeAvailable || isEditing">
+                            <option :value="value" v-for="(label, value) of getFilterValues(filterKey)">
+                                {{ label }}
+                            </option>
+                        </select>
+
+                        <template v-if="isEditModeAvailable && !isEditing">
+                            {{ getFilterValues(filterKey)[filter[filterKey]] }}
+                        </template>
+                    </div>
                 </div>
             </div>
             <div class="form-row">
@@ -303,8 +308,7 @@
                             :opened-on-date.sync="openedOnDate"
                             :session.sync="session"
                             :loading="isSessionsLoading"
-                            :selected-session-type="sessionType"
-                            :available-sessions="sessions"
+                            :available-sessions="filteredSessions"
                             :prev-available-day.sync="prevAvailableDay"
                             :next-available-day.sync="nextAvailableDay"
                             @changedMonth="loadSessions"
@@ -326,7 +330,6 @@
                         ></date-navigator>
                         <session-time-picker v-model="session"
                                              :selected-day.sync="selectedDay"
-                                             :selected-session-type="sessionType"
                                              :service="service"
                                              :timezone="timezone"
                                              :sessions="selectedDaySessions"
