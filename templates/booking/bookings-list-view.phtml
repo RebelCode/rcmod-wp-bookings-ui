@@ -44,9 +44,12 @@
             </template>
 
             <template slot="client" slot-scope="data">
-                <a :href="formatter(config.links.client, data.row.client ? data.row.client.id : 0)" target="_blank">
+                <a v-if="data.row.client" :href="formatter(config.links.client, data.row.client ? data.row.client.id : 0)" target="_blank">
                     {{ data.row.client ? data.row.client.name : null }}
                 </a>
+                <span class="info" v-else>
+                    {{ _('Client not found.') }}
+                </span>
             </template>
 
             <template slot="service" slot-scope="data">
