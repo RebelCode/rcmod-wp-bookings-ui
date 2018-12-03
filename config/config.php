@@ -20,6 +20,7 @@ return [
                 ],
                 'confirmation' => [
                     'booking' => 'You are booking: *%s* - %s appointment',
+                    'with' => 'with %s',
                     'starting' => 'Starting at *%s*',
                     'price' => 'The price is of *%s*',
                 ],
