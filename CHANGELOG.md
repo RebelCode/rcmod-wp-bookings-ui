@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Changed templates to work with new session types.
+- Using version `0.2.6` of `bookings-js`
 
 ## [0.1-alpha23] - 2018-10-30
 ### Added
