@@ -10,10 +10,9 @@
             </div>
 
             <span style="font-weight: 600; padding-left: .5rem;" v-if="!closeConfirming">
-                {{ _('Service availability') }}
+                {{ _('%s availability', [ stringHelpers.capitalize(instanceLabel) ]) }}
             </span>
 
-<!--            <div class="modal__close modal--right" @click="closeModal()" v-if="!closeConfirming">&times;</div>-->
             <div class="modal__header-buttons modal--right" v-if="closeConfirming">
                 <input type="button" class="button button-dark-solid" :value="_('Close')" @click="forceCloseModal">
                 <input type="button" class="button" :value="_('Continue Editing')" @click="continueEditing">

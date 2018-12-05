@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [[*next-version*]] - YYYY-MM-DD
 ### Added
 - The handler for getting the services for the bookings UI is now bundled with this module.
+- Added the page for managing staff members.
+- Added staff members endpoints configuration.
 
 ### Changed
 - Changed templates to work with new session types.
