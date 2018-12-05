@@ -280,18 +280,19 @@
                 <div class="form-row__label form-row__label--smaller form-row__label--padding-top">
                     {{ $attrs.field_labels[filterKey] }}
                 </div>
-                <div>
-                    <div class="form-row__input" :class="isEditModeAvailable && !isEditing ? 'form-row__input--padded' : ''">
-                        <select v-model="filter[filterKey]" class="eddb-control" v-if="!isEditModeAvailable || isEditing">
-                            <option :value="value" v-for="(label, value) of getFilterValues(filterKey)">
-                                {{ label }}
-                            </option>
-                        </select>
+                <div class="form-row__input" :class="isEditModeAvailable && !isEditing ? 'form-row__input--padded' : ''">
+                    <select v-model="filter[filterKey]"
+                            class="eddb-control"
+                            style="width: 100%"
+                            v-if="!isEditModeAvailable || isEditing">
+                        <option :value="value" v-for="(label, value) of getFilterValues(filterKey)">
+                            {{ label }}
+                        </option>
+                    </select>
 
-                        <template v-if="isEditModeAvailable && !isEditing">
-                            {{ getFilterValues(filterKey)[filter[filterKey]] }}
-                        </template>
-                    </div>
+                    <template v-if="isEditModeAvailable && !isEditing">
+                        {{ getFilterValues(filterKey)[filter[filterKey]] }}
+                    </template>
                 </div>
             </div>
             <div class="form-row">
