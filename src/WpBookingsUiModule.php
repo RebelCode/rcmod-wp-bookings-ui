@@ -154,6 +154,8 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         $this->_attach('eddbk_front_application_labels', $c->get('eddbk_front_application_labels_handler'));
 
+        $this->_attach('eddbk_front_application_filter_fields', $c->get('eddbk_front_application_filter_fields_handler'));
+
         $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_options_handler'));
 
         $this->_attach('wp_ajax_' . $c->get('wp_bookings_ui/settings/action'), $c->get('eddbk_bookings_update_settings_handler'));
@@ -445,11 +447,11 @@ class WpBookingsUiModule extends AbstractBaseModule
      */
     protected function _adminMenu($c)
     {
-        $rootMenuConfig     = $c->get('wp_bookings_ui/menu/root');
-        $servicesMenuConfig = $c->get('wp_bookings_ui/menu/services');
+        $rootMenuConfig         = $c->get('wp_bookings_ui/menu/root');
+        $servicesMenuConfig     = $c->get('wp_bookings_ui/menu/services');
         $staffMembersMenuConfig = $c->get('wp_bookings_ui/menu/staff_members');
-        $settingsMenuConfig = $c->get('wp_bookings_ui/menu/settings');
-        $aboutMenuConfig    = $c->get('wp_bookings_ui/menu/about');
+        $settingsMenuConfig     = $c->get('wp_bookings_ui/menu/settings');
+        $aboutMenuConfig        = $c->get('wp_bookings_ui/menu/about');
 
         $this->bookingsPageId = add_menu_page(
             $this->__($rootMenuConfig->get('page_title')),

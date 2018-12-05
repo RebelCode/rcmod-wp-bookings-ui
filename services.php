@@ -15,6 +15,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\BookingsStateStatusTransitionsH
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SettingsStateHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\WizardFilterFieldsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\WizardLabelsHandler;
 use RebelCode\Bookings\WordPress\Module\ServiceListTransformer;
 use RebelCode\Bookings\WordPress\Module\SettingsContainer;
@@ -262,6 +263,17 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_bookings_ui_service_transformer' => function (ContainerInterface $c) {
             // Use the same transformer as the REST API when the request is authenticated
             return $c->get('eddbk_rest_api_full_info_service_transformer');
-        }
+        },
+
+        /**
+         * Filter fields handler.
+         *
+         * @return WizardFilterFieldsHandler
+         */
+        'eddbk_front_application_filter_fields_handler' => function ($c) {
+            return new WizardFilterFieldsHandler(
+                $c->get('eddbk_settings_container')
+            );
+        },
     ];
 };

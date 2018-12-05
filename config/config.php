@@ -20,6 +20,7 @@ return [
                 ],
                 'confirmation' => [
                     'booking' => 'You are booking: *%s* - %s appointment',
+                    'with' => 'with %s',
                     'starting' => 'Starting at *%s*',
                     'price' => 'The price is of *%s*',
                 ],
@@ -30,6 +31,9 @@ return [
                     ],
                     'duration' => [
                         'title' => 'Select duration',
+                    ],
+                    'staffMember' => [
+                        'title' => 'Select staff member',
                     ],
                     'date' => [
                         'title' => 'Select a date',
@@ -47,6 +51,10 @@ return [
                         'placeholder' => 'If you have got any special requests for this service, please note them down here.',
                     ],
                 ],
+            ],
+            'wizard_fields' => [
+                'duration',
+                'staffMember'
             ],
             'options' => [
                 'week_starts_on' => [
@@ -69,7 +77,8 @@ return [
                 'default_calendar_view',
                 'booking_wizard_color',
                 'booking_statuses_colors',
-                'booking_wizard_labels'
+                'booking_wizard_labels',
+                'booking_wizard_fields'
             ],
             'prefix' => 'eddbk',
             'default_values' => [
@@ -83,10 +92,15 @@ return [
                     'completed' => '#57606f',
                     'cancelled' => '#eb4d4b',
                 ],
-                'booking_wizard_labels' => []
+                'booking_wizard_labels' => [],
+                'booking_wizard_fields' => [
+                    'duration',
+                    'staffMember'
+                ]
             ],
             'array_fields' => [
-                'booking_statuses_colors'
+                'booking_statuses_colors',
+                'booking_wizard_fields'
             ],
             'action' => WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION,
             'update_endpoint' => [

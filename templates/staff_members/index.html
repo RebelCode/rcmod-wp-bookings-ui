@@ -2,7 +2,7 @@
     <div class="vcloak--visible loading-container"></div>
     <staff-members-page inline-template>
         <div class="wrap vcloak--hidden">
-            <staff-member-editor @saved="fetchItems"></staff-member-editor>
+            <staff-member-editor></staff-member-editor>
             <h1 class="wp-heading-inline">
                 {{ _('Staff Members') }}
             </h1>
@@ -13,7 +13,7 @@
                 <label for="services-search-input" class="screen-reader-text">
                     {{ _('Search Staff Members') }}:
                 </label>
-                <input type="search" id="services-search-input" :placeholder="_('Search Staff Members')" v-model="search" @keyup.enter="fetchItems">
+                <input type="search" id="services-search-input" :placeholder="_('Search Staff Members')" v-model="search" @keyup.enter="fetchItems" style="width: 11rem">
                 <input type="submit" id="search-submit" :value="_('Search')" class="button" @click="fetchItems">
             </p>
             <hr class="wp-header-end">
