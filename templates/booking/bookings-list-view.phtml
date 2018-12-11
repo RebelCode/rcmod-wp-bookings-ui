@@ -53,9 +53,9 @@
             </template>
 
             <template slot="service" slot-scope="data">
-                <a v-if="data.row.service" :href="formatter(config.links.service, data.row.service ? data.row.service.id : 0)" target="_blank">
+                <template v-if="data.row.service">
                     {{ data.row.service.name }}
-                </a>
+                </template>
                 <span class="info" v-else>
                     {{ _('Service not found.') }}
                 </span>
