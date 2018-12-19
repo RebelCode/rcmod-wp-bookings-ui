@@ -44,18 +44,27 @@
             </template>
 
             <template slot="client" slot-scope="data">
-                <a :href="formatter(config.links.client, data.row.client ? data.row.client.id : null)" target="_blank">
+                <a v-if="data.row.client" :href="formatter(config.links.client, data.row.client ? data.row.client.id : 0)" target="_blank">
                     {{ data.row.client ? data.row.client.name : null }}
                 </a>
+                <span class="info" v-else>
+                    {{ _('Client not found.') }}
+                </span>
             </template>
 
             <template slot="service" slot-scope="data">
-                <a v-if="data.row.service" :href="formatter(config.links.service, data.row.service.id)" target="_blank">
+                <template v-if="data.row.service">
                     {{ data.row.service.name }}
-                </a>
+                </template>
                 <span class="info" v-else>
                     {{ _('Service not found.') }}
                 </span>
+                <div v-if="data.row.resources">
+                    <div class="service-staff" v-for="resource of getResources('staff', [data.row])">
+                        <img :src="resource.data.imageSrc || defaultStaffImageSrc" alt="" class="service-staff__image">
+                        <span class="staff-service__name">{{ resource.name }}</span>
+                    </div>
+                </div>
             </template>
 
             <template slot="status" slot-scope="data">

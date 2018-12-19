@@ -24,10 +24,6 @@
                             <div class="form-row__label">Service*</div>
                             <div class="form-row__input">
                                 <vueselect :options="services" v-validate="'required'" name="service" @input="errors.remove('service')" v-model="model.service" label="name"></vueselect>
-                                <a :href="formatter(config.links.service, model.service.id)"
-                                   target="_blank"
-                                   v-if="model.service"
-                                >Click here to view service details in new tab</a>
                             </div>
                         </div>
 
@@ -37,6 +33,7 @@
                                                   name="session"
                                                   @input="errors.remove('session')"
                                                   :timezone="timezone"
+                                                  :field_labels="{duration: _('Duration'), staffMember: _('Staff Member')}"
                         ></service-session-selector>
                     </div>
 

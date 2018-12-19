@@ -13,6 +13,9 @@ define('WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY', 'eddbk_screen_options');
 define('WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION', 'update_eddbk_settings');
 
 /* @since [*next-version*] */
+define('WP_BOOKINGS_UI_MODULE_APP_VERSION', '0.2.6');
+
+/* @since [*next-version*] */
 define('WP_BOOKINGS_UI_MODULE_DIR', __DIR__);
 
 /* @since [*next-version*] */
@@ -42,7 +45,7 @@ define('WP_BOOKINGS_UI_MODULE_CONFIG_FILE', __DIR__ . '/config.php');
 return function (ContainerInterface $c) {
     return new WpBookingsUiModule(
         WP_BOOKINGS_UI_MODULE_KEY,
-        [],
+        ['eddbk_rest_api'],
         $c->get('config_factory'),
         $c->get('container_factory'),
         $c->get('composite_container_factory'),
