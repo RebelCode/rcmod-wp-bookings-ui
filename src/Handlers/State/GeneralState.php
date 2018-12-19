@@ -14,10 +14,10 @@ use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
-use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\GetVisibleStatusesCapable;
+use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapableTrait;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
 use Traversable;
@@ -62,6 +62,9 @@ class GeneralState extends StateHandler
 
     /* @since [*next-version*] */
     use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapableTrait;
 
     /**
      * Settings container.
@@ -345,31 +348,5 @@ class GeneralState extends StateHandler
         }
 
         return $preparedLinksConfig;
-    }
-
-    /**
-     * Convert an iterator to an array.
-     *
-     * @since [*next-version*]
-     *
-     * @param array|stdClass|Traversable $iterator The object to convert.
-     *
-     * @throws InvalidArgumentException If $iterator is not iterable.
-     *
-     * @return array Result of iterator to array transform.
-     */
-    protected function _iteratorToArrayRecursive($iterator)
-    {
-        $iterator = $this->_normalizeIterable($iterator);
-        $array    = [];
-        foreach ($iterator as $key => $value) {
-            if ($value instanceof Traversable || is_array($value) || $value instanceof stdClass) {
-                $array[$key] = $this->_iteratorToArrayRecursive($value);
-                continue;
-            }
-            $array[$key] = $value;
-        }
-
-        return $array;
     }
 }

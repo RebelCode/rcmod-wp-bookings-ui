@@ -2,6 +2,7 @@
 
 use Dhii\Cache\MemoryMemoizer;
 use Dhii\Data\Container\ContainerFactoryInterface;
+use Dhii\Output\PlaceholderTemplate;
 use Dhii\Output\PlaceholderTemplateFactory;
 use Dhii\Output\TemplateFactoryInterface;
 use Dhii\Output\TemplateInterface;
@@ -13,6 +14,8 @@ use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\BookingsPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\ScreenOptions;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\ServiceMetabox;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\SettingsPage;
+use RebelCode\Bookings\WordPress\Module\Handlers\AdminBookingsUiServicesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\FrontApplicationLabelsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\State\SettingsState;
@@ -22,11 +25,14 @@ use RebelCode\Bookings\WordPress\Module\Handlers\State\BookingsTransitionsState;
 use RebelCode\Bookings\WordPress\Module\Handlers\State\GeneralState;
 use RebelCode\Bookings\WordPress\Module\Handlers\State\ServiceState;
 use RebelCode\Bookings\WordPress\Module\Handlers\VisibleStatusesHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\WizardFilterFieldsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\WizardLabelsHandler;
+use RebelCode\Bookings\WordPress\Module\ServiceListTransformer;
 use RebelCode\Bookings\WordPress\Module\SettingsContainer;
 use RebelCode\Bookings\WordPress\Module\TemplateManager;
 use \Psr\EventManager\EventManagerInterface;
 use \Dhii\Event\EventFactoryInterface;
-use RebelCode\Bookings\WordPress\Module\WpNonce;
+use RebelCode\WordPress\Nonce\Factory\NonceFactoryInterface;
 
 /**
  * Function for retrieving array of services definitions.
@@ -281,7 +287,9 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @return WpNonce
          */
         'eddbk_wp_rest_nonce' => function (ContainerInterface $c) {
-            return new WpNonce('wp_rest');
+            return $c->get('eddbk_rest_api_nonce_factory')->make([
+                NonceFactoryInterface::K_CONFIG_ID => $c->get('wp_bookings_ui/wp_rest_api_nonce')
+            ]);
         },
 
         /**
@@ -315,11 +323,20 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          * @return SettingsContainer
          */
         'eddbk_settings_container' => function ($c) {
-            $settingsPrefix = $c->get('wp_bookings_ui/settings/prefix');
             return new SettingsContainer(
-                $c->get($settingsPrefix),
+                $c->get('wp_bookings_ui/settings/default_values'),
                 $c->get('wp_bookings_ui/settings/array_fields'),
-                $settingsPrefix
+                $c->get('wp_bookings_ui/settings/prefix')
+            );
+        },
+        'eddbk_localized_wizard_labels' => function ($c) {
+            $wizardLabelsHandler = new WizardLabelsHandler($c->get('wp_bookings_ui/settings/wizard_labels'));
+            return $wizardLabelsHandler();
+        },
+        'eddbk_front_application_labels_handler' => function ($c) {
+            return new FrontApplicationLabelsHandler(
+                $c->get('eddbk_settings_container'),
+                $c->get('eddbk_localized_wizard_labels')
             );
         },
 
@@ -335,7 +352,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('eddbk_settings_container'),
                 $c->get('wp_bookings_ui/settings/options'),
                 $c->get('wp_bookings_ui/settings/fields'),
-                $c->get('wp_bookings_ui/settings/update_endpoint')
+                $c->get('wp_bookings_ui/settings/update_endpoint'),
+                $c->get('eddbk_localized_wizard_labels')
             );
         },
 
@@ -412,6 +430,29 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
 
         /**
+         * The template for the services page.
+         *
+         * @since [*next-version*]
+         *
+         * @return PlaceholderTemplate
+         */
+        'eddbk_ui_services_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('services/index.html');
+        },
+        /**
+         * The template for the staff members page.
+         *
+         * @since [*next-version*]
+         *
+         * @return PlaceholderTemplate
+         */
+        'eddbk_ui_staff_members_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('staff_members/index.html');
+        },
+
+        /**
          * The template for settings page.
          *
          * @since [*next-version*]
@@ -421,6 +462,58 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_ui_settings_general_tab_template' => function (ContainerInterface $c) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('settings/general.html');
+        },
+
+        /**
+         * The template for settings page.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_ui_settings_wizard_tab_template' => function (ContainerInterface $c) {
+            $makeTemplateFunction = $c->get('eddbk_ui_make_template');
+            return $makeTemplateFunction('settings/wizard.html');
+        },
+
+        /**
+         * The handler for providing services to the admin bookings UI.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_services_handler' => function (ContainerInterface $c) {
+            return new AdminBookingsUiServicesHandler(
+                $c->get('eddbk_services_manager'),
+                $c->get('eddbk_bookings_ui_service_list_transformer')
+            );
+        },
+
+        /**
+         * The transformer for transforming lists of services.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_service_list_transformer' => function (ContainerInterface $c) {
+            return new ServiceListTransformer($c->get('eddbk_bookings_ui_service_transformer'));
+        },
+
+        /**
+         * The service transformer to use for the bookings UI.
+         *
+         * @since [*next-version*]
+         */
+        'eddbk_bookings_ui_service_transformer' => function (ContainerInterface $c) {
+            // Use the same transformer as the REST API when the request is authenticated
+            return $c->get('eddbk_rest_api_full_info_service_transformer');
+        },
+
+        /**
+         * Filter fields handler.
+         *
+         * @return WizardFilterFieldsHandler
+         */
+        'eddbk_front_application_filter_fields_handler' => function ($c) {
+            return new WizardFilterFieldsHandler(
+                $c->get('eddbk_settings_container')
+            );
         },
     ];
 };

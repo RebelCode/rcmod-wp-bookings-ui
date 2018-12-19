@@ -6,8 +6,23 @@
                 {{ _('EDD Bookings Settings') }}
             </h1>
             <hr class="wp-header-end">
+            <tabs v-model="activeTab">
+                <tab title="General">${generalSettingsTab}</tab>
+                <tab title="Wizard Customization">${wizardSettingsTab}</tab>
+            </tabs>
 
-            ${generalSettingsTab}
+            <div style="margin-top: 2rem; margin-left: 1rem">
+                <div class="col-12 columns">
+                    <div>
+                        <button class="button button-primary" :class="{'loading-button': isSaving}" @click="submit">
+                            {{ _('Save Changes') }}
+                        </button>
+                        <button class="button" @click="revertChanges">
+                            {{ _('Cancel') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </settings-application>
 </div>

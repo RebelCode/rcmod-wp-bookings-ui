@@ -34,13 +34,6 @@
             </div>
 
             <div class="form-row">
-                <div class="form-row__label">{{ _('Booking Wizard Color') }}</div>
-                <div class="form-row__input">
-                    <color-picker v-model="booking_wizard_color"></color-picker>
-                </div>
-            </div>
-
-            <div class="form-row">
                 <div class="form-row__label">{{ _('Booking Status Colors') }}</div>
                 <div class="form-row__input">
                     <div class="settings-color-input" v-for="(bookingStatus, key) of state.statuses">
@@ -48,19 +41,6 @@
                         <span class="settings-color-input__title">{{ bookingStatus }}</span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="margin-top: 2rem">
-        <div class="col-12 columns">
-            <div>
-                <button class="button button-primary" :class="{'loading-button': isSaving}" @click="submit">
-                    {{ _('Save Changes') }}
-                </button>
-                <button class="button" @click="revertChanges">
-                    {{ _('Cancel') }}
-                </button>
             </div>
         </div>
     </div>

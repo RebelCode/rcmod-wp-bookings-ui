@@ -6,6 +6,62 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
 
+## [0.1-alpha24] - 2018-12-05
+### Added
+- Config for filters sorting.
+- The handler for getting the services for the bookings UI is now bundled with this module.
+- Added the page for managing staff members.
+- Added staff members endpoints configuration.
+
+### Changed
+- Changed templates to work with new session types.
+- Using version `0.2.6` of `bookings-js`
+
+## [0.1-alpha23] - 2018-10-30
+### Added
+- Added new separate WP page for managing services.
+- Added WP media scripts on the service page.
+
+### Removed
+- Removed the bookings metabox in the new/edit download page.
+
+## [0.1-alpha22] - 2018-10-08
+### Added
+- Setting for wizard labels overrides.
+
+### Changed
+- Settings default values moved to module's configuration namespace.
+- Using version `0.2.3` of `bookings-js`
+
+## [0.1-alpha21] - 2018-09-24
+### Changed
+- Using version `0.2.2` of `bookings-js`
+
+## [0.1-alpha20] - 2018-09-24
+### Changed
+- Assets management and styles have been removed fom this module. This module now only enqueues built JS and styles.
+- Using version `0.2.1` of `bookings-js`
+
+## [0.1-alpha19] - 2018-09-13
+### Changed
+- Using version `0.1.8` of `booking-wizard-components`
+
+## [0.1-alpha18] - 2018-09-11
+### Fixed
+- Path for `main.js` was wrong.
+
+## [0.1-alpha17] - 2018-09-11
+### Changed
+- Depends on nonce factory from `eddbk_rest_api` to create nonce instance.
+
+## [0.1-alpha16] - 2018-08-31
+### Changed
+- Using `booking-wizard-components` version `0.1.6`.
+
+## [0.1-alpha15] - 2018-08-27
+### Changed
+- Using `0.1.26` version of Bookings JS.
+
 ## [0.1-alpha14] - 2018-08-24
 ### Fixed
 - Pagination issue when switching to the different status.

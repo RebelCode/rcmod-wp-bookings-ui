@@ -55,13 +55,16 @@ class SettingsContainer implements ContainerInterface
     use CreateInvalidArgumentExceptionCapableTrait;
 
     /* @since [*next-version*] */
-    use NormalizeIterableCapableTrait;
-
-    /* @since [*next-version*] */
     use CreateNotFoundExceptionCapableTrait;
 
     /* @since [*next-version*] */
     use NormalizeKeyCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIterableCapableTrait;
+
+    /* @since [*next-version*] */
+    use IteratorToArrayRecursiveCapableTrait;
 
     /**
      * Map of settings keys to their default values.
@@ -117,7 +120,7 @@ class SettingsContainer implements ContainerInterface
         $value = get_option($key) ?: $this->_containerGetPath($this->defaultValues, explode('/', $id));
 
         if (in_array($id, $this->arrayFields)) {
-            $value = $this->_normalizeArray($value);
+            $value = $this->_iteratorToArrayRecursive($value);
         }
 
         return $value;

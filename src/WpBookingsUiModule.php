@@ -49,11 +49,22 @@ class WpBookingsUiModule extends AbstractBaseModule
     protected $bookingsPageId;
 
     /**
-     * Page where metabox application should be shown.
+     * Registered service's page ID.
+     *
+     * @since [*next-version*]
      *
      * @var string
      */
-    protected $metaboxPageId;
+    protected $servicesPageId;
+
+    /**
+     * Registered staff's page ID.
+     *
+     * @since [*next-version*]
+     *
+     * @var string
+     */
+    protected $staffMembersPageId;
 
     /**
      * Page where settings application should be shown.

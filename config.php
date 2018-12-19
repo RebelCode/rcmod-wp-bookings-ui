@@ -1,20 +1,61 @@
 <?php
 
 return [
-    'eddbk' => [
-        'week_starts_on'        => 'sunday',
-        'default_calendar_view' => 'week',
-        'booking_wizard_color'  => '#17a7dd',
-        'booking_statuses_colors'     => [
-            'draft'     => '#dfe4ea',
-            'pending'   => '#1e90ff',
-            'scheduled' => '#2ed573',
-            'completed' => '#57606f',
-            'cancelled' => '#eb4d4b',
-        ],
-    ],
     'wp_bookings_ui' => [
+        'wp_rest_api_nonce' => 'wp_rest',
         'settings' => [
+            'wizard_labels' => [
+                'general' => [
+                    'title' => 'Book an Appointment',
+                    'buttons' => [
+                        'back' => 'Back',
+                        'next' => 'Next',
+                        'book' => 'Book Now',
+                    ],
+                ],
+                'preview' => [
+                    'price' => 'Starting at %s for a %s appointment.',
+                    'available' => 'More appointment durations available in the next step.',
+                    'booking' => 'You are booking:',
+                ],
+                'confirmation' => [
+                    'booking' => 'You are booking: *%s* - %s appointment',
+                    'with' => 'with %s',
+                    'starting' => 'Starting at *%s*',
+                    'price' => 'The price is of *%s*',
+                ],
+                'fields' => [
+                    'service' => [
+                        'title' => 'Select a service',
+                        'placeholder' => 'Select option',
+                    ],
+                    'duration' => [
+                        'title' => 'Select duration',
+                    ],
+                    'staffMember' => [
+                        'title' => 'Select staff member',
+                    ],
+                    'date' => [
+                        'title' => 'Select a date',
+                        'empty' => 'No appointments are available this month.',
+                    ],
+                    'time' => [
+                        'title' => 'Select available time',
+                        'placeholder' => 'Select a date to pick a time from.',
+                    ],
+                    'timezone' => [
+                        'title' => 'Change timezone',
+                    ],
+                    'notes' => [
+                        'title' => 'Additional notes',
+                        'placeholder' => 'If you have got any special requests for this service, please note them down here.',
+                    ],
+                ],
+            ],
+            'wizard_fields' => [
+                'duration',
+                'staffMember'
+            ],
             'options' => [
                 'week_starts_on' => [
                     'sunday' => 'Sunday',
@@ -29,17 +70,37 @@ return [
                     'day'   => 'Day',
                     'week'  => 'Week',
                     'month' => 'Month',
-                ]
+                ],
             ],
             'fields' => [
                 'week_starts_on',
                 'default_calendar_view',
                 'booking_wizard_color',
                 'booking_statuses_colors',
+                'booking_wizard_labels',
+                'booking_wizard_fields'
             ],
             'prefix' => 'eddbk',
+            'default_values' => [
+                'week_starts_on'        => 'sunday',
+                'default_calendar_view' => 'week',
+                'booking_wizard_color'  => '#17a7dd',
+                'booking_statuses_colors'     => [
+                    'draft'     => '#dfe4ea',
+                    'pending'   => '#1e90ff',
+                    'scheduled' => '#2ed573',
+                    'completed' => '#57606f',
+                    'cancelled' => '#eb4d4b',
+                ],
+                'booking_wizard_labels' => [],
+                'booking_wizard_fields' => [
+                    'duration',
+                    'staffMember'
+                ]
+            ],
             'array_fields' => [
-                'booking_statuses_colors'
+                'booking_statuses_colors',
+                'booking_wizard_fields'
             ],
             'action' => WP_BOOKINGS_UI_UPDATE_SETTINGS_ACTION,
             'update_endpoint' => [
@@ -55,12 +116,6 @@ return [
             ],
             'endpoint' => admin_url('admin-ajax.php?action=set_'.WP_BOOKINGS_UI_SCREEN_OPTIONS_KEY),
         ],
-        'metabox' => [
-            'id' => 'service_booking_settings',
-            'post_type' => 'download',
-            'title' => 'Booking Options',
-            'renderer' => 'eddbk_metabox_render',
-        ],
         'menu' => [
             'bookings' => [
                 'page_title' => 'Bookings',
@@ -71,6 +126,18 @@ return [
                 'position' => 20,
                 'renderer' => 'eddbk_bookings_render',
                 'screen_settings_filter' => 'eddbk_screen_options_render'
+            ],
+            'services' => [
+                'page_title' => 'Services',
+                'menu_title' => 'Services',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-services',
+            ],
+            'staff_members' => [
+                'page_title' => 'Staff Members',
+                'menu_title' => 'Staff Members',
+                'capability' => 'publish_posts',
+                'menu_slug' => 'eddbk-staff-members',
             ],
             'settings' => [
                 'root_slug' => 'eddbk-bookings',
@@ -161,13 +228,7 @@ return [
         'templates' => [
             'components',
             'main',
-
-            'availability/metabox',
             'availability/service-availability-editor',
-            'availability/tab-availability',
-            'availability/tab-display-options',
-            'availability/tab-session-length',
-
             'booking/booking-editor',
             'booking/bookings-calendar-view',
             'booking/bookings-list-view',
@@ -195,13 +256,11 @@ return [
         ],
         'assets_urls_map_path' => WP_BOOKINGS_UI_MODULE_CONFIG_DIR.'/assets_urls_map.php',
         'assets' => [
-            'require.js' => 'require',
             'bookings' => [
                 'app.min.js' => 'bookings_ui/dist/app.min.js',
-                'main.js' => 'bookings_ui/assets/js/main.js',
             ],
             'styles' => [
-                'app' => 'bookings_ui/dist/wp-booking-ui.css',
+                'app' => 'bookings_ui/dist/app.min.css',
                 'fullcalendar' => 'cdn/fullcalendar.css',
             ],
         ],
@@ -240,6 +299,42 @@ return [
                     'endpoint' => '/eddbk/v1/sessions/',
                 ],
             ],
+            'services' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'delete' => [
+                    'method' => 'delete',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'update' => [
+                    'method' => 'patch',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+                'create' => [
+                    'method' => 'post',
+                    'endpoint' => '/eddbk/v1/services/',
+                ],
+            ],
+            'staff_members' => [
+                'fetch' => [
+                    'method' => 'get',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'delete' => [
+                    'method' => 'delete',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'update' => [
+                    'method' => 'patch',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+                'create' => [
+                    'method' => 'post',
+                    'endpoint' => '/eddbk/v1/resources/staff/',
+                ],
+            ]
         ],
 
         /*
@@ -253,7 +348,7 @@ return [
                  * If the amount > 2, complex setup validation wouldn't pass.
                  */
                 [
-                    'field' => 'sessions',
+                    'field' => 'model.sessionTypes',
                     'rule' => 'length',
                     'value' => [0, 2] // Max count of session lengths is 2.
                 ],
@@ -273,57 +368,6 @@ return [
          * List of different UI actions pipes. Each of pipe is configurable and can be ran
          * on client on some action.
          */
-        'ui_actions' => [
-            /*
-             * Actions for booking enabled tick change.
-             */
-            'bookingsEnabledChanged' => [
-                /*
-                 * Add message to "Download Prices" and hide it. Added message will be shown
-                 * if user manually unhide this metabox.
-                 */
-                [
-                    'action' => 'addBlock',
-                    'arguments' => [
-                        'block' => 'rc-message-box',
-                        'mode' => 'prepend',
-                        'selector' => '#edd_product_prices .inside',
-                        'text' => 'The EDD Download Prices are no longer applicable when enabling Bookings. Prices are to be set from the Session Length tab in the Bookings meta box.'
-                    ]
-                ],
-                [
-                    'action' => 'checkboxClick',
-                    'arguments' => [
-                        'value' => false, // value that should be set on "act"
-                        'selector' => '#edd_product_prices-hide'
-                    ]
-                ],
-
-                /*
-                 * Automatically check the "Disable the automatic output of the purchase button"
-                 * option in the Download Settings meta box
-                 */
-                [
-                    'action' => 'checkboxClick',
-                    'arguments' => [
-                        'value' => true, // value that should be set on "act"
-                        'selector' => '#_edd_hide_purchase_link'
-                    ]
-                ],
-
-                /*
-                 * Add message to the "Download Files" meta box.
-                 */
-                [
-                    'action' => 'addBlock',
-                    'arguments' => [
-                        'block' => 'rc-message-box',
-                        'mode' => 'prepend',
-                        'selector' => '#edd_product_files .inside',
-                        'text' => 'With Bookings enabled, any downloadable files added here will be included in the purchase price of a booking, and they can be included in the EDD Purchase Confirmation page and Purchase Receipt email. Price assignment is not currently applicable.'
-                    ]
-                ],
-            ]
-        ],
+        'ui_actions' => [],
     ],
 ];
