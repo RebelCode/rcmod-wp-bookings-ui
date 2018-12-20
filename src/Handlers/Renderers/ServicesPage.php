@@ -32,13 +32,13 @@ class ServicesPage extends RenderHandler
      *
      * @since [*next-version*]
      *
-     * @param TemplateInterface $pageTemplate   Page template.
-     * @param TemplateManager   $templateManager    The event based template manager instance.
+     * @param TemplateInterface $pageTemplate    Page template.
+     * @param TemplateManager   $templateManager The event based template manager instance.
      */
     public function __construct($pageTemplate, $templateManager)
     {
-        $this->pageTemplate = $pageTemplate;
-        $this->templateManager    = $templateManager;
+        $this->pageTemplate    = $pageTemplate;
+        $this->templateManager = $templateManager;
     }
 
     /**

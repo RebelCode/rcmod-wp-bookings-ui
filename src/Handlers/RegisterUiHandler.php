@@ -71,9 +71,9 @@ class RegisterUiHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param array|stdClass|Traversable  $menuPagesConfig The list of available menu pages. For more information about page config structure read config doc.
-     * @param EventManagerInterface       $eventManager    The event manager.
-     * @param EventFactoryInterface       $eventFactory    The event factory.
+     * @param array|stdClass|Traversable $menuPagesConfig The list of available menu pages. For more information about page config structure read config doc.
+     * @param EventManagerInterface      $eventManager    The event manager.
+     * @param EventFactoryInterface      $eventFactory    The event factory.
      */
     public function __construct($menuPagesConfig, $eventManager, $eventFactory)
     {

@@ -128,8 +128,8 @@ class GeneralState extends StateHandler
      * @param ContainerInterface          $settingsContainer Settings container.
      * @param array|Traversable|stdClass  $statuses          List of statuses key in application.
      * @param array|stdClass|MapInterface $statusesLabels    Map of known status keys to statuses labels.
-     * @param array|Traversable|stdClass  $uiConfig    UI config of application.
-     * @param array|stdClass|Traversable $endpointsConfig List of endpoints configuration.
+     * @param array|Traversable|stdClass  $uiConfig          UI config of application.
+     * @param array|stdClass|Traversable  $endpointsConfig   List of endpoints configuration.
      * @param string|Stringable           $wpRestNonce       The WP Rest nonce.
      * @param EventManagerInterface       $eventManager      The event manager.
      * @param EventFactoryInterface       $eventFactory      The event factory.
@@ -146,13 +146,13 @@ class GeneralState extends StateHandler
     ) {
         $this->settingsContainer = $settingsContainer;
 
-        $this->statuses         = $statuses;
-        $this->statusesLabels   = $statusesLabels;
+        $this->statuses       = $statuses;
+        $this->statusesLabels = $statusesLabels;
 
-        $this->uiConfig   = $uiConfig;
-        $this->endpointsConfig   = $endpointsConfig;
+        $this->uiConfig        = $uiConfig;
+        $this->endpointsConfig = $endpointsConfig;
 
-        $this->wpRestNonce      = $wpRestNonce;
+        $this->wpRestNonce = $wpRestNonce;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -221,7 +221,7 @@ class GeneralState extends StateHandler
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $uiConfig   UI config of application.
+     * @param array|Traversable|stdClass $uiConfig UI config of application.
      *
      * @return array UI configuration.
      */

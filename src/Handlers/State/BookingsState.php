@@ -11,8 +11,6 @@ use Dhii\Event\EventFactoryInterface;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Psr\EventManager\EventManagerInterface;
-use stdClass;
-use Traversable;
 
 /**
  * The main handler for bookings UI state.
@@ -47,8 +45,8 @@ class BookingsState extends StateHandler
      *
      * @since [*next-version*]
      *
-     * @param EventManagerInterface      $eventManager    The event manager.
-     * @param EventFactoryInterface      $eventFactory    The event factory.
+     * @param EventManagerInterface $eventManager The event manager.
+     * @param EventFactoryInterface $eventFactory The event factory.
      */
     public function __construct($eventManager, $eventFactory)
     {
