@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module\Handlers;
+namespace RebelCode\Bookings\WordPress\Module\Handlers\State;
 
 use Dhii\Cache\SimpleCacheInterface;
 use Dhii\Collection\MapInterface;
@@ -10,14 +10,13 @@ use Dhii\Data\Container\CreateContainerExceptionCapableTrait;
 use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
-use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\GetVisibleStatusesCapable;
 use RebelCode\Modular\Events\EventsConsumerTrait;
-use Psr\EventManager\EventInterface;
 use Dhii\Event\EventFactoryInterface;
 use stdClass;
 use Traversable;
@@ -29,7 +28,7 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-class BookingsStateStatusesHandler implements InvocableInterface
+class BookingsStatusesState extends StateHandler
 {
     /* @since [*next-version*] */
     use EventsConsumerTrait;
@@ -144,28 +143,14 @@ class BookingsStateStatusesHandler implements InvocableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @since [*next-version*]
      */
-    public function __invoke()
+    protected function _getState()
     {
-        /* @var $event EventInterface */
-        $event = func_get_arg(0);
-
-        if (!($event instanceof EventInterface)) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an event instance'), null, null, $event
-            );
-        }
-
         if (!$user = wp_get_current_user()) {
-            return;
+            return [];
         }
 
-        $event->setParams(array_merge(
-            $event->getParams(),
-            $this->_getStatusesParams($user->ID)
-        ));
+        return $this->_getStatusesParams($user->ID);
     }
 
     /**

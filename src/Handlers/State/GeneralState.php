@@ -1,6 +1,6 @@
 <?php
 
-namespace RebelCode\Bookings\WordPress\Module\Handlers;
+namespace RebelCode\Bookings\WordPress\Module\Handlers\State;
 
 use Dhii\Collection\MapInterface;
 use Dhii\Data\Container\ContainerGetCapableTrait;
@@ -10,14 +10,13 @@ use Dhii\Data\Container\CreateNotFoundExceptionCapableTrait;
 use Dhii\Data\Container\NormalizeKeyCapableTrait;
 use Dhii\Event\EventFactoryInterface;
 use Dhii\Exception\CreateOutOfRangeExceptionCapableTrait;
-use Dhii\Invocation\InvocableInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\Container\ContainerInterface;
-use Psr\EventManager\EventInterface;
 use Psr\EventManager\EventManagerInterface;
+use RebelCode\Bookings\WordPress\Module\Handlers\GetVisibleStatusesCapable;
 use RebelCode\Bookings\WordPress\Module\IteratorToArrayRecursiveCapableTrait;
 use RebelCode\Modular\Events\EventsConsumerTrait;
 use stdClass;
@@ -29,7 +28,7 @@ use Traversable;
  *
  * @since [*next-version*]
  */
-class GeneralUiStateHandler implements InvocableInterface
+class GeneralState extends StateHandler
 {
     /* @since [*next-version*] */
     use EventsConsumerTrait;
@@ -95,50 +94,22 @@ class GeneralUiStateHandler implements InvocableInterface
     protected $statusesLabels;
 
     /**
-     * Currency config of application.
+     * UI configuration.
      *
      * @since [*next-version*]
      *
      * @var array|Traversable|stdClass
      */
-    protected $currencyConfig;
+    protected $uiConfig;
 
     /**
-     * Configuration of application formats to format some data.
-     * For example, datetime formats.
+     * List of endpoints configuration.
      *
      * @since [*next-version*]
      *
-     * @var array|Traversable|stdClass
+     * @var array|stdClass|Traversable
      */
-    protected $formatsConfig;
-
-    /**
-     * List of links to booking related entities (clients, services).
-     *
-     * @since [*next-version*]
-     *
-     * @var array|Traversable|stdClass
-     */
-    protected $linksConfig;
-
-    /**
-     * List of UI action pipes configuration.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|Traversable|stdClass
-     */
-    protected $uiActionsConfig;
-
-    /**
-     * List of validators configuration.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|Traversable|stdClass
-     */
-    protected $validatorsConfig;
+    protected $endpointsConfig;
 
     /*
      * The WP Rest nonce.
@@ -157,11 +128,8 @@ class GeneralUiStateHandler implements InvocableInterface
      * @param ContainerInterface          $settingsContainer Settings container.
      * @param array|Traversable|stdClass  $statuses          List of statuses key in application.
      * @param array|stdClass|MapInterface $statusesLabels    Map of known status keys to statuses labels.
-     * @param array|Traversable|stdClass  $currencyConfig    Currency config of application.
-     * @param array|Traversable|stdClass  $formatsConfig     List of available data formats in application.
-     * @param array|Traversable|stdClass  $linksConfig       List of links to booking related entities (clients, services).
-     * @param array|Traversable|stdClass  $uiActionsConfig   List of UI action pipes configuration.
-     * @param array|Traversable|stdClass  $validatorsConfig  List of validators configuration.
+     * @param array|Traversable|stdClass  $uiConfig    UI config of application.
+     * @param array|stdClass|Traversable $endpointsConfig List of endpoints configuration.
      * @param string|Stringable           $wpRestNonce       The WP Rest nonce.
      * @param EventManagerInterface       $eventManager      The event manager.
      * @param EventFactoryInterface       $eventFactory      The event factory.
@@ -170,11 +138,8 @@ class GeneralUiStateHandler implements InvocableInterface
         $settingsContainer,
         $statuses,
         $statusesLabels,
-        $currencyConfig,
-        $formatsConfig,
-        $linksConfig,
-        $uiActionsConfig,
-        $validatorsConfig,
+        $uiConfig,
+        $endpointsConfig,
         $wpRestNonce,
         $eventManager,
         $eventFactory
@@ -183,11 +148,10 @@ class GeneralUiStateHandler implements InvocableInterface
 
         $this->statuses         = $statuses;
         $this->statusesLabels   = $statusesLabels;
-        $this->currencyConfig   = $currencyConfig;
-        $this->formatsConfig    = $formatsConfig;
-        $this->linksConfig      = $linksConfig;
-        $this->uiActionsConfig  = $uiActionsConfig;
-        $this->validatorsConfig = $validatorsConfig;
+
+        $this->uiConfig   = $uiConfig;
+        $this->endpointsConfig   = $endpointsConfig;
+
         $this->wpRestNonce      = $wpRestNonce;
 
         $this->_setEventManager($eventManager);
@@ -199,18 +163,9 @@ class GeneralUiStateHandler implements InvocableInterface
      *
      * @since [*next-version*]
      */
-    public function __invoke()
+    protected function _getState()
     {
-        /* @var $event EventInterface */
-        $event = func_get_arg(0);
-
-        if (!($event instanceof EventInterface)) {
-            throw $this->_createInvalidArgumentException(
-                $this->__('Argument is not an event instance'), null, null, $event
-            );
-        }
-
-        $event->setParams([
+        return [
             /*
              * Get wp rest nonce string.
              */
@@ -221,32 +176,64 @@ class GeneralUiStateHandler implements InvocableInterface
              */
             'statuses' => $this->_getTranslatedStatuses($this->statuses, $this->statusesLabels),
 
-            'config' => $this->_getUiConfig($this->currencyConfig, $this->formatsConfig, $this->linksConfig, $this->uiActionsConfig, $this->validatorsConfig),
-        ]);
+            'endpointsConfig' => $this->_prepareEndpoints($this->endpointsConfig),
+
+            'config' => $this->_prepareUiConfig($this->uiConfig),
+        ];
     }
 
     /**
-     * Get config for UI application.
+     * Prepare endpoints for consuming in the UI.
      *
      * @since [*next-version*]
      *
-     * @param array|Traversable|stdClass $currencyConfig   Currency config of application.
-     * @param array|Traversable|stdClass $formatsConfig    List of available data formats in application.
-     * @param array|Traversable|stdClass $linksConfig      List of links to booking related entities (clients, services).
-     * @param array|Traversable|stdClass $uiActionsConfig  List of UI action pipes configuration.
-     * @param array|Traversable|stdClass $validatorsConfig List of validators configuration.
+     * @param array|stdClass|Traversable $endpointsConfig List of endpoints configuration.
+     *
+     * @return array Prepared array of endpoints to use in front-end application.
+     */
+    protected function _prepareEndpoints($endpointsConfig)
+    {
+        $endpointsConfig = $this->_normalizeIterable($endpointsConfig);
+
+        $resultingConfig = [];
+
+        foreach ($endpointsConfig as $namespace => $endpoints) {
+            $resultingConfig[$namespace] = [];
+            foreach ($endpoints as $purpose => $endpoint) {
+                $endpointUrl = $endpoint->get('endpoint');
+
+                $resultingConfig[$namespace][$purpose] = [
+                    'method'   => $endpoint->get('method'),
+                    'endpoint' => $endpointUrl,
+                ];
+
+                if ($endpointUrl[0] === '/') {
+                    $resultingConfig[$namespace][$purpose]['endpoint'] = rest_url($endpointUrl);
+                }
+            }
+        }
+
+        return $resultingConfig;
+    }
+
+    /**
+     * Prepare UI config for client application.
+     *
+     * @since [*next-version*]
+     *
+     * @param array|Traversable|stdClass $uiConfig   UI config of application.
      *
      * @return array UI configuration.
      */
-    protected function _getUiConfig($currencyConfig, $formatsConfig, $linksConfig, $uiActionsConfig, $validatorsConfig)
+    protected function _prepareUiConfig($uiConfig)
     {
         return [
             'timezone'   => $this->_getWebsiteTimezone(),
-            'currency'   => $this->_prepareCurrencyConfig($currencyConfig),
-            'formats'    => $this->_prepareFormatsConfig($formatsConfig),
-            'links'      => $this->_prepareLinksConfig($linksConfig),
-            'uiActions'  => $this->_iteratorToArrayRecursive($uiActionsConfig),
-            'validators' => $this->_iteratorToArrayRecursive($validatorsConfig),
+            'currency'   => $this->_prepareCurrencyConfig($this->_containerGet($uiConfig, 'currency')),
+            'formats'    => $this->_prepareFormatsConfig($this->_containerGet($uiConfig, 'formats')),
+            'links'      => $this->_prepareLinksConfig($this->_containerGet($uiConfig, 'links')),
+            'uiActions'  => $this->_iteratorToArrayRecursive($this->_containerGet($uiConfig, 'ui_actions')),
+            'validators' => $this->_iteratorToArrayRecursive($this->_containerGet($uiConfig, 'validators')),
 
             'weekStartsOn'          => $this->settingsContainer->get('week_starts_on'),
             'defaultCalendarView'   => $this->settingsContainer->get('default_calendar_view'),
