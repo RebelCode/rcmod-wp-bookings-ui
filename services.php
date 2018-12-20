@@ -13,9 +13,11 @@ use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\AboutPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\BookingsPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\ScreenOptions;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\ServiceMetabox;
+use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\ServicesPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\SettingsPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\AdminBookingsUiServicesHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\FrontApplicationLabelsHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\Renderers\StaffMembersPage;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveScreenOptionsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\SaveSettingsHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\State\SettingsState;
@@ -86,7 +88,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         'eddbk_register_ui_handler' => function ($c) {
             return new RegisterUiHandler(
                 $c->get('wp_bookings_ui/menu'),
-                $c->get('wp_bookings_ui/metabox'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );
@@ -110,20 +111,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
 
         /**
-         * State for service application page.
-         *
-         * @since [*next-version*]
-         *
-         * @return ServiceState
-         */
-        'eddbk_service_state_handler' => function ($c) {
-            return new ServiceState(
-                $c->get('event_manager'),
-                $c->get('event_factory')
-            );
-        },
-
-        /**
          * State for bookings application page.
          *
          * @since [*next-version*]
@@ -132,7 +119,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
          */
         'eddbk_bookings_state_handler' => function ($c) {
             return new BookingsState(
-                $c->get('wp_bookings_ui/endpoints_config'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
             );
@@ -173,19 +159,6 @@ return function ($eventManager, $eventFactory, $containerFactory) {
         },
 
         /**
-         * Renderer handler for the service metabox.
-         *
-         * @since [*next-version*]
-         *
-         * @return ServiceMetabox
-         */
-        'eddbk_metabox_render_handler' => function ($c) {
-            return new ServiceMetabox(
-                $c->get('template_manager')
-            );
-        },
-
-        /**
          * Renderer handler for the bookings page.
          *
          * @since [*next-version*]
@@ -222,6 +195,35 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             return new SettingsPage(
                 $c->get('eddbk_ui_settings_template'),
                 $c->get('eddbk_ui_settings_general_tab_template'),
+                $c->get('eddbk_ui_settings_wizard_tab_template'),
+                $c->get('template_manager')
+            );
+        },
+
+        /**
+         * Renderer handler for the services page.
+         *
+         * @since [*next-version*]
+         *
+         * @return ServicesPage
+         */
+        'eddbk_services_render_handler' => function ($c) {
+            return new ServicesPage(
+                $c->get('eddbk_ui_services_template'),
+                $c->get('template_manager')
+            );
+        },
+
+        /**
+         * Renderer handler for the staff members page.
+         *
+         * @since [*next-version*]
+         *
+         * @return ServicesPage
+         */
+        'eddbk_staff_members_render_handler' => function ($c) {
+            return new StaffMembersPage(
+                $c->get('eddbk_ui_staff_members_template'),
                 $c->get('template_manager')
             );
         },
@@ -304,11 +306,8 @@ return function ($eventManager, $eventFactory, $containerFactory) {
                 $c->get('eddbk_settings_container'),
                 $c->get('booking_logic/statuses'),
                 $c->get('wp_bookings_ui/statuses_labels'),
-                $c->get('wp_bookings_ui/config/currency'),
-                $c->get('wp_bookings_ui/config/formats'),
-                $c->get('wp_bookings_ui/config/links'),
-                $c->get('wp_bookings_ui/ui_actions'),
-                $c->get('wp_bookings_ui/validators'),
+                $c->get('wp_bookings_ui/config'),
+                $c->get('wp_bookings_ui/endpoints_config'),
                 $c->get('eddbk_wp_rest_nonce'),
                 $c->get('event_manager'),
                 $c->get('event_factory')
@@ -440,6 +439,7 @@ return function ($eventManager, $eventFactory, $containerFactory) {
             $makeTemplateFunction = $c->get('eddbk_ui_make_template');
             return $makeTemplateFunction('services/index.html');
         },
+
         /**
          * The template for the staff members page.
          *

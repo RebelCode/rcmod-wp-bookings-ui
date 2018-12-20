@@ -154,13 +154,7 @@ class EnqueueAssetsHandler implements InvocableInterface
      */
     protected function _enqueueScripts($assetsUrlMap, $assets)
     {
-        wp_enqueue_script(self::REQUIRE_APP_ID, $this->_containerGet($assetsUrlMap, $this->_containerGet($assets, 'require.js')), [], false, true);
-
-        wp_enqueue_script(self::APP_ID, $this->_containerGet($assetsUrlMap, $this->_containerGet($assets, 'bookings/main.js')), [], false, true);
-
-        wp_localize_script(self::REQUIRE_APP_ID, 'RC_APP_REQUIRE_FILES', [
-            'app' => $this->_containerGet($assetsUrlMap, $this->_containerGet($assets, 'bookings/app.min.js')),
-        ]);
+        wp_enqueue_script(self::APP_ID, $this->_containerGet($assetsUrlMap, $this->_containerGet($assets, 'bookings/app.min.js')), [], false, true);
     }
 
     /**

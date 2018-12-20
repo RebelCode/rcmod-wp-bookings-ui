@@ -67,28 +67,17 @@ class RegisterUiHandler implements InvocableInterface
     protected $menuPagesConfig;
 
     /**
-     * Metabox configuration.
-     *
-     * @since [*next-version*]
-     *
-     * @var array|MapInterface|stdClass
-     */
-    protected $metaboxConfig;
-
-    /**
      * RegisterUiHandler constructor.
      *
      * @since [*next-version*]
      *
      * @param array|stdClass|Traversable  $menuPagesConfig The list of available menu pages. For more information about page config structure read config doc.
-     * @param array|stdClass|MapInterface $metaboxConfig   Metabox configuration.
      * @param EventManagerInterface       $eventManager    The event manager.
      * @param EventFactoryInterface       $eventFactory    The event factory.
      */
-    public function __construct($menuPagesConfig, $metaboxConfig, $eventManager, $eventFactory)
+    public function __construct($menuPagesConfig, $eventManager, $eventFactory)
     {
         $this->menuPagesConfig = $menuPagesConfig;
-        $this->metaboxConfig   = $metaboxConfig;
 
         $this->_setEventManager($eventManager);
         $this->_setEventFactory($eventFactory);
@@ -111,7 +100,6 @@ class RegisterUiHandler implements InvocableInterface
         }
 
         $this->_registerMenu($this->menuPagesConfig);
-        $this->_registerMetabox($this->metaboxConfig);
 
         $this->_attach('eddbk_registered_application_pages', function (EventInterface $event) {
             $event->setParams([

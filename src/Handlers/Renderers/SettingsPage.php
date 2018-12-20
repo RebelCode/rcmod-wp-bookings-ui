@@ -28,6 +28,15 @@ class SettingsPage extends RenderHandler
     protected $generalTabTemplate;
 
     /**
+     * Wizard tab template.
+     *
+     * @since [*next-version*]
+     *
+     * @var TemplateInterface
+     */
+    protected $wizardTabTemplate;
+
+    /**
      * The event based template manager instance.
      *
      * @since [*next-version*]
@@ -43,12 +52,14 @@ class SettingsPage extends RenderHandler
      *
      * @param TemplateInterface $settingsTemplate   Settings page template.
      * @param TemplateInterface $generalTabTemplate General tab template.
+     * @param TemplateInterface $wizardTabTemplate Wizard tab template.
      * @param TemplateManager   $templateManager    The event based template manager instance.
      */
-    public function __construct($settingsTemplate, $generalTabTemplate, $templateManager)
+    public function __construct($settingsTemplate, $generalTabTemplate, $wizardTabTemplate, $templateManager)
     {
         $this->settingsTemplate   = $settingsTemplate;
         $this->generalTabTemplate = $generalTabTemplate;
+        $this->wizardTabTemplate = $wizardTabTemplate;
         $this->templateManager    = $templateManager;
     }
 
@@ -63,6 +74,7 @@ class SettingsPage extends RenderHandler
     {
         return $this->settingsTemplate->render([
             'generalSettingsTab' => $this->generalTabTemplate->render(),
+            'wizardSettingsTab' => $this->wizardTabTemplate->render(),
             'components'         => $this->templateManager->render('components'),
         ]);
     }

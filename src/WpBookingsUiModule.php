@@ -133,13 +133,15 @@ class WpBookingsUiModule extends AbstractBaseModule
         /*
          * Rendering handlers
          */
-        $this->_attach('eddbk_metabox_render', $c->get('eddbk_metabox_render_handler'));
-
         $this->_attach('eddbk_bookings_render', $c->get('eddbk_bookings_render_handler'));
 
         $this->_attach('eddbk_screen_options_render', $c->get('eddbk_screen_options_render_handler'));
 
         $this->_attach('eddbk_settings_render', $c->get('eddbk_settings_render_handler'));
+
+        $this->_attach('eddbk_services_render', $c->get('eddbk_services_render_handler'));
+
+        $this->_attach('eddbk_staff_members_render', $c->get('eddbk_staff_members_render_handler'));
 
         $this->_attach('eddbk_about_render', $c->get('eddbk_about_render_handler'));
 
@@ -151,8 +153,6 @@ class WpBookingsUiModule extends AbstractBaseModule
         $this->_attach('eddbk_bookings_ui_state', $c->get('eddbk_bookings_statuses_state_handler'));
 
         $this->_attach('eddbk_bookings_ui_state', $c->get('eddbk_bookings_transitions_state_handler'));
-
-        $this->_attach('eddbk_service_ui_state', $c->get('eddbk_service_state_handler'));
 
         $this->_attach('eddbk_general_ui_state', $c->get('eddbk_general_state_handler'));
 
@@ -166,6 +166,9 @@ class WpBookingsUiModule extends AbstractBaseModule
         $this->_attach('wp_ajax_set_' . $c->get('wp_bookings_ui/screen_options/key'), $c->get('eddbk_bookings_save_screen_options_handler'));
 
         $this->_attach('wp_ajax_' . $c->get('wp_bookings_ui/settings/action'), $c->get('eddbk_bookings_update_settings_handler'));
+
+        // Event for providing the booking services for the admin bookings UI
+        $this->_attach('eddbk_admin_bookings_ui_services', $c->get('eddbk_bookings_ui_services_handler'));
     }
 
     /**
