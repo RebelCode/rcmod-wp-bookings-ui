@@ -169,6 +169,10 @@ class WpBookingsUiModule extends AbstractBaseModule
 
         // Event for providing the booking services for the admin bookings UI
         $this->_attach('eddbk_admin_bookings_ui_services', $c->get('eddbk_bookings_ui_services_handler'));
+
+        $this->_attach('eddbk_front_application_labels', $c->get('eddbk_front_application_labels_handler'));
+
+        $this->_attach('eddbk_front_application_filter_fields', $c->get('eddbk_front_application_filter_fields_handler'));
     }
 
     /**
