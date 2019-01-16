@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha25] - 2019-01-16
 ### Changed
 - Using version `0.2.7` of `bookings-js`
 
